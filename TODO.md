@@ -1,4 +1,4 @@
-# MobiiliProjekti - Herukka - Budjetti App
+# MobiiliProjekti - Vaahtera - Budjetti App
 
 Suunnittelu, toteutus ja testaus tehtäviä  
 
