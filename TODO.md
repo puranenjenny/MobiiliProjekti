@@ -9,7 +9,7 @@
     * [ ] fontit  
     * [ ] iconit yms  
 * [ ] Käyttötapaus UML kaavio  
-* [ ] Projektin vaatimuspuu RBS  
+* [ ] Projektin vaatimuspuu RBS
 
 ### DONE
 * [x] Idean valinta  
