@@ -12,8 +12,7 @@ Suunnittelu, toteutus ja testaus tehtäviä
 * [ ] Streakki ja palkinto?  
 * [ ] (Kuitin skannaus) 
 * [ ] (mainokset)
-* [ ] (lähin automaatti)
-* [ ] 
+* [ ] (lähin automaatti) 
 
 ### IN PROGRESS
 * [ ] Suunnittele ulkoasu Figmalla  
