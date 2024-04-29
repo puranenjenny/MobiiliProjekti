@@ -1,15 +1,15 @@
-# Mobiilisovelluksen teko
-
+# MobiiliProjekti - Herukka
 
 ### TODO
-* [ ] suunnittele ulkoasu[tehtävän kuvausta yms](./tasks/ulkoasu.md)
-    * [ ] napit
-    * [ ] taustakuva
-* [ ] Koodaa jotain    
-* [ ] Katselmoi jotain
+* [ ] Itse appi  
 
 ### IN PROGRESS
-* [ ] Koodaa runko
+* [ ] Suunnittele ulkoasu Figmalla  
+    * [ ] värit  
+    * [ ] fontit  
+    * [ ] iconit yms  
+* [ ] Käyttötapaus UML kaavio  
+* [ ] Projektin vaatimuspuu RBS  
 
 ### DONE
-* [x] Karkea design speksi
+* [x] Idean valinta  
