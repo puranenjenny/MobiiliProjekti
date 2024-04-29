@@ -1,9 +1,19 @@
-# MobiiliProjekti - Herukka
+# MobiiliProjekti - Herukka - Budjetti App
 
-suunnittelu, toteutus ja testaus tehtäviä  
+Suunnittelu, toteutus ja testaus tehtäviä  
 
 ### TODO
-* [ ] Itse appi  
+* [ ] Ui rakennus  
+* [ ] Hyvä nimi ja logo 
+* [ ] Tietokannan suunnittelu  
+* [ ] Kirjautuminen  
+* [ ] Edistymispalkit  
+* [ ] Kategorioiden suunnittelu 
+* [ ] Streakki ja palkinto?  
+* [ ] (Kuitin skannaus) 
+* [ ] (mainokset)
+* [ ] (lähin automaatti)
+* [ ] 
 
 ### IN PROGRESS
 * [ ] Suunnittele ulkoasu Figmalla  
