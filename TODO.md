@@ -1,5 +1,7 @@
 # MobiiliProjekti - Herukka
 
+suunnittelu, toteutus ja testaus tehtäviä  
+
 ### TODO
 * [ ] Itse appi  
 
