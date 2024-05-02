@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:src="@drawable/ic_toolbar_image"
-            android:text="@string/img_description" />
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
 </androidx.appcompat.widget.Toolbar>
