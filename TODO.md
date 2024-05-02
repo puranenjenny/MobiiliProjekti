@@ -4,6 +4,7 @@ Suunnittelu, toteutus ja testaus tehtäviä
 
 ### TODO
 * [ ] Ui rakennus  
+* [ ] Hyvä nimi ja logo 
 * [ ] Tietokannan suunnittelu  
 * [ ] Kirjautuminen  
 * [ ] Edistymispalkit  
@@ -20,7 +21,6 @@ Suunnittelu, toteutus ja testaus tehtäviä
     * [ ] iconit yms  
 * [ ] Käyttötapaus UML kaavio  
 * [ ] Projektin vaatimuspuu RBS
-* [ ] Hyvä nimi ja logo 
 
 ### DONE
 * [x] Idean valinta  
