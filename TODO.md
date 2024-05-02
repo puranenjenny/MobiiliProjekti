@@ -18,9 +18,9 @@ Suunnittelu, toteutus ja testaus tehtäviä
     * [ ] värit  
     * [ ] fontit  
     * [ ] iconit yms  
-* [ ] Käyttötapaus UML kaavio  
-* [ ] Projektin vaatimuspuu RBS
-* [ ] Hyvä nimi ja logo 
+* [x] Käyttötapaus UML kaavio  
+* [x] Projektin vaatimuspuu RBS
+* [x] Hyvä nimi ja logo 
 
 ### DONE
 * [x] Idean valinta  
