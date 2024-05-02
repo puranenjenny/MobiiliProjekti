@@ -1,0 +1,21 @@
+<resources>
+    <style name="Widget.Theme.MobiiliProjekti.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/button</item>
+    </style>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/white</item>
+        <item name="android:width">50dp</item>
+        <item name="android:height">50dp</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/main</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/main</item>
+    </style>
+
+
+</resources>

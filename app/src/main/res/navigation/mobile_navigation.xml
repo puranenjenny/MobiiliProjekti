@@ -8,18 +8,20 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.mobiiliprojekti.ui.home.HomeFragment"
-        android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.mobiiliprojekti.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.mobiiliprojekti.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_annual"
+        android:name="com.example.mobiiliprojekti.ui.annual.AnnualFragment"
+        tools:layout="@layout/fragment_annual" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.mobiiliprojekti.ui.profile.ProfileFragment"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
