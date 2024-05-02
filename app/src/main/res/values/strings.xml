@@ -4,4 +4,6 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_profile">Profile</string>
     <string name="title_annual">Annual</string>
+    <string name="title_header_main">PENNY PALADIN</string>
+    <string name="title_header_sub">BUDGET BUDDY</string>
 </resources>
