@@ -14,10 +14,10 @@ Suunnittelu, toteutus ja testaus tehtäviä
 * [ ] (lähin automaatti) 
 
 ### IN PROGRESS
-* [ ] Suunnittele ulkoasu Figmalla  
-    * [ ] värit  
-    * [ ] fontit  
-    * [ ] iconit yms  
+* [x] Suunnittele ulkoasu Figmalla  
+    * [x] värit  
+    * [x] fontit  
+    * [x] iconit yms  
 * [x] Käyttötapaus UML kaavio  
 * [x] Projektin vaatimuspuu RBS
 * [x] Hyvä nimi ja logo 
