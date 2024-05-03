@@ -3,8 +3,8 @@
 Suunnittelu, toteutus ja testaus tehtäviä  
 
 ### TODO
-* [ ] Ui rakennus  
-* [ ] Tietokannan suunnittelu  
+ 
+
 * [ ] Kirjautuminen  
 * [ ] Edistymispalkit  
 * [ ] Kategorioiden suunnittelu 
@@ -14,13 +14,15 @@ Suunnittelu, toteutus ja testaus tehtäviä
 * [ ] (lähin automaatti) 
 
 ### IN PROGRESS
-* [x] Suunnittele ulkoasu Figmalla  
-    * [x] värit  
-    * [x] fontit  
-    * [x] iconit yms  
+ * [ ] Ui rakennus
+ * [ ] Tietokannan suunnittelu  
+
+### DONE
+* [x] Idean valinta
 * [x] Käyttötapaus UML kaavio  
 * [x] Projektin vaatimuspuu RBS
 * [x] Hyvä nimi ja logo 
-
-### DONE
-* [x] Idean valinta  
+* [x] Suunnittele ulkoasu Figmalla  
+    * [x] värit  
+    * [x] fontit  
+    * [x] iconit yms 
