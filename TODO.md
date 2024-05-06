@@ -24,15 +24,18 @@ Suunnittelu, toteutus ja testaus tehtäviä
 * [ ] kirjautumis sivun toiminnallisuudet  
    * [ ] passcode (ja sormenjälki)  
    * [ ] rekisteröityminen  
-   * [ ] olen unohtanut  
+   * [ ] "olen unohtanut"  
 * [ ] (Kuitin skannaus)  
 * [ ] (mainokset)  
 * [ ] (lähin automaatti)  
 
 ### IN PROGRESS
 * [ ] Alapalkki  
-* [ ] Tietokannan suunnittelu  
-* [ ] Iconien teko / valinta  
+* [ ] Tietokannan suunnittelu
+* [ ] Käyttöliittymän rakentaminen
+* [ ] Iconien, värien ja logon viimeistely
+* [ ] Main activity ui
+* [ ] Kaavioiden rakennuksen selvitys
 
 ### DONE
 * [x] Idean valinta  
