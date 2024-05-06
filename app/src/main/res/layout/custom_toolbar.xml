@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:contentDescription="Penny Paladin Logo"
-            app:srcCompat="@drawable/logo2" />
+            app:srcCompat="@drawable/logo" />
 
     </RelativeLayout>
 
