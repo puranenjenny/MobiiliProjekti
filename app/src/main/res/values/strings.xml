@@ -1,10 +1,14 @@
 <resources>
-    <string name="app_name">Mobiili Projekti</string>
+    <string name="app_name">Penny Paladin</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_profile">Profile</string>
     <string name="title_annual">Annual</string>
-    <string name="title_header_main">PENNY PALADIN</string>
-    <string name="title_header_sub">BUDGET BUDDY</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">No account? No Problem. Register here.</string>
+    <string name="motto">Shielding Your Savings,  One Penny at a Time</string>
+    <string name="welcome">Welcome</string>
+
     <string name="img_description">Logo</string>
+    <string name="img_description2">Coin</string>
 </resources>
