@@ -17,5 +17,9 @@
         <item name="android:color">@color/main</item>
     </style>
 
+    <style name="BottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconSize">32dp</item>
+    </style>
+
 
 </resources>
