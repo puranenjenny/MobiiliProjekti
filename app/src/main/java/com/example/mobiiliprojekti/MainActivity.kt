@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val databaseManager = DatabaseManager(this)
+        databaseManager.allCategories()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
