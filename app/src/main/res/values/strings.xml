@@ -9,6 +9,26 @@
     <string name="motto">Shielding Your Savings,  One Penny at a Time</string>
     <string name="welcome">Welcome</string>
 
-    <string name="img_description">Logo</string>
+    <!-- login fragment -->
+    <string name="Login">Login</string>
+    <string name="Login2">Please enter information to login.</string>
+    <string name="Name">Name</string>
+    <string name="Password">Password</string>
+    <string name="Forgot_psw">Forgot password?</string>
+    <string name="Cancel">Cancel</string>
+
+    <!-- frogor psw fragment -->
+    <string name="Forgot_psw2">Please enter information and you receive new password to your email.</string>
+    <string name="Email">Email</string>
+    <string name="Submit">Submit</string>
+
+    <!-- frogor psw fragment -->
+    <string name="Register">Register</string>
+    <string name="enter_info">Please enter information.</string>
+    Please enter information.
+
+    <!-- image descriptions -->
+    <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
+
 </resources>
