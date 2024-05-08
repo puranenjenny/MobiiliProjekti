@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="RegisterFragment">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="RegisterFragment"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp">
 
             <TextView
-                android:id="@+id/txv_login"
+                android:id="@+id/txv_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -27,38 +18,39 @@
                 android:layout_marginStart="50dp"
                 android:layout_marginEnd="50dp"
                 android:fontFamily="@font/poppins"
-                android:text="Register"
+                android:text="@string/Register"
                 android:textAlignment="textStart"
                 android:textColor="@color/dark_grey"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/txt_login2"
+                android:id="@+id/txt_register2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txv_login"
+                android:layout_below="@+id/txv_register"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="50dp"
                 android:fontFamily="@font/poppins"
-                android:text="Please enter information." />
+                android:text="@string/enter_info" />
 
             <EditText
                 android:id="@+id/txt_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txv_login"
+                android:layout_below="@+id/txt_register2"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="50dp"
                 android:ems="10"
-                android:hint="Name"
+                android:hint="@string/Name"
                 android:inputType="text"
-                android:fontFamily="@font/poppins"/>
+                android:fontFamily="@font/poppins"
+                android:autofillHints="username" />
 
             <EditText
                 android:id="@+id/txt_email"
@@ -71,9 +63,10 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
                 android:ems="10"
-                android:hint="Email"
+                android:hint="@string/Email"
                 android:inputType="textEmailAddress"
-                android:fontFamily="@font/poppins"/>
+                android:fontFamily="@font/poppins"
+                android:autofillHints="emailAddress" />
 
             <EditText
                 android:id="@+id/txt_psw_login"
@@ -86,9 +79,10 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
                 android:ems="10"
-                android:hint="Password"
+                android:hint="@string/Password"
                 android:inputType="textPassword"
-                android:fontFamily="@font/poppins"/>
+                android:fontFamily="@font/poppins"
+                android:autofillHints="password" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -110,9 +104,10 @@
                     android:background="@drawable/rounded_button"
                     android:fontFamily="@font/poppins"
                     android:insetLeft="0dp"
-                    android:text="Cancel"
+                    android:text="@string/Cancel"
                     android:textColor="@android:color/white"
-                    app:backgroundTint="#B80101" />
+                    app:backgroundTint="#B80101"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/btn_register_user"
@@ -121,14 +116,10 @@
                     android:layout_marginStart="10dp"
                     android:background="@drawable/rounded_button"
                     android:fontFamily="@font/poppins"
-                    android:text="Register"
+                    android:text="@string/Register"
                     android:textColor="@android:color/white"
-                    app:backgroundTint="@null" />
+                    app:backgroundTint="@null"
+                    style="?android:attr/buttonBarButtonStyle" />
             </LinearLayout>
 
         </RelativeLayout>
-
-    </LinearLayout>
-
-
-</FrameLayout>
