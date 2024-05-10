@@ -1,6 +1,9 @@
 package com.example.mobiiliprojekti
 
+
+import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -11,13 +14,14 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         private const val DATABASE_VERSION = 1
     }
 
+    // creates new database at first use.
     override fun onCreate(db: SQLiteDatabase) {
 
         db.execSQL("CREATE TABLE category (category_id INTEGER PRIMARY KEY AUTOINCREMENT, category_name TEXT NOT NULL)")
         db.execSQL("CREATE TABLE category_budget (cb_id INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER, cat_budget INTEGER, date TEXT, user INTEGER, FOREIGN KEY(category) REFERENCES category(category_id), FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE monthly_budget (mb_id INTEGER PRIMARY KEY AUTOINCREMENT, mont_budget INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE purchase (purchase_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER DEFAULT 0, category INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, FOREIGN KEY(category) REFERENCES category_budget(category), FOREIGN KEY(user) REFERENCES user(user_id))")
-        db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL, email TEXT NOT NULL UNIQUE)")
+        db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0)")
 
         val categories = arrayOf("Food", "Transportation", "Household", "Clothing", "Well-being", "Entertainment", "Other")
         val insertStatement = db.compileStatement("INSERT INTO category (category_name) VALUES (?)")
@@ -26,12 +30,161 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             insertStatement.executeInsert()
         }
         println("db created")
-
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         //updates for database goes here
     }
 
+    // Adding/registering new user to db
+    fun addUser(username: String, email: String, password: String): Long {
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("username", username)
+            put("email", email)
+            put("password", password)
+        }
+        return try {
+            val result = db.insertOrThrow("user", null, contentValues)
+            db.close()
+            result
+        } catch (e: SQLiteConstraintException) {
+            // returns -1 to handle exception in ui fragment
+            -1
+        }
+    }
+
+    // Changing user as primary user and sets other users as non primary.
+    fun updateUserAsAdmin(userId: Long) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // Sets all users is_admin-value as 0
+            val updateAllUsersQuery = "UPDATE user SET is_admin = 0 WHERE user_id != ?"
+            val updateAllUsersStatement = db.compileStatement(updateAllUsersQuery)
+            updateAllUsersStatement.bindLong(1, userId)
+            updateAllUsersStatement.executeUpdateDelete()
+
+            // Sets selected users is_admin-value as 1
+            val updateAdminUserQuery = "UPDATE user SET is_admin = 1 WHERE user_id = ?"
+            val updateAdminUserStatement = db.compileStatement(updateAdminUserQuery)
+            updateAdminUserStatement.bindLong(1, userId)
+            updateAdminUserStatement.executeUpdateDelete()
+
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.endTransaction()
+            printAllUsers() // for testing/debugging
+        }
+    }
+
+    // get primary users username from db
+    fun fetchAdminUser(): String? {
+        val db = readableDatabase
+        var adminUsername: String? = null
+        try {
+            val cursor = db.rawQuery("SELECT username FROM user WHERE is_admin = 1", null)
+            if (cursor.moveToFirst()) {
+                val usernameIndex = cursor.getColumnIndex("username")
+                if (usernameIndex >= 0) {
+                    adminUsername = cursor.getString(usernameIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+        return adminUsername
+    }
+
+    //Check if user and password matches to user in db for login
+    fun loginUser(username: String, password: String): Boolean {
+        var result = false
+        val db = readableDatabase
+        val selection = "username = ? AND password = ?"
+        val selectionArgs = arrayOf(username, password)
+        val cursor = db.query("user", null, selection, selectionArgs, null, null, null)
+
+        try {
+            if (cursor.moveToFirst()) {
+                // User found in db
+                result = true
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor.close()
+            db.close()
+        }
+        return result
+    }
+
+    // set new password if user forgets it.
+    fun resetPassword(username: String, email: String, newPassword: String): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM user WHERE username = ? AND email = ?", arrayOf(username, email))
+        try {
+            if (cursor.moveToFirst()) {
+                val userIdIndex = cursor.getColumnIndex("user_id")
+                val userId = cursor.getInt(userIdIndex)
+                if (userId >= 0) {
+                    val contentValues = ContentValues().apply {
+                        put("password", newPassword)
+                    }
+                    val rowsAffected = db.update("user", contentValues, "user_id = ?", arrayOf(userId.toString()))
+                    if (rowsAffected > 0) {
+                        return true
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor.close()
+            db.close()
+        }
+        return false
+    }
+
+
+
+    // this prints all user to terminal for debugging -->
+    private fun printAllUsers() {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM user", null)
+        val userIdIndex = cursor.getColumnIndex("user_id")
+        val usernameIndex = cursor.getColumnIndex("username")
+        val emailIndex = cursor.getColumnIndex("email")
+        val passwordIndex = cursor.getColumnIndex("password")
+        val isAdminIndex = cursor.getColumnIndex("is_admin")
+
+        try {
+        if (userIdIndex >= 0 && usernameIndex >= 0 && emailIndex >= 0 && passwordIndex >= 0 && isAdminIndex >= 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    val userId = cursor.getInt(userIdIndex)
+                    val username = cursor.getString(usernameIndex)
+                    val email = cursor.getString(emailIndex)
+                    val password = cursor.getString(passwordIndex)
+                    val isAdmin = cursor.getInt(isAdminIndex) == 1
+
+                    println("User ID: $userId, Username: $username, Password: $password, Email: $email, isAdmin: $isAdmin")
+                } while (cursor.moveToNext())
+            } else {
+                println("User table is empty")
+            }
+        } else {
+            println("Column indexes not found")
+        }} finally {
+            cursor.close()
+            db.close()
+        }
+    }
+
+    // this prints all user to dashboard fragment for testing purposes -->
     fun allCategories(): String {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM category", null)
@@ -50,7 +203,5 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
         return categoryList.toString()
     }
-
-
 
 }

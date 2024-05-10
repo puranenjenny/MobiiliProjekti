@@ -17,15 +17,16 @@
     <string name="Forgot_psw">Forgot password?</string>
     <string name="Cancel">Cancel</string>
 
-    <!-- frogor psw fragment -->
+    <!-- forget psw fragment -->
     <string name="Forgot_psw2">Please enter information and you receive new password to your email.</string>
     <string name="Email">Email</string>
     <string name="Submit">Submit</string>
 
-    <!-- frogor psw fragment -->
+    <!-- Register psw fragment -->
     <string name="Register">Register</string>
     <string name="enter_info">Please enter information.</string>
-    Please enter information.
+    <string name="primary_user">Set as the primary user.</string>
+
 
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>

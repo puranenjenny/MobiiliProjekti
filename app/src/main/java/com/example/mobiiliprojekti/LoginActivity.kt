@@ -1,7 +1,5 @@
 package com.example.mobiiliprojekti
 
-import LoginFragment
-import RegisterFragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
