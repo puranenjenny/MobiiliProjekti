@@ -23,7 +23,7 @@
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linlaymonthyear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -35,8 +35,8 @@
 
         <Button
             android:id="@+id/btn_monthback"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/icon_back"
             android:textSize="20sp" />
@@ -50,15 +50,16 @@
             android:text="@string/txt_MonthYear"
             android:textAlignment="center"
             android:textColor="@color/dark_grey"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/btn_monthforward"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/icon_next"
+            android:padding="20dp"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -68,6 +69,7 @@
         android:id="@+id/linlayimages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:layout_weight="1"
         android:elevation="8dp"
         android:gravity="center"
@@ -76,10 +78,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/linlaymonthyear">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/ivkalenteri"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="20dp"
@@ -96,6 +98,7 @@
             android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:elevation="6dp"
+            android:paddingLeft="15dp"
             app:srcCompat="@drawable/spent" />
 
         <ImageView
@@ -113,7 +116,7 @@
         android:id="@+id/linlaystatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="100dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,9 +125,9 @@
         <!-- Days left -->
 
         <LinearLayout
-            android:layout_width="12dp"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginStart="15dp"
             android:layout_weight="1"
             android:background="@drawable/element_background_orange"
             android:orientation="vertical"
@@ -153,13 +156,13 @@
 
         <!-- Money spent -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="15dp"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@drawable/element_background_orange"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/txt_moneyspentname"
@@ -184,9 +187,9 @@
 
         <!-- Money left -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
+            android:layout_marginEnd="15dp"
             android:layout_weight="1"
             android:background="@drawable/element_background_orange"
             android:orientation="vertical"
@@ -216,13 +219,13 @@
 
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/KAAVION_PAIKKA"
         android:layout_width="288dp"
         android:layout_height="125dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="20dp"
         android:src="@android:drawable/ic_dialog_dialer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linlaystatus" />
 
@@ -230,44 +233,98 @@
         android:id="@+id/btn_addNew"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/rounded_button"
-        android:drawableEnd="@drawable/icon_addnew"
+        android:drawableEnd="@drawable/icon_add2"
         android:elevation="2dp"
         android:fontFamily="@font/poppins"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:text="@string/btn_addNew"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/KAAVION_PAIKKA" />
+
+    <TextView
+        android:id="@+id/txt_Treat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="32dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/poppins"
+        android:padding="5dp"
+        android:text="@string/txt_Treat"
+        android:textAlignment="center"
+        android:textColor="@color/dark_grey"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_addNew" />
+
+    <EditText
+        android:id="@+id/PALKIN_PAIKKA"
+        android:layout_width="290dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:background="#F0F4EF"
+        android:ems="10"
+        android:inputType="text"
+        android:text="tässä menee palkki"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/ivTreat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Treat" />
+
+    <ImageView
+        android:id="@+id/ivTreat"
+        android:layout_width="81dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="28dp"
+        android:src="@drawable/treat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/PALKIN_PAIKKA"
+        app:layout_constraintTop_toBottomOf="@+id/btn_addNew" />
+
+    <TextView
+        android:id="@+id/txt_lastpaymentsname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="132dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/poppins"
+        android:padding="5dp"
+        android:text="@string/txt_lastpay"
+        android:textAlignment="center"
+        android:textColor="@color/dark_grey"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_addNew" />
+
+    <ScrollView
+        android:id="@+id/sv_lastpayments_home"
+        android:layout_width="354dp"
+        android:layout_height="157dp"
+        android:layout_marginTop="10dp"
+        android:background="#F0F4EF"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_lastpaymentsname">
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="linlayimages,linlaystatus" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="linlayimages,linlaystatus" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="linlayimages,linlaystatus" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="linlayimages,linlaystatus" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

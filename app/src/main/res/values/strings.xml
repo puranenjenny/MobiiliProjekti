@@ -33,6 +33,8 @@
     <string name="txt_daysleft">Days Left</string>
     <string name="txt_moneyleft">Money left</string>
     <string name="txt_moneyspent">Money spent</string>
+    <string name="txt_Treat">Treat Meter</string>
+    <string name="txt_lastpay">Last payments</string>
 
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
