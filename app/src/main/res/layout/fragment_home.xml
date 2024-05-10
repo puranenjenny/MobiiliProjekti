@@ -65,11 +65,14 @@
 
 
     <LinearLayout
+        android:id="@+id/linlayimages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:elevation="8dp"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linlaystatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -82,8 +85,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/calendar"
-            android:elevation="6dp"/>
+            android:elevation="6dp"
+            app:srcCompat="@drawable/calendar" />
 
         <ImageView
             android:id="@+id/imageView4"
@@ -92,8 +95,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/spent"
-            android:elevation="6dp"/>
+            android:elevation="6dp"
+            app:srcCompat="@drawable/spent" />
 
         <ImageView
             android:id="@+id/imageView5"
@@ -102,12 +105,12 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/left"
-            android:elevation="6dp"/>
+            android:elevation="6dp"
+            app:srcCompat="@drawable/left" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linlaystatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
@@ -212,11 +215,22 @@
     </LinearLayout>
 
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="288dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="41dp"
+        android:src="@android:drawable/ic_dialog_dialer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linlaystatus" />
+
     <Button
         android:id="@+id/btn_addNew"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/rounded_button"
         android:drawableEnd="@drawable/icon_addnew"
         android:elevation="2dp"
@@ -228,7 +242,32 @@
         android:textSize="20sp"
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="linlayimages,linlaystatus" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="linlayimages,linlaystatus" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="linlayimages,linlaystatus" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="linlayimages,linlaystatus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
