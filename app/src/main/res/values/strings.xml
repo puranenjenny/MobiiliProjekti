@@ -27,6 +27,13 @@
     <string name="enter_info">Please enter information.</string>
     Please enter information.
 
+    <!--home fragment-->
+    <string name="btn_addNew">Add new </string>
+    <string name="txt_MonthYear">Month Year</string>
+    <string name="txt_daysleft">Days Left</string>
+    <string name="txt_moneyleft">Money left</string>
+    <string name="txt_moneyspent">Money spent</string>
+
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
