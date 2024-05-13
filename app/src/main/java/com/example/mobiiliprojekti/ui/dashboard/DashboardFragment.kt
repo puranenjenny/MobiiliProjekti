@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.example.mobiiliprojekti.DatabaseManager
+import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.databinding.FragmentDashboardBinding
 import java.time.LocalDate
 

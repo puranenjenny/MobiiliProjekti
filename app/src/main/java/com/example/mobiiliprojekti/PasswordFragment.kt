@@ -7,6 +7,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.EmailServices
 import java.util.UUID
 
 class PasswordFragment : DialogFragment() {
