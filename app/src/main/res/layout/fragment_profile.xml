@@ -124,10 +124,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="149dp"
             android:layout_marginTop="60dp"
-            android:layout_marginEnd="72dp"
             app:boxBackgroundMode="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.666"
             app:layout_constraintStart_toEndOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/MonthlyInput">
 
@@ -138,12 +135,12 @@
                 android:background="@drawable/round_input"
                 android:backgroundTint="@color/black"
                 android:fontFamily="@font/poppins"
+                android:gravity="center"
                 android:hint="500"
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:gravity="center"/>
+                android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -166,13 +163,11 @@
             android:layout_height="85dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="28dp"
             android:fontFamily="@font/poppins"
             android:text="Here you can set your monthly budget and set your category and treat goals."
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/WelcomeText" />
 
@@ -196,14 +191,13 @@
             android:id="@+id/text_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="85dp"
             android:fontFamily="@font/poppins"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TreatBudjetInput" />
+            app:layout_constraintTop_toBottomOf="@+id/DeleteUserBtn" />
 
         <TextView
             android:id="@+id/CategoriesText"
@@ -415,31 +409,26 @@
             android:id="@+id/TreatBudjetInput"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:layout_marginStart="57dp"
-            android:layout_marginEnd="55dp"
-            android:layout_marginBottom="345dp"
+            android:layout_marginStart="49dp"
+            android:layout_marginBottom="97dp"
             android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/text_profile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/TreatBudgetText"
-            app:layout_constraintTop_toBottomOf="@+id/TreatItemImput"
-            app:layout_constraintVertical_bias="0.0"
             app:boxBackgroundMode="none"
-             >
+            app:layout_constraintBottom_toTopOf="@+id/DeleteUserBtn"
+            app:layout_constraintStart_toEndOf="@+id/TreatBudgetText"
+            app:layout_constraintTop_toBottomOf="@+id/TreatItemImput">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/round_input"
                 android:fontFamily="@font/poppins"
+                android:gravity="center"
                 android:hint="40"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:boxStrokeColor="@color/black"
-                android:background="@drawable/round_input"
-                android:gravity="center"/>
+                app:boxStrokeColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputEditText
@@ -460,6 +449,23 @@
             app:layout_constraintStart_toEndOf="@+id/BudgetText"
             app:layout_constraintTop_toBottomOf="@+id/InfoText"
             android:gravity="center"/>
+
+        <Button
+            android:id="@+id/DeleteUserBtn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="154dp"
+            android:layout_marginTop="97dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:gravity="center_horizontal|center_vertical"
+
+            android:text="Remove user"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#B80101"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TreatBudjetInput" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
