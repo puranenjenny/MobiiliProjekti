@@ -43,6 +43,7 @@
     <string name="txt_moneyspent">Money spent</string>
     <string name="txt_Treat">Treat Meter</string>
     <string name="txt_lastpay">Last payments</string>
+    <string name="category">Category</string>
 
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
