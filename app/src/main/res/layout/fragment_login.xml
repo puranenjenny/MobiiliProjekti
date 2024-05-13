@@ -37,21 +37,21 @@
                 android:fontFamily="@font/poppins"
                 android:text="@string/Login2" />
 
-            <EditText
-                android:id="@+id/txt_login_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txv_login"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginEnd="50dp"
-                android:ems="10"
-                android:hint="@string/Name"
-                android:inputType="text"
-                android:fontFamily="@font/poppins"
-                android:autofillHints="username" />
+    <EditText
+        android:id="@+id/txt_login_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txv_login"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints="username"
+        android:ems="10"
+        android:fontFamily="@font/poppins"
+        android:hint="@string/Name"
+        android:inputType="text" />
 
             <EditText
                 android:id="@+id/txt_psw_login"
@@ -82,44 +82,44 @@
                 android:text="@string/Forgot_psw"
                 android:fontFamily="@font/poppins"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_forgot_psw"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="50dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_forgot_psw"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_cancel_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/rounded_button"
-                    android:fontFamily="@font/poppins"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="@string/Cancel"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="#B80101"
-                    style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/btn_cancel_login"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/Cancel"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#B80101" />
 
-                <Button
-                    android:id="@+id/btn_login_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/rounded_button"
-                    android:backgroundTint="@null"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/Login"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="@null"
-                    style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/btn_login_user"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@null"
+            android:fontFamily="@font/poppins"
+            android:text="@string/Login"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@null" />
 
-            </LinearLayout>
+    </LinearLayout>
 
         </RelativeLayout>

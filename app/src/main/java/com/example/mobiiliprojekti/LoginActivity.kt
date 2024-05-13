@@ -3,6 +3,7 @@ package com.example.mobiiliprojekti
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.mobiiliprojekti.services.DatabaseManager
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,13 +29,13 @@ class LoginActivity : AppCompatActivity() {
 
         // add onClickListener to that button
         btnLogin.setOnClickListener {
-            // set login fragment to variable
-            val fragmentLogin = LoginFragment()
+                // set login fragment to variable
+                val fragmentLogin = LoginFragment()
 
-            // show fragment as dialog
-            supportFragmentManager.beginTransaction()
-                .add(fragmentLogin, "register_dialog")
-                .commit()
+                // show fragment as dialog
+                supportFragmentManager.beginTransaction()
+                    .add(fragmentLogin, "login_dialog")
+                    .commit()
         }
     }
 }

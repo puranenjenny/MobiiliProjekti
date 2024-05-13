@@ -4,32 +4,39 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_profile">Profile</string>
     <string name="title_annual">Annual</string>
+
+    <!-- login activity -->
     <string name="btn_login">Login</string>
-    <string name="btn_register">No account? No Problem. Register here.</string>
-    <string name="motto">Shielding Your Savings,  One Penny at a Time</string>
+    <string name="btn_register">No account? No Problem.\nRegister here.</string>
+    <string name="motto">Shielding Your Savings,\nOne Penny at a Time</string>
     <string name="welcome">Welcome</string>
 
     <!-- login fragment -->
     <string name="Login">Login</string>
-    <string name="Login2">Please enter information to login.</string>
+    <string name="Login2">Please enter the information\nto login.</string>
     <string name="Name">Name</string>
     <string name="Password">Password</string>
     <string name="Forgot_psw">Forgot password?</string>
     <string name="Cancel">Cancel</string>
 
-    <!-- forget psw fragment -->
-    <string name="Forgot_psw2">Please enter information and you receive new password to your email.</string>
+    <!-- Biometric login fragment -->
+    <string name="biom_login">Biometric login</string>
+    <string name="biom_login2">Please login by touching\nthe fingerprint scanner of your device.</string>
+    <string name="biom_login_cancel">Login with password\nor change the user.</string>
+
+    <!-- forgot psw fragment -->
+    <string name="Forgot_psw2">Please enter the information and you\'ll receive new password to your email.</string>
     <string name="Email">Email</string>
     <string name="Submit">Submit</string>
 
     <!-- Register psw fragment -->
     <string name="Register">Register</string>
-    <string name="enter_info">Please enter information.</string>
+    <string name="enter_info">Please enter information to\nregister new user.</string>
     <string name="primary_user">Set as the primary user.</string>
 
 
     <!--home fragment-->
-    <string name="btn_addNew">Add new </string>
+    <string name="btn_addNew">Add new</string>
     <string name="txt_MonthYear">Month Year</string>
     <string name="txt_daysleft">Days Left</string>
     <string name="txt_moneyleft">Money left</string>
@@ -40,5 +47,6 @@
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
+
 
 </resources>

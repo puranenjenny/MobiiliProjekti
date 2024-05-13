@@ -8,11 +8,17 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import com.example.mobiiliprojekti.services.DatabaseManager
 
 class LoginFragment : DialogFragment() {
 
     private lateinit var databaseManager: DatabaseManager
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
@@ -21,22 +27,29 @@ class LoginFragment : DialogFragment() {
         // set view for dialog
         builder.setView(view)
 
-        // set up database manager
-        databaseManager = DatabaseManager(requireContext())
-
-        // Look for text fields and buttons
+        // set up text fields and buttons
         val userNameEditText: EditText = view.findViewById(R.id.txt_login_user_name)
         val pswEditText: EditText = view.findViewById(R.id.txt_psw_login)
-
         val loginButton: Button = view.findViewById(R.id.btn_login_user)
         val cancelButton = view.findViewById<Button>(R.id.btn_cancel_login)
 
-        // get admin user and set it to text field
+        // Initialize database manager
+        databaseManager = DatabaseManager(requireContext())
+
+        // Set admin username to text-field if it is available
+        // and also activate biometric authentication when primary user is set
         val adminUsername = databaseManager.fetchAdminUser()
         if (adminUsername != null) {
             userNameEditText.setText(adminUsername)
+
+            // Initialize biometric prompt and prompt info
+            biometricPrompt = createBiometricPrompt()
+            promptInfo = createPromptInfo(adminUsername)
+
+            biometricPrompt.authenticate(promptInfo)
         }
 
+        // Set click listener for login button
         loginButton.setOnClickListener {
             // set values of text fields to variables
             val userName = userNameEditText.text.toString()
@@ -46,8 +59,7 @@ class LoginFragment : DialogFragment() {
             if (userName.isNotEmpty() && password.isNotEmpty()) {
                 val result = databaseManager.loginUser(userName, password)
                 if (result) {
-                    // If user and password are correct navigate to main screen and show toast
-                    Toast.makeText(requireContext(), "Welcome $userName!", Toast.LENGTH_SHORT).show()
+                    // If user and password are correct navigate to main screen
                     val intent = Intent(requireContext(), MainActivity::class.java)
                     startActivity(intent)
                     // close login activity
@@ -82,7 +94,39 @@ class LoginFragment : DialogFragment() {
             dismiss()
         }
 
+        // Show biometric prompt if admin user is available
+        if (adminUsername != null) {
+            biometricPrompt.authenticate(promptInfo)
+        }
+
         return builder.create()
     }
 
+    // function for allowing biometric authentication
+    private fun createBiometricPrompt(): BiometricPrompt {
+        val executor = ContextCompat.getMainExecutor(requireContext())
+        val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                startActivity(intent)
+                // close login activity
+                requireActivity().finish()
+            }
+
+            override fun onAuthenticationFailed() {
+                // Handle authentication failure
+                Toast.makeText(requireContext(), "Identification failed!", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return BiometricPrompt(this, executor, callback)
+    }
+
+    // function for building a ui for biometric authentication
+    private fun createPromptInfo(username:String): BiometricPrompt.PromptInfo {
+        return BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Welcome $username!")
+            .setDescription("Place your finger on the fingerprint sensor to login.")
+            .setNegativeButtonText("Login with password")
+            .build()
+    }
 }
