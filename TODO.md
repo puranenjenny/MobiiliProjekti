@@ -2,42 +2,42 @@
 Suunnittelu, toteutus ja testaus tehtäviä  
 
 ### TODO 
-* [ ] home sivun ui  
 * [ ] home sivun toiminnallisuudet  
    * [ ] tietokannasta haku  
    * [ ] lisää tietokantaan  
    * [ ] prosenttikaavio  
-* [ ] profile sivun ui  
-* [ ] profile sivun toiminnallisuudet  
-   * [ ] lisää ja muokkaa tietokantaa  
-   * [ ] laskutoimitukset  
-   * [ ] streak ja palkinto  
-* [ ] dashboard sivun ui  
 * [ ] dashboard sivun toiminnallisuudet  
    * [ ] tietokannasta haku kategorian mukaan  
    * [ ] kaavio  
-* [ ] annual sivun ui  
-* [ ] annual sivun toiminnallisuudet  
-   * [ ] aikasarja kuluneesta budjetista ja toteutuneesta  
-   * [ ] prosenttikaavio  
-* [ ] kirjautumis ui  
-* [ ] kirjautumis sivun toiminnallisuudet  
-   * [ ] passcode (ja sormenjälki)  
-   * [ ] rekisteröityminen  
-   * [ ] "olen unohtanut"  
 * [ ] (Kuitin skannaus)  
 * [ ] (mainokset)  
 * [ ] (lähin automaatti)  
 
 ### IN PROGRESS
-* [ ] Alapalkki  
-* [ ] Tietokannan suunnittelu
-* [ ] Käyttöliittymän rakentaminen
-* [ ] Iconien, värien ja logon viimeistely
-* [ ] Main activity ui
-* [ ] Kaavioiden rakennuksen selvitys
+* [ ] Käyttöliittymän rakentaminen  
+* [ ] home sivun ui  
+* [ ] dashboard sivun ui 
+* [ ] kirjautumis ui  
+* [ ] kirjautumis sivun toiminnallisuudet  
+   * [ ] passcode (ja sormenjälki)  
+   * [ ] rekisteröityminen  
+   * [ ] "olen unohtanut"
+* [ ] annual sivun ui  
+* [ ] annual sivun toiminnallisuudet  
+   * [ ] aikasarja kuluneesta budjetista ja toteutuneesta  
+   * [ ] prosenttikaavio  
+* [ ] profile sivun ui  
+* [ ] profile sivun toiminnallisuudet  
+   * [ ] lisää ja muokkaa tietokantaa  
+   * [ ] laskutoimitukset  
+   * [ ] streak ja palkinto 
 
 ### DONE
+* [x] Main activity ui
+* [x] Kaavioiden rakennuksen selvitys
+* [x] Iconien, värien ja logon viimeistely
+* [x] Tietokannan suunnittelu
+* [x] Alapalkki  
 * [x] Idean valinta  
 * [x] Suunnittele ulkoasu Figmalla  
     * [x] värit  
