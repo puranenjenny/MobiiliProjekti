@@ -1,5 +1,4 @@
-package com.example.mobiiliprojekti
-
+package com.example.mobiiliprojekti.services
 
 import android.content.ContentValues
 import android.content.Context
@@ -9,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+    // set up security manager
+    private val securityManager = SecurityManager()
     companion object {
         private const val DATABASE_NAME = "db_penny_paladin.db"
         private const val DATABASE_VERSION = 1
@@ -21,7 +22,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db.execSQL("CREATE TABLE category_budget (cb_id INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER, cat_budget INTEGER, date TEXT, user INTEGER, FOREIGN KEY(category) REFERENCES category(category_id), FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE monthly_budget (mb_id INTEGER PRIMARY KEY AUTOINCREMENT, mont_budget INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE purchase (purchase_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER DEFAULT 0, category INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, FOREIGN KEY(category) REFERENCES category_budget(category), FOREIGN KEY(user) REFERENCES user(user_id))")
-        db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0)")
+        db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0, salt TEXT NOT NULL)")
 
         val categories = arrayOf("Food", "Transportation", "Household", "Clothing", "Well-being", "Entertainment", "Other")
         val insertStatement = db.compileStatement("INSERT INTO category (category_name) VALUES (?)")
@@ -37,11 +38,18 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
     // Adding/registering new user to db
     fun addUser(username: String, email: String, password: String): Long {
+        // Generate salt
+        val salt = securityManager.generateSalt()
+
+        // Salt and hash password
+        val hashedPassword = securityManager.hashPassword(password, salt)
+
         val db = writableDatabase
         val contentValues = ContentValues().apply {
             put("username", username)
             put("email", email)
-            put("password", password)
+            put("password", hashedPassword)
+            put("salt", salt)
         }
         return try {
             val result = db.insertOrThrow("user", null, contentValues)
@@ -104,15 +112,30 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     fun loginUser(username: String, password: String): Boolean {
         var result = false
         val db = readableDatabase
-        val selection = "username = ? AND password = ?"
-        val selectionArgs = arrayOf(username, password)
-        val cursor = db.query("user", null, selection, selectionArgs, null, null, null)
+
+        // get inputted usernames hashed password and salt
+        val selection = "username = ?"
+        val selectionArgs = arrayOf(username)
+        val cursor = db.query("user", arrayOf("salt", "password"), selection, selectionArgs, null, null, null)
+        val passwordIndex = cursor.getColumnIndex("password")
+        val saltIndex = cursor.getColumnIndex("salt")
 
         try {
-            if (cursor.moveToFirst()) {
-                // User found in db
-                result = true
-            }
+                if (passwordIndex >= 0 && saltIndex >= 0) {
+                    if (cursor.moveToFirst()) {
+                        val salt = cursor.getBlob(saltIndex)
+                        val storedPassword = cursor.getString(passwordIndex)
+
+
+                        // hash inputted password with users unique salt
+                        val hashedPassword = SecurityManager().hashPassword(password, salt)
+
+                        // compare if inputted and stored password match
+                        if (hashedPassword == storedPassword) {
+                            result = true
+                        }
+                    }
+                }
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -122,8 +145,15 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return result
     }
 
+
     // set new password if user forgets it.
     fun resetPassword(username: String, email: String, newPassword: String): Boolean {
+        // Generate salt
+        val salt = securityManager.generateSalt()
+
+        // Salt and hash password
+        val hashedPassword = securityManager.hashPassword(newPassword, salt)
+
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM user WHERE username = ? AND email = ?", arrayOf(username, email))
         try {
@@ -132,7 +162,8 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 val userId = cursor.getInt(userIdIndex)
                 if (userId >= 0) {
                     val contentValues = ContentValues().apply {
-                        put("password", newPassword)
+                        put("password", hashedPassword)
+                        put("salt", salt)
                     }
                     val rowsAffected = db.update("user", contentValues, "user_id = ?", arrayOf(userId.toString()))
                     if (rowsAffected > 0) {
@@ -160,6 +191,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val emailIndex = cursor.getColumnIndex("email")
         val passwordIndex = cursor.getColumnIndex("password")
         val isAdminIndex = cursor.getColumnIndex("is_admin")
+        val saltIndex = cursor.getColumnIndex("salt")
 
         try {
         if (userIdIndex >= 0 && usernameIndex >= 0 && emailIndex >= 0 && passwordIndex >= 0 && isAdminIndex >= 0) {
@@ -170,8 +202,9 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                     val email = cursor.getString(emailIndex)
                     val password = cursor.getString(passwordIndex)
                     val isAdmin = cursor.getInt(isAdminIndex) == 1
+                    val salt = cursor.getBlob(saltIndex)
 
-                    println("User ID: $userId, Username: $username, Password: $password, Email: $email, isAdmin: $isAdmin")
+                    println("User ID: $userId, Username: $username, Password: $password, Email: $email, isAdmin: $isAdmin, salt: $salt")
                 } while (cursor.moveToNext())
             } else {
                 println("User table is empty")

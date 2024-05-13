@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.mobiiliprojekti.DatabaseManager
+import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {

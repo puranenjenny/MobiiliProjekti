@@ -1,4 +1,4 @@
-package com.example.mobiiliprojekti
+package com.example.mobiiliprojekti.services
 
 import javax.mail.Authenticator
 import javax.mail.Message

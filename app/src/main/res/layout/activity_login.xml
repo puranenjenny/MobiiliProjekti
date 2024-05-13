@@ -27,7 +27,7 @@
 
     <Button
         android:id="@+id/btn_register"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@android:color/transparent"
@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/txt_motto"
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
         android:text="@string/motto"
