@@ -83,8 +83,8 @@ class AnnualFragment : Fragment() {
         val incomeDataSet = LineDataSet(incomeEntries, "Income")
         val expenseDataSet = LineDataSet(expenseEntries, "Expenses")
 
-        incomeDataSet.color = Color.BLUE
-        expenseDataSet.color = Color.RED
+        incomeDataSet.color = Color.GREEN
+        expenseDataSet.color = Color.GRAY
 
         // Combine datasets into one data object
         val lineData = LineData(incomeDataSet, expenseDataSet)
