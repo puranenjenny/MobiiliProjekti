@@ -17,6 +17,9 @@ class MainActivity : AppCompatActivity() {
 
         val databaseManager = DatabaseManager(this)
         databaseManager.allCategories()
+        databaseManager.printMonthBudget() //prints monthly budget table to logcat for debugging
+        databaseManager.printCategoryBudgets() //prints category budget table to logcat for debugging
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
