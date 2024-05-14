@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/btn_monthback"
+            android:id="@+id/btnMonthBack"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
@@ -44,7 +44,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/txt_MonthYear"
+            android:id="@+id/txtMonthYearHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
@@ -56,7 +56,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btn_monthforward"
+            android:id="@+id/btnMonthForward"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"

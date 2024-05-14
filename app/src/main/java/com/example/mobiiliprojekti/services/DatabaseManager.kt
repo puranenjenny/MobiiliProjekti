@@ -237,4 +237,22 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return categoryList.toString()
     }
 
+    fun allCategoryNames(): List<String> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT category_name FROM category", null)
+        val categories = mutableListOf<String>()
+        try {
+            while (cursor.moveToNext()) {
+                val categoryName = cursor.getString(cursor.getColumnIndexOrThrow("category_name"))
+                categories.add(categoryName)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()  // exception
+        } finally {
+            cursor.close()
+            db.close()
+        }
+        return categories //return category names only
+    }
+
 }

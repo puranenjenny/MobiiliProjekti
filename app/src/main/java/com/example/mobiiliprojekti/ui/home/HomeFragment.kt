@@ -8,6 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobiiliprojekti.databinding.FragmentHomeBinding
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.TextStyle
+import java.util.Locale
+
 
 class HomeFragment : Fragment() {
 
@@ -16,6 +21,9 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private var currentMonthIndex: Int = LocalDate.now().monthValue
+    private var currentYear: Int = LocalDate.now().year
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,8 +40,62 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+        updateMonthYearDisplay() // initial month and year
+        updateDaysLeftDisplay() // setting days left
+
+        // click listeners for month navigation
+        binding.btnMonthBack.setOnClickListener {
+            navigateMonths(-1)
+        }
+        binding.btnMonthForward.setOnClickListener {
+            navigateMonths(1)
+        }
+
         return root
     }
+
+
+
+    // date functions
+    private fun navigateMonths(direction: Int) {
+        currentMonthIndex += direction
+        if (currentMonthIndex < 1) {
+            currentMonthIndex = 12
+            currentYear -= 1
+        } else if (currentMonthIndex > 12) {
+            currentMonthIndex = 1
+            currentYear += 1
+        }
+        updateMonthYearDisplay()
+        updateDaysLeftDisplay()
+    }
+    private fun updateMonthYearDisplay() {
+        val monthName = LocalDate.of(currentYear, currentMonthIndex, 1).month.getDisplayName(
+            TextStyle.FULL, Locale.getDefault())
+        binding.txtMonthYearHome.text = "$monthName $currentYear"
+    }
+
+    private fun updateDaysLeftDisplay() {
+        val today = LocalDate.now()
+        val yearMonth = YearMonth.of(currentYear, currentMonthIndex)
+        val totalDaysInMonth = yearMonth.lengthOfMonth()
+
+        val daysLeft = if (currentYear > today.year || (currentYear == today.year && currentMonthIndex > today.monthValue)) {
+            // future month
+            totalDaysInMonth
+        } else if (currentYear < today.year || (currentYear == today.year && currentMonthIndex < today.monthValue)) {
+            // past month
+            0
+        } else {
+            // current month
+            totalDaysInMonth - today.dayOfMonth + 1
+        }
+
+        binding.txtDaysleft.text = if (daysLeft > 0) "$daysLeft / $totalDaysInMonth" else "0"
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
