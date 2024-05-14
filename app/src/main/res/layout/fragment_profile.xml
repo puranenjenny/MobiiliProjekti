@@ -154,15 +154,15 @@
             android:layout_width="229dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="44dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="19dp"
+            android:layout_marginBottom="44dp"
             android:fontFamily="@font/poppins"
             android:text="Monthly budget"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/CategoriesText"
+            app:layout_constraintBottom_toTopOf="@+id/AddCategoryButton"
             app:layout_constraintEnd_toStartOf="@+id/MonthlyInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/InfoText" />
@@ -184,16 +184,16 @@
             android:layout_width="166dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="56dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="50dp"
             android:fontFamily="@font/poppins"
             android:text="Categories"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toStartOf="@+id/AddCategoryButton"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/BudgetText" />
 
         <TextView
             android:id="@+id/textView5"
@@ -348,11 +348,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/TreatText" />
 
+
         <TextView
             android:id="@+id/TreatTextDown"
             android:layout_width="85dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="29dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="36dp"
             android:fontFamily="@font/poppins"
             android:text="Treat"
@@ -362,12 +363,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/TreatInfoText" />
 
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/TreatInput"
             android:layout_width="140dp"
             android:layout_height="40dp"
-            android:layout_marginStart="124dp"
+            android:layout_marginStart="132dp"
             android:layout_marginTop="37dp"
             android:layout_marginBottom="3dp"
             android:background="@drawable/round_input"
@@ -490,13 +490,12 @@
             android:layout_width="69dp"
             android:layout_height="64dp"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="34dp"
+            android:layout_marginBottom="333dp"
             android:backgroundTint="@color/light_grey"
-            app:layout_constraintBottom_toTopOf="@+id/HousingInput"
+            app:layout_constraintBottom_toTopOf="@+id/SavingsText"
             app:layout_constraintStart_toEndOf="@+id/CategoriesText"
-            app:layout_constraintTop_toBottomOf="@+id/BudgetText"
-            app:layout_constraintVertical_bias="0.59"
+            app:layout_constraintTop_toBottomOf="@+id/MonthlyInput"
             app:srcCompat="@drawable/icon_add2" />
 
         <Button
