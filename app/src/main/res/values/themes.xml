@@ -18,6 +18,11 @@
         <item name="fullscreenBackgroundColor">@color/white</item>
         <item name="fullscreenTextColor">@color/black</item>
     </style>
+
+    <style name="SplashActivity" parent="Theme.MobiiliProjekti">
+        <item name="android:windowSplashScreenBackground">@color/main</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/logo3</item>
+    </style>
 </resources>
 
 
