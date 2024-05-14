@@ -4,16 +4,20 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.SharedViewModel
 
 class RegisterFragment : DialogFragment() {
 
     private lateinit var databaseManager: DatabaseManager
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
@@ -49,6 +53,10 @@ class RegisterFragment : DialogFragment() {
                     databaseManager.updateUserAsAdmin(result)
                 }
                 if (result != -1L) {
+                    // If user was added successfully, set the user ID in SharedViewModel
+                    sharedViewModel.setUserId(result) // set the user ID in SharedViewModel
+                    Log.d("Rekistöröityessä saatu ", "Login User ID: $result")
+
                     // If user was added successfully navigate to main screen and show toast
                     Toast.makeText(requireContext(), "New user added!", Toast.LENGTH_SHORT).show()
                     val intent = Intent(requireContext(), MainActivity::class.java)

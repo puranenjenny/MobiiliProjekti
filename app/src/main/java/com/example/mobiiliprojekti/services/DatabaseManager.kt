@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -255,4 +256,53 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return categories //return category names only
     }
 
+    // add a new purchase to the database
+    fun addPurchase(name: String, value: Double, category: String, date: String, userId: Long): Long {
+        val db = writableDatabase
+        val categoryId = getCategoryID(category)
+        return try {
+            val sql = "INSERT INTO purchase (name, value, category, date, user) VALUES (?, ?, ?, ?, ?)"
+            val stmt = db.compileStatement(sql)
+            stmt.bindString(1, name)
+            stmt.bindDouble(2, value)
+            stmt.bindLong(3, categoryId.toLong())
+            stmt.bindString(4, date)
+            stmt.bindLong(5, userId)
+            stmt.executeInsert()
+        } catch (e: SQLiteConstraintException) {
+            -1
+        } finally {
+            db.close()
+        }
+    }
+
+
+    // get category ID from category name
+    private fun getCategoryID(categoryName: String): Int {
+        var categoryId = -1
+        val db = readableDatabase
+        db.rawQuery("SELECT category_id FROM category WHERE category_name = ?", arrayOf(categoryName)).use { cursor ->
+            if (cursor.moveToFirst()) {
+                categoryId = cursor.getInt(cursor.getColumnIndexOrThrow("category_id"))
+            }
+        }
+        db.close()
+        return categoryId
+    }
+
+    // get user ID from username
+    fun getUserId(username: String): Long {
+        var userId = -1L
+        val db = readableDatabase
+        db.rawQuery("SELECT user_id FROM user WHERE username = ?", arrayOf(username)).use { cursor ->
+            if (cursor.moveToFirst()) {
+                userId = cursor.getLong(cursor.getColumnIndexOrThrow("user_id"))
+                println("userId on $userId")
+            } else {
+                Log.e("DatabaseError", "User not found: $username")
+            }
+        }
+        db.close()
+        return userId
+    }
 }

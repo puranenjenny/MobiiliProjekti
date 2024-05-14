@@ -3,6 +3,7 @@ package com.example.mobiiliprojekti
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,13 +12,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.SharedViewModel
 
 class LoginFragment : DialogFragment() {
 
     private lateinit var databaseManager: DatabaseManager
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
@@ -59,7 +63,12 @@ class LoginFragment : DialogFragment() {
             if (userName.isNotEmpty() && password.isNotEmpty()) {
                 val result = databaseManager.loginUser(userName, password)
                 if (result) {
-                    // If user and password are correct navigate to main screen
+                    // if user and password are correct, set the user ID in SharedViewModel
+                    val userId = databaseManager.getUserId(userName) // create a method to get the user ID by username
+                    sharedViewModel.setUserId(userId)
+                    Log.d("loginissa saatu ", "Login User ID: $userId")
+
+                    // navigate to main screen
                     val intent = Intent(requireContext(), MainActivity::class.java)
                     startActivity(intent)
                     // close login activity
