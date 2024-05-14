@@ -15,138 +15,114 @@
         >
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/OtherInputLayout"
-            android:layout_width="80dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/OtherInput"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginStart="173dp"
-            android:orientation="vertical"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_input"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:hint="100"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/SavingsNumberText"
             app:layout_constraintStart_toEndOf="@+id/OtherText"
-            app:layout_constraintTop_toBottomOf="@+id/HygieneInputLayout"
-            app:boxBackgroundMode="none">
+            app:layout_constraintTop_toBottomOf="@+id/HyqieneInput" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/OtherInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_input"
-                android:backgroundTint="@color/black"
-                android:fontFamily="@font/poppins"
-                android:hint="100"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:gravity="center"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/HygieneInputLayout"
-            android:layout_width="80dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/HyqieneInput"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginStart="148dp"
-            android:backgroundTint="#FEFEFE"
-            app:layout_constraintBottom_toTopOf="@+id/OtherInputLayout"
+            android:layout_marginStart="108dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/round_input"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:hint="50"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/OtherInput"
             app:layout_constraintStart_toEndOf="@+id/HygieneText"
-            app:layout_constraintTop_toBottomOf="@+id/FoodInputLayout"
-            app:boxBackgroundMode="none" >
+            app:layout_constraintTop_toBottomOf="@+id/FoodInput" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/HyqieneInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_input"
-                android:backgroundTint="@color/black"
-                android:fontFamily="@font/poppins"
-                android:hint="50"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:gravity="center"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/FoodInputLayout"
-            android:layout_width="80dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/FoodInput"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginStart="153dp"
+            android:layout_marginStart="116dp"
+            android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
-            app:layout_constraintBottom_toTopOf="@+id/HygieneInputLayout"
+            android:background="@drawable/round_input"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:hint="400"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/HyqieneInput"
             app:layout_constraintStart_toEndOf="@+id/FoodText"
-            app:layout_constraintTop_toBottomOf="@+id/ClothesInputLayout"
-            app:boxBackgroundMode="none">
+            app:layout_constraintTop_toBottomOf="@+id/ClothesInput" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/FoodInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_input"
-                android:backgroundTint="@color/black"
-                android:fontFamily="@font/poppins"
-                android:hint="400"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:gravity="center" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ClothesInputLayout"
-            android:layout_width="80dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ClothesInput"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginStart="150dp"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="2dp"
             android:layout_marginBottom="1dp"
-            app:layout_constraintBottom_toTopOf="@+id/FoodInputLayout"
+            android:background="@drawable/round_input"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:hint="120"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/FoodInput"
             app:layout_constraintStart_toEndOf="@+id/ClothesText"
-            app:layout_constraintTop_toBottomOf="@+id/HousingInputLayout"
-            app:boxBackgroundMode="none">
+            app:layout_constraintTop_toBottomOf="@+id/HousingInput" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ClothesInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_input"
-                android:backgroundTint="@color/black"
-                android:fontFamily="@font/poppins"
-                android:hint="120"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:gravity="center" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/HousingInputLayout"
-            android:layout_width="80dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/HousingInput"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginStart="149dp"
-            android:layout_marginTop="60dp"
-            app:boxBackgroundMode="none"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/round_input"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:hint="500"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/ClothesInput"
             app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/MonthlyInput">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/HousingInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_input"
-                android:backgroundTint="@color/black"
-                android:fontFamily="@font/poppins"
-                android:gravity="center"
-                android:hint="500"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/MonthlyInput" />
 
         <TextView
             android:id="@+id/WelcomeText"
             android:layout_width="260dp"
-            android:layout_height="43dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
             android:fontFamily="@font/poppins"
@@ -160,29 +136,33 @@
         <TextView
             android:id="@+id/InfoText"
             android:layout_width="354dp"
-            android:layout_height="85dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="9dp"
             android:fontFamily="@font/poppins"
             android:text="Here you can set your monthly budget and set your category and treat goals."
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/MonthlyInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/WelcomeText" />
 
         <TextView
             android:id="@+id/BudgetText"
-            android:layout_width="215dp"
-            android:layout_height="40dp"
+            android:layout_width="229dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="29dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="19dp"
+            android:fontFamily="@font/poppins"
             android:text="Monthly budget"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/CategoriesText"
             app:layout_constraintEnd_toStartOf="@+id/MonthlyInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/InfoText" />
@@ -191,7 +171,7 @@
             android:id="@+id/text_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="128dp"
             android:fontFamily="@font/poppins"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -201,127 +181,141 @@
 
         <TextView
             android:id="@+id/CategoriesText"
-            android:layout_width="148dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="19dp"
+            android:layout_width="166dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="50dp"
             android:fontFamily="@font/poppins"
             android:text="Categories"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/BudgetText" />
+            app:layout_constraintBottom_toTopOf="@+id/textView5"
+            app:layout_constraintEnd_toStartOf="@+id/AddCategoryButton"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="87dp"
-            android:layout_height="32dp"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="70dp"
+            android:fontFamily="@font/poppins"
             android:text="Housing"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/CategoriesText" />
 
         <TextView
             android:id="@+id/ClothesText"
-            android:layout_width="80dp"
-            android:layout_height="31dp"
+            android:layout_width="123dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="112dp"
+            android:fontFamily="@font/poppins"
             android:text="Clothes"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/ClothesInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
             android:id="@+id/FoodText"
-            android:layout_width="77dp"
-            android:layout_height="30dp"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="116dp"
+            android:fontFamily="@font/poppins"
             android:text="Food"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/FoodInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ClothesText" />
 
         <TextView
             android:id="@+id/HygieneText"
-            android:layout_width="wrap_content"
+            android:layout_width="126dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="108dp"
+            android:fontFamily="@font/poppins"
             android:text="Hygiene"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/HyqieneInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/FoodText" />
 
         <TextView
             android:id="@+id/OtherText"
-            android:layout_width="wrap_content"
+            android:layout_width="102dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="132dp"
+            android:fontFamily="@font/poppins"
             android:text="Other"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/OtherInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/HygieneText" />
 
         <TextView
             android:id="@+id/SavingsText"
-            android:layout_width="wrap_content"
+            android:layout_width="173dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="88dp"
+            android:fontFamily="@font/poppins"
             android:text="Your Savings"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/SavingsNumberText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/OtherText" />
 
         <TextView
             android:id="@+id/SavingsNumberText"
-            android:layout_width="57dp"
-            android:layout_height="27dp"
-            android:layout_marginStart="115dp"
+            android:layout_width="56dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="87dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:fontFamily="@font/poppins"
             android:text="118"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/SaveCategoriesButton"
             app:layout_constraintStart_toEndOf="@+id/SavingsText"
-            app:layout_constraintTop_toBottomOf="@+id/OtherInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/OtherInput" />
 
         <TextView
             android:id="@+id/TreatText"
-            android:layout_width="wrap_content"
+            android:layout_width="147dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
+            android:fontFamily="@font/poppins"
             android:text="Little Treat"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/SavingsText" />
 
@@ -337,135 +331,187 @@
 
         <TextView
             android:id="@+id/TreatInfoText"
-            android:layout_width="384dp"
-            android:layout_height="54dp"
+            android:layout_width="371dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="36dp"
             android:fontFamily="@font/poppins"
             android:text="After sticking to your budget for 4 month, you deserve a little treat!"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/TreatTextDown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/TreatText" />
 
         <TextView
             android:id="@+id/TreatTextDown"
-            android:layout_width="wrap_content"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="29dp"
             android:layout_marginTop="36dp"
-            android:layout_marginEnd="124dp"
+            android:fontFamily="@font/poppins"
             android:text="Treat"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@+id/TreatItemImput"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/TreatInfoText" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/TreatItemImput"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="127dp"
-            android:layout_marginTop="23dp"
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/TreatInput"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="124dp"
+            android:layout_marginTop="37dp"
+            android:layout_marginBottom="3dp"
+            android:background="@drawable/round_input"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/poppins"
+            android:hint="New shirt"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:boxStrokeColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/TreatBudgetInput"
             app:layout_constraintStart_toEndOf="@+id/TreatTextDown"
             app:layout_constraintTop_toBottomOf="@+id/TreatInfoText"
-            app:boxBackgroundMode="none">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/TreatInput"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_input"
-                android:backgroundTint="@color/black"
-                android:fontFamily="@font/poppins"
-                android:hint="New shirt"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:boxStrokeColor="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/TreatBudgetText"
-            android:layout_width="wrap_content"
+            android:layout_width="167dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="28dp"
             android:fontFamily="@font/poppins"
             android:text="Treat budget"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/TreatBudgetInput"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/TreatTextDown" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/TreatBudjetInput"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="49dp"
-            android:layout_marginBottom="97dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/TreatBudgetInput"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="49dp"
+            android:background="@drawable/round_input"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:inputType="number"
             android:textAlignment="center"
-            app:boxBackgroundMode="none"
-            app:layout_constraintBottom_toTopOf="@+id/DeleteUserBtn"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:boxStrokeColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/TreatBudgetText"
-            app:layout_constraintTop_toBottomOf="@+id/TreatItemImput">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_input"
-                android:fontFamily="@font/poppins"
-                android:gravity="center"
-                android:hint="40"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:boxStrokeColor="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/TreatInput" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/MonthlyInput"
             android:layout_width="116dp"
             android:layout_height="55dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="70dp"
             android:background="@drawable/round_input"
             android:fontFamily="@font/poppins"
+            android:gravity="center"
             android:hint="1500"
             android:inputType="number"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/HousingInputLayout"
+            app:layout_constraintBottom_toTopOf="@+id/HousingInput"
             app:layout_constraintStart_toEndOf="@+id/BudgetText"
-            app:layout_constraintTop_toBottomOf="@+id/InfoText"
-            android:gravity="center"/>
+            app:layout_constraintTop_toBottomOf="@+id/InfoText" />
 
         <Button
             android:id="@+id/DeleteUserBtn"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="154dp"
-            android:layout_marginTop="97dp"
+
+            android:layout_marginStart="148dp"
+            android:layout_marginTop="160dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/poppins"
             android:gravity="center_horizontal|center_vertical"
-
             android:text="Remove user"
             android:textColor="@android:color/white"
             app:backgroundTint="#B80101"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TreatBudjetInput" />
+            app:layout_constraintTop_toBottomOf="@+id/TreatBudgetInput" />
+
+        <Button
+            android:id="@+id/SaveCategoriesButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="19dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:text="Save"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/dark_green"
+            app:layout_constraintBottom_toTopOf="@+id/TreatInfoText"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/SavingsNumberText" />
+
+        <Button
+            android:id="@+id/SaveTreatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="272dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/button"
+            android:text="Save"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TreatBudgetInput" />
+
+        <ImageButton
+            android:id="@+id/AddCategoryButton"
+            android:layout_width="69dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/light_grey"
+            app:layout_constraintBottom_toTopOf="@+id/HousingInput"
+            app:layout_constraintStart_toEndOf="@+id/CategoriesText"
+            app:layout_constraintTop_toBottomOf="@+id/BudgetText"
+            app:layout_constraintVertical_bias="0.59"
+            app:srcCompat="@drawable/icon_add2" />
+
+        <Button
+            android:id="@+id/EditPasswordButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="131dp"
+            android:layout_marginTop="37dp"
+            android:layout_marginBottom="11dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/button"
+            android:text="Edit password"
+            app:layout_constraintBottom_toTopOf="@+id/DeleteUserBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/SaveTreatButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
