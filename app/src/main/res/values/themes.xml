@@ -18,6 +18,7 @@
         <item name="fullscreenBackgroundColor">@color/white</item>
         <item name="fullscreenTextColor">@color/black</item>
     </style>
+
 </resources>
 
 
