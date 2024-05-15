@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.SessionManager
 
 class EditUserFragment : DialogFragment() {
 
@@ -25,6 +26,9 @@ class EditUserFragment : DialogFragment() {
         // set up database manager
         databaseManager = DatabaseManager(requireContext())
 
+        //get logged in user id
+        val userId = SessionManager.getLoggedInUserId()
+
         // Look for text fields and buttons
         val userNameEditText: EditText = view.findViewById(R.id.txt_user_name_edit)
         val emailEditText: EditText = view.findViewById(R.id.txt_email_edit)
@@ -35,20 +39,30 @@ class EditUserFragment : DialogFragment() {
         val cancelEditButton: Button =  view.findViewById(R.id.btnCancelEditUser)
         val editPrimaryUserSwitch: SwitchCompat =  view.findViewById(R.id.switchEditPrimaryUser)
 
+        val (username, email, admin) = databaseManager.fetchUser(userId)
+        userNameEditText.setText(username)
+        emailEditText.setText(email)
+        if(admin==1){
+            editPrimaryUserSwitch.isChecked = true
+        }
 
         editUserButton.setOnClickListener {
             // set values of text fields to variables
             val userName = userNameEditText.text.toString()
-            val email = emailEditText.text.toString()
+            val userEmail = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
+            var isAdmin = 0
+            if (editPrimaryUserSwitch.isChecked) {
+                // If switch is selected set user as a primary user
+                databaseManager.updateUserAsAdmin(userId)
+                isAdmin = 1
+            }
+
 
             // Check that all fields are filled
-            if (userName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                val result = databaseManager.addUser(userName, email, password)
-                if (editPrimaryUserSwitch.isChecked) {
-                    // If switch is selected set user as a primary user
-                    databaseManager.updateUserAsAdmin(result)
-                }
+            if (userName.isNotEmpty() && userEmail.isNotEmpty() && password.isNotEmpty()) {
+                // update user information
+                val result = databaseManager.updateUser(userId, userName, userEmail, password, isAdmin)
                 if (result != -1L) {
                     // If user was added successfully navigate to main screen and show toast
                     Toast.makeText(requireContext(), "User information updated!", Toast.LENGTH_SHORT).show()
@@ -62,7 +76,7 @@ class EditUserFragment : DialogFragment() {
                 if (userName.isEmpty()) {
                     Toast.makeText(requireContext(), "Add username!", Toast.LENGTH_SHORT).show()
                 }
-                if (email.isEmpty()) {
+                if (userEmail.isEmpty()) {
                     Toast.makeText(requireContext(), "Add email address!", Toast.LENGTH_SHORT).show()
                 }
                 if (password.isEmpty()) {
