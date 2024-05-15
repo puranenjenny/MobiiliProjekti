@@ -26,7 +26,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db.execSQL("CREATE TABLE purchase (purchase_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER DEFAULT 0, category INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, FOREIGN KEY(category) REFERENCES category_budget(category), FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0, salt TEXT NOT NULL, is_logged_in INTEGER DEFAULT 0)")
 
-        val categories = arrayOf("Food", "Transportation", "Household", "Clothing", "Well-being", "Entertainment", "Other")
+        val categories = arrayOf("Food", "Transportation", "Housing", "Clothing", "Well-being", "Entertainment", "Other")
         val insertStatement = db.compileStatement("INSERT INTO category (category_name) VALUES (?)")
         categories.forEach { category ->
             insertStatement.bindString(1, category)
@@ -115,6 +115,76 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             db.close()
         }
         return adminUsername
+    }
+
+    fun fetchUser(userId: Long): Pair<String?, String?> {
+        val db = readableDatabase
+        var username: String? = null
+        var email: String? = null
+
+        try {
+            val cursor = db.rawQuery("SELECT username, email FROM user WHERE user_id = $userId", null)
+            if (cursor.moveToFirst()) {
+                val usernameIndex = cursor.getColumnIndex("username")
+                val emailIndex = cursor.getColumnIndex("email")
+                if (usernameIndex >= 0 && emailIndex >= 0) {
+                    username = cursor.getString(usernameIndex)
+                    email = cursor.getString(emailIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+        return Pair(username, email)
+    }
+
+    fun fetchMonthlyBudget(userId: Long): Int? {
+        val db = readableDatabase
+        var monthlyBudget: Int? = null
+
+        try {
+            val cursor = db.rawQuery("    SELECT month_budget FROM monthly_budget WHERE user = $userId ORDER BY date DESC LIMIT 1", null)
+            if (cursor.moveToFirst()) {
+                val monthlyBudgetIndex = cursor.getColumnIndex("month_budget")
+                if (monthlyBudgetIndex >= 0) {
+                    monthlyBudget = cursor.getInt(monthlyBudgetIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+        return monthlyBudget
+    }
+
+    //db.execSQL("CREATE TABLE category_budget (cb_id INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER, cat_budget INTEGER, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER, FOREIGN KEY(category) REFERENCES category(category_id), FOREIGN KEY(user) REFERENCES user(user_id))")
+
+    fun fetchHousingBudget(userId: Long): Int? {
+        val db = readableDatabase
+        var housingBudget: Int? = null
+
+        try {
+            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = 'food' ORDER BY cb.date DESC LIMIT 1", null)
+            Log.d("DeleteUserData", "Query executed successfully: $cursor")
+            if (cursor.moveToFirst()) {
+                val housingBudgetIndex = cursor.getColumnIndex("cat_budget")
+                if (housingBudgetIndex >= 0) {
+                    housingBudget = cursor.getInt(housingBudgetIndex)
+
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+        return housingBudget
     }
 
     //Check if user and password matches to user in db for login
@@ -339,7 +409,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return when (categoryName) {
             "Food" -> 250
             "Transportation" -> 200
-            "Household" -> 500
+            "Housing" -> 500
             "Clothing" -> 100
             "Well-being" -> 150
             "Entertainment" -> 100

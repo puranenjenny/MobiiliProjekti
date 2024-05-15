@@ -8,15 +8,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.mobiiliprojekti.DeleteUserFragment
 import com.example.mobiiliprojekti.EditUserFragment
 import com.example.mobiiliprojekti.LoginActivity
-import com.example.mobiiliprojekti.LoginFragment
 import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.databinding.FragmentProfileBinding
+import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.SessionManager
+import com.google.android.material.textfield.TextInputEditText
 
 class ProfileFragment : Fragment() {
+
+    private lateinit var databaseManager: DatabaseManager
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -29,10 +32,29 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        // set up database manager
+        databaseManager = DatabaseManager(requireContext())
+
+        var userId = SessionManager.getLoggedInUserId()
+
         // set up text fields and buttons to variables
         val btnEditUser: Button = root.findViewById(R.id.EditPasswordButton)
         val btnDeleteUser: Button = root.findViewById(R.id.DeleteUserBtn)
         val btnLogout: Button = root.findViewById(R.id.LogoutBtn)
+        val welcomeTxt: TextView = root.findViewById(R.id.WelcomeText)
+        val monthlyBudget: TextInputEditText = root.findViewById(R.id.MonthlyInput)
+        val housingBudget: TextInputEditText = root.findViewById(R.id.HousingInput)
+
+        //set text for welcome text
+        val (username, email) = databaseManager.fetchUser(userId)
+        welcomeTxt.text = "Welcome $username!"
+
+        //set text for welcome text
+        val setMonthlyBudget = databaseManager.fetchMonthlyBudget(userId)
+        monthlyBudget.hint = "$setMonthlyBudget"
+
+        val setHousingBudget = databaseManager.fetchHousingBudget(userId)
+        housingBudget.hint = "$setHousingBudget"
 
         // Set click listener for edit user button
         btnEditUser.setOnClickListener {

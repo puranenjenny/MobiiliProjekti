@@ -55,6 +55,40 @@
     <string name="deleteUser2">Here you can delete your user information.\n\n<b>Warning!</b>\nThis deletes all user related information permanently!</string>
     <string name="delete">Delete</string>
 
+    <!--Profile fragment-->
+    <string name="setBudget">Here you can set your monthly budget and set your category and treat goals.</string>
+    <string name="monthly">Monthly budget</string>
+    <string name="monthlyNum">0</string>
+    <string name="housing">Housing</string>
+    <string name="housingNum">0</string>
+    <string name="transportation">Transportation</string>
+    <string name="transportationNum">0</string>
+    <string name="clothes">Clothes</string>
+    <string name="clothesNum">0</string>
+    <string name="food">Food</string>
+    <string name="foodNum">0</string>
+    <string name="wellness">Well-being</string>
+    <string name="wellnessNum">0</string>
+    <string name="entertain">Entertainment</string>
+    <string name="entertainNum">0</string>
+    <string name="other">Other</string>
+    <string name="otherNum">0</string>
+    <string name="savings">Your savings:</string>
+    <string name="savingsNum">0</string>
+    <string name="littleTreat">Little Treat</string>
+    <string name="littleTreat2">After sticking to your budget for 4 month, you deserve a little treat!</string>
+    <string name="treat">Treat:</string>
+    <string name="treat2">Add treat</string>
+    <string name="treatNum">Treat budget:</string>
+    <string name="treatNum2">0</string>
+    <string name="logout">Logout</string>
+    <string name="categories">Categories</string>
+    <string name="addCategory">Add category button</string>
+    <string name="profile">Profile picture</string>
+    <string name="editProfile">Edit user profile</string>
+    <string name="treatPicture">Treat picture</string>
+
+    Monthly budget
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
