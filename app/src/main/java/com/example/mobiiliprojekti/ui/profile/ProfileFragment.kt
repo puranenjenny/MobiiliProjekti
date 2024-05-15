@@ -62,12 +62,12 @@ class ProfileFragment : Fragment() {
         val (username) = databaseManager.fetchUser(userId)
         welcomeTxt.text = "Welcome $username!"
 
-        //set monthly budget
+        //set monthly budget input field value with value that is stored to db
         val setMonthlyBudget = databaseManager.fetchMonthlyBudget(userId)
         monthlyBudget.setText(setMonthlyBudget.toString())
 
         // TODO: do this again with some kind of loop and function
-        //set category budgets
+        //set category budget input field values with values that is stored to db
         val setHousingBudget = databaseManager.fetchCategoryBudget(userId, "Housing")
         housingBudget.setText(setHousingBudget.toString())
 
@@ -122,7 +122,8 @@ class ProfileFragment : Fragment() {
             fragmentEditUser.show(parentFragmentManager, "edit_user_dialog")
         }
 
-        // Set click listener for save budget button
+        // Set click listener for save budget button for saving new budget
+        // TODO: should be changed so that if value is not changed no need for update?
         btnSaveBudget.setOnClickListener {
             val monthlyBudgetValue = monthlyBudget.text.toString()
             val monthlyBudgetNumber = monthlyBudgetValue.toIntOrNull()
@@ -193,11 +194,12 @@ class ProfileFragment : Fragment() {
         savings.text = savingsValue.toString()
     }
 
-    fun saveBudget(budget:TextInputEditText, categoryName: String){
-        val BudgetValue = budget.text.toString()
-        val BudgetNumber =BudgetValue.toIntOrNull()
-        if (BudgetNumber != null) {
-            databaseManager.changecategoryBudget(BudgetNumber, categoryName)
+    //function for saving category budget
+    private fun saveBudget(budget:TextInputEditText, categoryName: String){
+        val budgetValue = budget.text.toString()
+        val budgetNumber =budgetValue.toIntOrNull()
+        if (budgetNumber != null) {
+            databaseManager.changeCategoryBudget(budgetNumber, categoryName)
         }
         else {
             Toast.makeText(requireContext(), "Input budget $categoryName!", Toast.LENGTH_SHORT).show()

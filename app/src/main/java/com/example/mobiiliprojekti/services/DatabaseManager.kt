@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
+
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -89,12 +89,9 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             val result = db.update("user", contentValues, "user_id = ?", arrayOf(userId.toString()))
             db.close()
             println("user: $result")
-
-            SessionManager.setLoggedInUserId(userId.toLong()) // päivitetään kirjautuneen käyttäjän id, jos se on muuttunut
-
-            result.toLong() // Palautetaan päivityksen tulos
+            result.toLong()
         } catch (e: SQLiteConstraintException) {
-            // Palautetaan virheen käsittelyä varten
+            // for error handling
             -1
         }
     }
@@ -146,6 +143,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return adminUsername
     }
 
+    //function gets logged in users information
     fun fetchUser(userId: Long): Triple<String?, String?, Int?> {
         val db = readableDatabase
         var username: String? = null
@@ -173,12 +171,13 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return  Triple(username, email, admin)
     }
 
+    //function gets logged in users monthly budget
     fun fetchMonthlyBudget(userId: Long): Int? {
         val db = readableDatabase
         var monthlyBudget: Int? = null
 
         try {
-            val cursor = db.rawQuery("    SELECT month_budget FROM monthly_budget WHERE user = $userId ORDER BY date DESC LIMIT 1", null)
+            val cursor = db.rawQuery("SELECT month_budget FROM monthly_budget WHERE user = $userId ORDER BY date DESC LIMIT 1", null)
             if (cursor.moveToFirst()) {
                 val monthlyBudgetIndex = cursor.getColumnIndex("month_budget")
                 if (monthlyBudgetIndex >= 0) {
@@ -194,6 +193,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return monthlyBudget
     }
 
+    //function gets logged in users category budget by category name
     fun fetchCategoryBudget(userId: Long, categoryName: String): Int? {
         val db = readableDatabase
         var categoryBudget: Int? = null
@@ -368,6 +368,8 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return categories //return category names only
     }
 
+    // this function allows to change monthly budget. It makes new budget instead of updating old
+    // TODO: Is new budget way togo or should old one be updated?
     fun changeMonthlyBudget(monthlyBudget: Int) {
         try {
             val userId = SessionManager.getLoggedInUserId() // get user id that is registered
@@ -377,8 +379,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 put("month_budget", monthlyBudget)
                 put("user", userId)
             }
-
-            val result = db.insert("monthly_budget", null, contentValues)
+            db.insert("monthly_budget", null, contentValues)
             db.close()
 
         } catch (e: Exception) {
@@ -386,12 +387,14 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
-    fun changecategoryBudget(categoryBudget: Int, categoryName: String) {
+    // this function allows to change category budget by category name. It makes new budget instead of updating old
+    // TODO: Is new budget way togo or should old one be updated
+    fun changeCategoryBudget(categoryBudget: Int, categoryName: String) {
         try {
             val userId = SessionManager.getLoggedInUserId() // get user id that is registered
             val db = writableDatabase
 
-            // Haetaan kategorian id nimen perusteella
+            // Use other function to get category id by category name
             val categoryId = fetchCategoryIdByName(categoryName)
 
             if (categoryId.toInt() != -1) {
@@ -414,6 +417,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
+    // this function gets category id by category name
     private fun fetchCategoryIdByName(categoryName: String): Long {
         val db = readableDatabase
         var categoryId: Long = -1

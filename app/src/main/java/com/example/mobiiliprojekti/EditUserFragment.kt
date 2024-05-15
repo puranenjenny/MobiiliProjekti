@@ -49,7 +49,7 @@ class EditUserFragment : DialogFragment() {
         editUserButton.setOnClickListener {
             // set values of text fields to variables
             val userName = userNameEditText.text.toString()
-            val email = emailEditText.text.toString()
+            val userEmail = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
             var isAdmin = 0
             if (editPrimaryUserSwitch.isChecked) {
@@ -60,9 +60,9 @@ class EditUserFragment : DialogFragment() {
 
 
             // Check that all fields are filled
-            if (userName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+            if (userName.isNotEmpty() && userEmail.isNotEmpty() && password.isNotEmpty()) {
                 // update user information
-                val result = databaseManager.updateUser(userId, userName, email, password, isAdmin)
+                val result = databaseManager.updateUser(userId, userName, userEmail, password, isAdmin)
                 if (result != -1L) {
                     // If user was added successfully navigate to main screen and show toast
                     Toast.makeText(requireContext(), "User information updated!", Toast.LENGTH_SHORT).show()
@@ -76,7 +76,7 @@ class EditUserFragment : DialogFragment() {
                 if (userName.isEmpty()) {
                     Toast.makeText(requireContext(), "Add username!", Toast.LENGTH_SHORT).show()
                 }
-                if (email.isEmpty()) {
+                if (userEmail.isEmpty()) {
                     Toast.makeText(requireContext(), "Add email address!", Toast.LENGTH_SHORT).show()
                 }
                 if (password.isEmpty()) {
