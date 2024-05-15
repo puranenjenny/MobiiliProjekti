@@ -1,19 +1,17 @@
 package com.example.mobiiliprojekti.services
+object SessionManager {
 
-class SessionManager {
+    private var loggedInUserId: Long = -1
 
-        private var loggedInUserId: Long = -1
+    fun setLoggedInUserId(userId: Long) {
+        loggedInUserId = userId
+    }
 
-        fun setLoggedInUserId(userId: Long) {
-            loggedInUserId = userId
-        }
+    fun getLoggedInUserId(): Long {
+        return loggedInUserId
+    }
 
-        fun getLoggedInUserId(): Long {
-            return loggedInUserId
-        }
-
-        fun clearLoggedInUserId() {
-            loggedInUserId = -1
-        }
-
+    fun clearLoggedInUserId() {
+        loggedInUserId = -1
+    }
 }

@@ -45,9 +45,20 @@
     <string name="txt_lastpay">Last payments</string>
     <string name="category">Category</string>
 
+    <!--edit user fragment-->
+    <string name="editUser">Edit user information</string>
+    <string name="editUser2">Here you can edit your user information.</string>
+    <string name="save">Save</string>
+
+    <!--delete user fragment-->
+    <string name="deleteUser">Delete user</string>
+    <string name="deleteUser2">Here you can delete your user information.\n\n<b>Warning!</b>\nThis deletes all user related information permanently!</string>
+    <string name="delete">Delete</string>
+
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
+
 
 
 </resources>

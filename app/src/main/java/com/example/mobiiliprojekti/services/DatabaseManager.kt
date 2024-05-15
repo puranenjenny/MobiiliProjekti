@@ -5,12 +5,13 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     // set up security manager
     private val securityManager = SecurityManager()
-    private val sessionManager = SessionManager()
+
     companion object {
         private const val DATABASE_NAME = "db_penny_paladin.db"
         private const val DATABASE_VERSION = 1
@@ -57,7 +58,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             db.close()
             println("user: $result")
 
-            sessionManager.setLoggedInUserId(result) //sets user id to session manager for tracking current user
+            SessionManager.setLoggedInUserId(result) //sets user id to session manager for tracking current user
 
             insertDefaultMonthlyBudget() // sets default monthly budget for registered user
             insertDefaultCategoryBudgets() // sets default category budgets for registered user
@@ -144,7 +145,8 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                         if (hashedPassword == storedPassword) {
                             result = true
 
-                            sessionManager.setLoggedInUserId(userId)  //sets user id to session manager for tracking current user
+                            SessionManager.setLoggedInUserId(userId)  //sets user id to session manager for tracking current user
+                            println("Login UserId: ${SessionManager.getLoggedInUserId()}")
                         }
                     }
                 }
@@ -195,7 +197,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
 
     // this prints all user to terminal for debugging -->
-    private fun printAllUsers() {
+    fun printAllUsers() {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM user", null)
         val userIdIndex = cursor.getColumnIndex("user_id")
@@ -270,7 +272,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     // this function is used to add default monthly budget for new user
     private fun insertDefaultMonthlyBudget() {
         try {
-            val userId = sessionManager.getLoggedInUserId() // get user id that is registered
+            val userId = SessionManager.getLoggedInUserId() // get user id that is registered
             val defaultBudget = 1500 // default monthly budget
 
             val db = writableDatabase
@@ -292,7 +294,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     // this function is used to add default category budgets for new user
     private fun insertDefaultCategoryBudgets() {
         try {
-            val userId = sessionManager.getLoggedInUserId() // get user id that is registered
+            val userId = SessionManager.getLoggedInUserId() // get user id that is registered
 
             val db = writableDatabase
 
@@ -343,6 +345,31 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             "Entertainment" -> 100
             "Other" -> 50
             else -> 0 // default value if category is unknown
+        }
+    }
+
+    // this function deleter all user related data from database
+    fun deleteUserData(userId: Long): Boolean {
+        val db = writableDatabase
+        val deleteQueries = arrayOf(
+            "DELETE FROM category_budget WHERE user = $userId",
+            "DELETE FROM monthly_budget WHERE user = $userId",
+            "DELETE FROM purchase WHERE user = $userId",
+            "DELETE FROM user WHERE user_id = $userId"
+        )
+
+        return try {
+            db.beginTransaction()
+            for (query in deleteQueries) {
+                db.execSQL(query)
+            }
+            db.setTransactionSuccessful()
+            true
+        } catch (e: Exception) {
+            false
+        } finally {
+            db.endTransaction()
+            db.close()
         }
     }
 

@@ -3,15 +3,21 @@ package com.example.mobiiliprojekti
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var databaseManager: DatabaseManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val sessionManager = SessionManager()
-        sessionManager.clearLoggedInUserId()
+        //for debugging
+        databaseManager = DatabaseManager(this)
+        databaseManager.printAllUsers()
+        SessionManager.clearLoggedInUserId()
+        println(SessionManager.getLoggedInUserId())
 
         // set register button to variable
         val btnRegister: Button = findViewById(R.id.btn_register)
