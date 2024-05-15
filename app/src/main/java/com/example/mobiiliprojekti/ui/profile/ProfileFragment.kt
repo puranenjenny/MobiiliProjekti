@@ -2,6 +2,7 @@ package com.example.mobiiliprojekti.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,8 @@ import com.example.mobiiliprojekti.databinding.FragmentProfileBinding
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import com.google.android.material.textfield.TextInputEditText
+import android.text.TextWatcher
+import android.widget.Toast
 
 class ProfileFragment : Fragment() {
 
@@ -35,36 +38,112 @@ class ProfileFragment : Fragment() {
         // set up database manager
         databaseManager = DatabaseManager(requireContext())
 
-        var userId = SessionManager.getLoggedInUserId()
+        //get logged in user id
+        val userId = SessionManager.getLoggedInUserId()
+
 
         // set up text fields and buttons to variables
+        val btnSaveBudget: Button = root.findViewById(R.id.SaveCategoriesButton)
         val btnEditUser: Button = root.findViewById(R.id.EditPasswordButton)
         val btnDeleteUser: Button = root.findViewById(R.id.DeleteUserBtn)
         val btnLogout: Button = root.findViewById(R.id.LogoutBtn)
         val welcomeTxt: TextView = root.findViewById(R.id.WelcomeText)
         val monthlyBudget: TextInputEditText = root.findViewById(R.id.MonthlyInput)
         val housingBudget: TextInputEditText = root.findViewById(R.id.HousingInput)
+        val transportBudget: TextInputEditText = root.findViewById(R.id.TransportationInput)
+        val foodBudget: TextInputEditText = root.findViewById(R.id.FoodInput)
+        val clothesBudget: TextInputEditText = root.findViewById(R.id.ClothesInput)
+        val wellnessBudget: TextInputEditText = root.findViewById(R.id.HyqieneInput)
+        val entertainmentBudget: TextInputEditText = root.findViewById(R.id.EntertainmentInput)
+        val otherBudget: TextInputEditText = root.findViewById(R.id.OtherInput)
+        val savings: TextView = root.findViewById(R.id.SavingsNumberText)
 
         //set text for welcome text
-        val (username, email) = databaseManager.fetchUser(userId)
+        val (username) = databaseManager.fetchUser(userId)
         welcomeTxt.text = "Welcome $username!"
 
-        //set text for welcome text
+        //set monthly budget
         val setMonthlyBudget = databaseManager.fetchMonthlyBudget(userId)
-        monthlyBudget.hint = "$setMonthlyBudget"
+        monthlyBudget.setText(setMonthlyBudget.toString())
 
-        val setHousingBudget = databaseManager.fetchHousingBudget(userId)
-        housingBudget.hint = "$setHousingBudget"
+        // TODO: do this again with some kind of loop and function
+        //set category budgets
+        val setHousingBudget = databaseManager.fetchCategoryBudget(userId, "Housing")
+        housingBudget.setText(setHousingBudget.toString())
+
+        val setTransportBudget = databaseManager.fetchCategoryBudget(userId, "Transportation")
+        transportBudget.setText(setTransportBudget.toString())
+
+        val setFoodBudget = databaseManager.fetchCategoryBudget(userId, "Food")
+        foodBudget.setText(setFoodBudget.toString())
+        val setClothesBudget = databaseManager.fetchCategoryBudget(userId, "Clothes")
+        clothesBudget.setText(setClothesBudget.toString())
+
+        val setWellnessBudget = databaseManager.fetchCategoryBudget(userId, "Well-being")
+        wellnessBudget.setText(setWellnessBudget.toString())
+
+        val setEntertainmentBudget = databaseManager.fetchCategoryBudget(userId, "Entertainment")
+        entertainmentBudget.setText(setEntertainmentBudget.toString())
+
+        val setOtherBudget = databaseManager.fetchCategoryBudget(userId, "Other")
+        otherBudget.setText(setOtherBudget.toString())
+
+        //Calculate savings
+        calculateSavings(monthlyBudget, housingBudget, transportBudget, foodBudget, clothesBudget, wellnessBudget, entertainmentBudget, otherBudget, savings)
+
+        // TextWatcher for listening to changes in TextInputEditText fields
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                // calculate savings after changes
+                calculateSavings(monthlyBudget, housingBudget, transportBudget, foodBudget, clothesBudget, wellnessBudget, entertainmentBudget, otherBudget, savings)
+            }
+        }
+
+        // TODO: do this again with some kind of loop?
+        // Add TextWatcher to all TextInputEditText fields
+        monthlyBudget.addTextChangedListener(textWatcher)
+        housingBudget.addTextChangedListener(textWatcher)
+        transportBudget.addTextChangedListener(textWatcher)
+        foodBudget.addTextChangedListener(textWatcher)
+        clothesBudget.addTextChangedListener(textWatcher)
+        wellnessBudget.addTextChangedListener(textWatcher)
+        entertainmentBudget.addTextChangedListener(textWatcher)
+        otherBudget.addTextChangedListener(textWatcher)
 
         // Set click listener for edit user button
         btnEditUser.setOnClickListener {
-            // New instance of edit user fragent
+            // New instance of edit user fragment
             val fragmentEditUser = EditUserFragment()
             // Show fragment as dialog
             fragmentEditUser.show(parentFragmentManager, "edit_user_dialog")
         }
 
-        // Set click listener for edit user button
+        // Set click listener for save budget button
+        btnSaveBudget.setOnClickListener {
+            val monthlyBudgetValue = monthlyBudget.text.toString()
+            val monthlyBudgetNumber = monthlyBudgetValue.toIntOrNull()
+            if (monthlyBudgetNumber != null) {
+                databaseManager.changeMonthlyBudget(monthlyBudgetNumber)
+                Toast.makeText(requireContext(), "New budgets stored success fully!", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(requireContext(), "Input budgets!", Toast.LENGTH_SHORT).show()
+            }
+            // TODO: do this again with some kind of loop?
+            saveBudget(housingBudget, "Housing")
+            saveBudget(transportBudget, "Transportation")
+            saveBudget(foodBudget, "Food")
+            saveBudget(clothesBudget, "Clothes")
+            saveBudget(wellnessBudget, "Well-being")
+            saveBudget(entertainmentBudget, "Entertainment")
+            saveBudget(otherBudget, "Other")
+        }
+
+        // Set click listener for delete user button
         btnDeleteUser.setOnClickListener {
             // New instance of Delete user fragent
             val fragmentDeleteUser = DeleteUserFragment()
@@ -72,6 +151,7 @@ class ProfileFragment : Fragment() {
             fragmentDeleteUser.show(parentFragmentManager, "Delete_user_dialog")
         }
 
+        // Set click listener for logout button
         btnLogout.setOnClickListener {
             // create intent for starting a new LoginActivity
             val intent = Intent(requireContext(), LoginActivity::class.java)
@@ -96,5 +176,31 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    // Function to calculate savings based on the values in TextInputEditText fields
+    fun calculateSavings(monthlyBudget:TextInputEditText, housingBudget:TextInputEditText, transportBudget:TextInputEditText, foodBudget:TextInputEditText, clothesBudget:TextInputEditText, wellnessBudget:TextInputEditText, entertainmentBudget:TextInputEditText, otherBudget:TextInputEditText, savings:TextView) {
+        val monthly = monthlyBudget.text.toString().toIntOrNull() ?: 0
+        val housing = housingBudget.text.toString().toIntOrNull() ?: 0
+        val transport = transportBudget.text.toString().toIntOrNull() ?: 0
+        val food = foodBudget.text.toString().toIntOrNull() ?: 0
+        val clothes = clothesBudget.text.toString().toIntOrNull() ?: 0
+        val wellness = wellnessBudget.text.toString().toIntOrNull() ?: 0
+        val entertainment = entertainmentBudget.text.toString().toIntOrNull() ?: 0
+        val other = otherBudget.text.toString().toIntOrNull() ?: 0
+
+        val savingsValue = monthly - (housing + transport + food + clothes + wellness + entertainment + other)
+        savings.text = savingsValue.toString()
+    }
+
+    fun saveBudget(budget:TextInputEditText, categoryName: String){
+        val BudgetValue = budget.text.toString()
+        val BudgetNumber =BudgetValue.toIntOrNull()
+        if (BudgetNumber != null) {
+            databaseManager.changecategoryBudget(BudgetNumber, categoryName)
+        }
+        else {
+            Toast.makeText(requireContext(), "Input budget $categoryName!", Toast.LENGTH_SHORT).show()
+        }
     }
 }

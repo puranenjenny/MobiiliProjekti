@@ -26,7 +26,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db.execSQL("CREATE TABLE purchase (purchase_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER DEFAULT 0, category INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, FOREIGN KEY(category) REFERENCES category_budget(category), FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0, salt TEXT NOT NULL, is_logged_in INTEGER DEFAULT 0)")
 
-        val categories = arrayOf("Food", "Transportation", "Housing", "Clothing", "Well-being", "Entertainment", "Other")
+        val categories = arrayOf("Food", "Transportation", "Housing", "Clothes", "Well-being", "Entertainment", "Other")
         val insertStatement = db.compileStatement("INSERT INTO category (category_name) VALUES (?)")
         categories.forEach { category ->
             insertStatement.bindString(1, category)
@@ -66,6 +66,35 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             result
         } catch (e: SQLiteConstraintException) {
             // returns -1 to handle exception in ui fragment
+            -1
+        }
+    }
+
+    fun updateUser(userId: Long, username: String, email: String, password: String, isAdmin: Int): Long {
+        // Generate salt
+        val salt = securityManager.generateSalt()
+
+        // Salt and hash password
+        val hashedPassword = securityManager.hashPassword(password, salt)
+
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("username", username)
+            put("email", email)
+            put("password", hashedPassword)
+            put("salt", salt)
+            put("is_admin", isAdmin)
+        }
+        return try {
+            val result = db.update("user", contentValues, "user_id = ?", arrayOf(userId.toString()))
+            db.close()
+            println("user: $result")
+
+            SessionManager.setLoggedInUserId(userId.toLong()) // päivitetään kirjautuneen käyttäjän id, jos se on muuttunut
+
+            result.toLong() // Palautetaan päivityksen tulos
+        } catch (e: SQLiteConstraintException) {
+            // Palautetaan virheen käsittelyä varten
             -1
         }
     }
@@ -117,19 +146,22 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return adminUsername
     }
 
-    fun fetchUser(userId: Long): Pair<String?, String?> {
+    fun fetchUser(userId: Long): Triple<String?, String?, Int?> {
         val db = readableDatabase
         var username: String? = null
         var email: String? = null
+        var admin: Int? = null
 
         try {
-            val cursor = db.rawQuery("SELECT username, email FROM user WHERE user_id = $userId", null)
+            val cursor = db.rawQuery("SELECT username, email, is_admin FROM user WHERE user_id = $userId", null)
             if (cursor.moveToFirst()) {
                 val usernameIndex = cursor.getColumnIndex("username")
                 val emailIndex = cursor.getColumnIndex("email")
-                if (usernameIndex >= 0 && emailIndex >= 0) {
+                val adminIndex = cursor.getColumnIndex("is_admin")
+                if (usernameIndex >= 0 && emailIndex >= 0 && adminIndex >= 0) {
                     username = cursor.getString(usernameIndex)
                     email = cursor.getString(emailIndex)
+                    admin = cursor.getInt(adminIndex)
                 }
             }
             cursor.close()
@@ -138,7 +170,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } finally {
             db.close()
         }
-        return Pair(username, email)
+        return  Triple(username, email, admin)
     }
 
     fun fetchMonthlyBudget(userId: Long): Int? {
@@ -162,19 +194,16 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return monthlyBudget
     }
 
-    //db.execSQL("CREATE TABLE category_budget (cb_id INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER, cat_budget INTEGER, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER, FOREIGN KEY(category) REFERENCES category(category_id), FOREIGN KEY(user) REFERENCES user(user_id))")
-
-    fun fetchHousingBudget(userId: Long): Int? {
+    fun fetchCategoryBudget(userId: Long, categoryName: String): Int? {
         val db = readableDatabase
-        var housingBudget: Int? = null
+        var categoryBudget: Int? = null
 
         try {
-            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = 'food' ORDER BY cb.date DESC LIMIT 1", null)
-            Log.d("DeleteUserData", "Query executed successfully: $cursor")
+            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = '$categoryName' ORDER BY cb.date DESC LIMIT 1", null)
             if (cursor.moveToFirst()) {
-                val housingBudgetIndex = cursor.getColumnIndex("cat_budget")
-                if (housingBudgetIndex >= 0) {
-                    housingBudget = cursor.getInt(housingBudgetIndex)
+                val categoryBudgetIndex = cursor.getColumnIndex("cat_budget")
+                if (categoryBudgetIndex >= 0) {
+                    categoryBudget = cursor.getInt(categoryBudgetIndex)
 
                 }
             }
@@ -184,7 +213,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } finally {
             db.close()
         }
-        return housingBudget
+        return categoryBudget
     }
 
     //Check if user and password matches to user in db for login
@@ -339,6 +368,74 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return categories //return category names only
     }
 
+    fun changeMonthlyBudget(monthlyBudget: Int) {
+        try {
+            val userId = SessionManager.getLoggedInUserId() // get user id that is registered
+
+            val db = writableDatabase
+            val contentValues = ContentValues().apply {
+                put("month_budget", monthlyBudget)
+                put("user", userId)
+            }
+
+            val result = db.insert("monthly_budget", null, contentValues)
+            db.close()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun changecategoryBudget(categoryBudget: Int, categoryName: String) {
+        try {
+            val userId = SessionManager.getLoggedInUserId() // get user id that is registered
+            val db = writableDatabase
+
+            // Haetaan kategorian id nimen perusteella
+            val categoryId = fetchCategoryIdByName(categoryName)
+
+            if (categoryId.toInt() != -1) {
+                val contentValues = ContentValues().apply {
+                    put("cat_budget", categoryBudget)
+                    put("user", userId)
+                    put("category", categoryId)
+                }
+
+                val result = db.insert("category_budget", null, contentValues)
+                db.close()
+
+                println("Category budget changed: $result") // for debugging
+            } else {
+                println("Category ID not found for category: $categoryName")
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun fetchCategoryIdByName(categoryName: String): Long {
+        val db = readableDatabase
+        var categoryId: Long = -1
+
+        try {
+            val cursor = db.rawQuery("SELECT category_id FROM category WHERE category_name = '$categoryName'", null)
+
+
+            if (cursor.moveToFirst()) {
+                val categoryIdIndex = cursor.getColumnIndex("category_id")
+                if (categoryIdIndex >= 0) {
+                    categoryId = cursor.getLong(categoryIdIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return categoryId
+    }
+
     // this function is used to add default monthly budget for new user
     private fun insertDefaultMonthlyBudget() {
         try {
@@ -410,7 +507,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             "Food" -> 250
             "Transportation" -> 200
             "Housing" -> 500
-            "Clothing" -> 100
+            "Clothes" -> 100
             "Well-being" -> 150
             "Entertainment" -> 100
             "Other" -> 50

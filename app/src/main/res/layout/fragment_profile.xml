@@ -143,8 +143,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -181,8 +180,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp" />
 
         </LinearLayout>
 
@@ -192,7 +190,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/linearLayoutTransport">
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutFood">
 
             <TextView
                 android:id="@+id/ClothesText"
@@ -219,8 +217,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
 
         </LinearLayout>
 
@@ -230,7 +227,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutClothes">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutTransport">
 
             <TextView
                 android:id="@+id/FoodText"
@@ -257,8 +254,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -267,7 +263,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutFood">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutClothes">
 
             <TextView
                 android:id="@+id/HygieneText"
@@ -294,8 +290,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -331,8 +326,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -368,8 +362,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -415,7 +408,7 @@
             android:fontFamily="@font/poppins"
             android:text="@string/save"
             android:textColor="@android:color/white"
-            app:backgroundTint="@color/dark_green"
+            app:backgroundTint="@color/main"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutSavings" />
 
@@ -497,7 +490,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 app:boxStrokeColor="@color/black" />
 
         </LinearLayout>
@@ -535,7 +527,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="24sp"
-                android:textStyle="bold"
                 android:hint="@string/treatNum2"
                 app:boxStrokeColor="@color/black" />
 
@@ -548,8 +539,8 @@
             android:layout_marginStart="270dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/button"
             android:text="@string/save"
+            android:fontFamily="@font/poppins"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutTreat3" />
 
@@ -589,7 +580,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/button"
             android:fontFamily="@font/poppins"
             android:text="@string/editUser"
             app:layout_constraintEnd_toEndOf="parent"
@@ -619,7 +609,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="40dp"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/button"
             android:fontFamily="@font/poppins"
             android:text="@string/logout"
             app:layout_constraintBottom_toBottomOf="parent"
