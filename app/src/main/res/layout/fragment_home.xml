@@ -331,19 +331,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_addNew" />
 
+
         <ScrollView
             android:id="@+id/sv_lastpayments_home"
-            android:layout_width="354dp"
-            android:layout_height="157dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
             android:background="#F0F4EF"
             android:contentDescription="last payments listed"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_lastpaymentsname">
 
             <LinearLayout
+                android:id="@+id/lin_lastpayments_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />

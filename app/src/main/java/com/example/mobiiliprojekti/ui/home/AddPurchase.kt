@@ -74,7 +74,6 @@ class AddPurchaseFragment : DialogFragment() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        // Set the default date to today's date
         btnDate.text = "$day/${month + 1}/$year"
 
         btnDate.setOnClickListener {
@@ -125,10 +124,9 @@ class AddPurchaseFragment : DialogFragment() {
                 Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT).show()
             }
             if (userId == -1L) {
-                Log.e("AddPurchaseFragment", "User ID is not valid.")
+                Log.e("AddPurchaseFragment", "User ID is not available.")
                 Toast.makeText(requireContext(), "User ID not available!", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 }
