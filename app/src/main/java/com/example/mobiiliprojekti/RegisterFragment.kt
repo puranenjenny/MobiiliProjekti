@@ -11,25 +11,24 @@ import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SharedViewModel
 
 class RegisterFragment : DialogFragment() {
 
     private lateinit var databaseManager: DatabaseManager
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var sharedViewModel: SharedViewModel
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.fragment_register, null)
 
-        // set view for dialog
         builder.setView(view)
 
-        // set up database manager
         databaseManager = DatabaseManager(requireContext())
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
 
-        // Look for text fields and buttons
         val userNameEditText: EditText = view.findViewById(R.id.txt_user_name)
         val emailEditText: EditText = view.findViewById(R.id.txt_email)
         val passwordEditText: EditText = view.findViewById(R.id.txt_psw_register)
@@ -40,35 +39,29 @@ class RegisterFragment : DialogFragment() {
 
 
         registerButton.setOnClickListener {
-            // set values of text fields to variables
             val userName = userNameEditText.text.toString()
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            // Check that all fields are filled
             if (userName.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
                 val result = databaseManager.addUser(userName, email, password)
                 if (primaryUserSwitch.isChecked) {
-                    // If switch is selected set user as a primary user
                     databaseManager.updateUserAsAdmin(result)
                 }
                 if (result != -1L) {
-                    // If user was added successfully, set the user ID in SharedViewModel
-                    sharedViewModel.setUserId(result) // set the user ID in SharedViewModel
-                    Log.d("Rekistöröityessä saatu ", "Login User ID: $result")
+                    val userId = databaseManager.getUserId(userName)
+                    if (userId != -1) {
+                        sharedViewModel.setUserId(userId)
+                        Log.d("RegisterFragment ", "Register User ID: $userId")
 
-                    // If user was added successfully navigate to main screen and show toast
-                    Toast.makeText(requireContext(), "New user added!", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    // close login activity
-                    requireActivity().finish()
+                        Toast.makeText(requireContext(), "New user added!", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
                 } else {
-                    // Show toast if user exist already in db
                     Toast.makeText(requireContext(), "Error: Username or email already exist", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                //show toast if some of the text fields is empty
                 if (userName.isEmpty()) {
                     Toast.makeText(requireContext(), "Add username!", Toast.LENGTH_SHORT).show()
                 }
@@ -81,13 +74,11 @@ class RegisterFragment : DialogFragment() {
             }
         }
 
-        // onClickListener for "Cancel"-button
         cancelButton.setOnClickListener {
-            // close register-fragment if button is pressed
             dismiss()
         }
 
-        return builder.create()
-    }
 
-}
+    }
+        return builder.create()
+    }}

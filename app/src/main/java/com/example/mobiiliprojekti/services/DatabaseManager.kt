@@ -257,7 +257,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     // add a new purchase to the database
-    fun addPurchase(name: String, value: Double, category: String, date: String, userId: Long): Long {
+    fun addPurchase(name: String, value: Double, category: String, date: String, userId: Int): Long {
         val db = writableDatabase
         val categoryId = getCategoryID(category)
         return try {
@@ -267,7 +267,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             stmt.bindDouble(2, value)
             stmt.bindLong(3, categoryId.toLong())
             stmt.bindString(4, date)
-            stmt.bindLong(5, userId)
+            stmt.bindLong(5, userId.toLong())
             stmt.executeInsert()
         } catch (e: SQLiteConstraintException) {
             -1
@@ -291,12 +291,12 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     // get user ID from username
-    fun getUserId(username: String): Long {
-        var userId = -1L
+    fun getUserId(username: String): Int {
+        var userId = -1
         val db = readableDatabase
         db.rawQuery("SELECT user_id FROM user WHERE username = ?", arrayOf(username)).use { cursor ->
             if (cursor.moveToFirst()) {
-                userId = cursor.getLong(cursor.getColumnIndexOrThrow("user_id"))
+                userId = cursor.getInt(cursor.getColumnIndexOrThrow("user_id"))
                 println("userId on $userId")
             } else {
                 Log.e("DatabaseError", "User not found: $username")

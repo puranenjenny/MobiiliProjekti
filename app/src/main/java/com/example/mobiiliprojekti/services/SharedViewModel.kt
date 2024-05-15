@@ -1,15 +1,17 @@
 package com.example.mobiiliprojekti.services
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class SharedViewModel : ViewModel() {
-    private val _userId = MutableLiveData<Long>()
-    val userId: LiveData<Long> get() = _userId
+    private val _userId = MutableLiveData<Int>()
+    val userId: LiveData<Int> get() = _userId
 
-    fun setUserId(userId: Long) {
+    fun setUserId(userId: Int) {
         _userId.value = userId
-        println("SharedViewModelissa saatu userid: $userId")
+        Log.d("SharedViewModel", "setUserId set with: $userId")
+        Log.d("SharedViewModel","SharedViewModel userid: $userId")
     }
 }
