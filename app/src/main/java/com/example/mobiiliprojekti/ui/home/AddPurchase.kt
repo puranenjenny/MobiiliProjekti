@@ -101,7 +101,7 @@ class AddPurchaseFragment : DialogFragment() {
         Log.d("AddPurchaseFragment", "Date: $date")
         Log.d("AddPurchaseFragment", "User ID: $userId")
 
-        if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != null) {
+        if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
             val result = databaseManager.addPurchase(name, price, category, date, userId)
             if (result != -1L) {
                 Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
@@ -124,8 +124,8 @@ class AddPurchaseFragment : DialogFragment() {
                 Log.e("AddPurchaseFragment", "Date is empty.")
                 Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT).show()
             }
-            if (userId == null) {
-                Log.e("AddPurchaseFragment", "User ID is null.")
+            if (userId == -1L) {
+                Log.e("AddPurchaseFragment", "User ID is not valid.")
                 Toast.makeText(requireContext(), "User ID not available!", Toast.LENGTH_SHORT).show()
             }
         }
