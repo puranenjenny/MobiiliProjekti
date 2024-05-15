@@ -548,11 +548,17 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     // get lats purchases from the user
-    fun getLastPurchases(userId: Long): List<Purchase> {
+    fun getLastPurchases(userId: Long, year: Int, month: Int): List<Purchase> {
         val db = readableDatabase
         val purchases = mutableListOf<Purchase>()
-        val query = "SELECT * FROM purchase WHERE user = ? ORDER BY date DESC LIMIT 10" //montako halutaan?
-        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+        // Ensuring month is formatted to two digits
+        val monthStr = String.format("%02d", month)
+        val query = """
+        SELECT * FROM purchase 
+        WHERE user = ? AND strftime('%Y', date) = ? AND strftime('%m', date) = ? 
+        ORDER BY date DESC LIMIT 8
+    """
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), year.toString(), monthStr))
 
         try {
             if (cursor.moveToFirst()) {
@@ -573,6 +579,36 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
         return purchases
     }
+
+
+    //get selected months purchases
+    fun getSelectedMonthsPurchases(userId: Long, selectedMonth: Int, selectedYear: Int): List<Double> {
+        val db = readableDatabase
+        val values = mutableListOf<Double>()
+        val month = "%02d".format(selectedMonth)
+        val year = selectedYear.toString()
+        val query = "SELECT value FROM purchase WHERE user = ? AND strftime('%m', date) = ? AND strftime('%Y', date) = ? ORDER BY date DESC"
+        Log.d("DatabaseQuery", "Query: $query, User: ${userId}, Month: $month, Year: $year")
+
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), month, year))
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val value = cursor.getDouble(cursor.getColumnIndexOrThrow("value"))
+                    values.add(value)
+                } while (cursor.moveToNext())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor.close()
+        }
+        return values
+    }
+
+
+
 
     data class Purchase(
         val purchaseId: Long,

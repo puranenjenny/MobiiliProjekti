@@ -66,7 +66,8 @@ class AddPurchase : DialogFragment() {
             Toast.makeText(requireContext(), "No categories found!", Toast.LENGTH_SHORT).show()
         }
 
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = adapter
     }
@@ -77,17 +78,20 @@ class AddPurchase : DialogFragment() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        btnDate.text = "$day/${month + 1}/$year"
+        // Format the date to "YYYY-MM-DD"
+        btnDate.text = String.format("%d-%02d-%02d", year, month + 1, day)
 
         btnDate.setOnClickListener {
             val datePickerDialog = DatePickerDialog(requireContext(),
                 { _, selectedYear, selectedMonth, selectedDay ->
-                    btnDate.text = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                }, year, month, day)
-
+                    // Format the selected date to "YYYY-MM-DD"
+                    btnDate.text = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                }, year, month, day
+            )
             datePickerDialog.show()
         }
     }
+
 
     private fun savePurchase() {
         val name = etName.text.toString()
@@ -105,30 +109,47 @@ class AddPurchase : DialogFragment() {
         if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
             val result = databaseManager.addPurchase(name, price, category, date, userId)
             if (result != -1L) {
-                Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
-                Toast.makeText(requireContext(), "Purchase saved successfully!", Toast.LENGTH_SHORT).show()
-                //HomeFragment.
-                dismiss()
+                if (result != -1L) {
+                    Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
+                    Toast.makeText(
+                        requireContext(),
+                        "Purchase saved successfully!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                   // purchaseUpdateListener?.onPurchaseUpdated() // vittu ei jaksa x)
+                    dismiss()
+                } else {
+                    Log.e("AddPurchaseFragment", "Error saving purchase.")
+                    Toast.makeText(requireContext(), "Error saving purchase.", Toast.LENGTH_SHORT)
+                        .show()
+                }
             } else {
-                Log.e("AddPurchaseFragment", "Error saving purchase.")
-                Toast.makeText(requireContext(), "Error saving purchase.", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            if (name.isEmpty()) {
-                Log.e("AddPurchaseFragment", "Purchase name is empty.")
-                Toast.makeText(requireContext(), "Please enter the purchase name!", Toast.LENGTH_SHORT).show()
-            }
-            if (price == null) {
-                Log.e("AddPurchaseFragment", "Price is null or invalid.")
-                Toast.makeText(requireContext(), "Please enter a valid price!", Toast.LENGTH_SHORT).show()
-            }
-            if (date.isEmpty()) {
-                Log.e("AddPurchaseFragment", "Date is empty.")
-                Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT).show()
-            }
-            if (userId == -1L) {
-                Log.e("AddPurchaseFragment", "User ID is not available.")
-                Toast.makeText(requireContext(), "User ID not available!", Toast.LENGTH_SHORT).show()
+                if (name.isEmpty()) {
+                    Log.e("AddPurchaseFragment", "Purchase name is empty.")
+                    Toast.makeText(
+                        requireContext(),
+                        "Please enter the purchase name!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (price == null) {
+                    Log.e("AddPurchaseFragment", "Price is null or invalid.")
+                    Toast.makeText(
+                        requireContext(),
+                        "Please enter a valid price!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (date.isEmpty()) {
+                    Log.e("AddPurchaseFragment", "Date is empty.")
+                    Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                if (userId == -1L) {
+                    Log.e("AddPurchaseFragment", "User ID is not available.")
+                    Toast.makeText(requireContext(), "User ID not available!", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
     }

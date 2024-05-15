@@ -12,6 +12,7 @@ import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -62,14 +63,18 @@ class HomeFragment : Fragment() {
         }
 
         displayLastPurchases()
+        displayMoneySpent()
+        displayMoneyLeft()
 
         return root
     }
 
-
+// this months last purchases
     fun displayLastPurchases() {
         val userId = SessionManager.getLoggedInUserId()
-        val purchases = databaseManager.getLastPurchases(userId)
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+        val purchases = databaseManager.getLastPurchases(userId, selectedYear, selectedMonth )
         val purchasesLayout = binding.linLastpaymentsHome
         purchasesLayout.removeAllViews()
 
@@ -77,7 +82,7 @@ class HomeFragment : Fragment() {
             val noPurchasesView = TextView(context).apply {
                 text = "No purchases yet"
                 textSize = 16f
-                setPadding(8, 8, 8, 8)
+                setPadding(12, 12, 12, 12)
             }
             purchasesLayout.addView(noPurchasesView)
         } else {
@@ -85,13 +90,12 @@ class HomeFragment : Fragment() {
                 val purchaseView = TextView(context).apply {
                     text = "${purchase.date}: ${purchase.name} - ${purchase.value} €"
                     textSize = 16f
-                    setPadding(8, 8, 8, 8)
+                    setPadding(12, 12, 12, 12)
                 }
                 purchasesLayout.addView(purchaseView)
             }
         }
     }
-
 
 
     // date functions
@@ -106,6 +110,7 @@ class HomeFragment : Fragment() {
         }
         updateMonthYearDisplay()
         updateDaysLeftDisplay()
+        updateProgressBar()
     }
     private fun updateMonthYearDisplay() {
         val monthName = LocalDate.of(currentYear, currentMonthIndex, 1).month.getDisplayName(
@@ -133,6 +138,111 @@ class HomeFragment : Fragment() {
     }
 
 
+    //money spent
+    private fun displayMoneySpent() {
+        val userId = SessionManager.getLoggedInUserId()
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+
+        println("$selectedMonth ja $selectedYear")
+
+        val values = databaseManager.getSelectedMonthsPurchases(userId, selectedMonth, selectedYear)
+
+        println("$values")
+        var totalMoneySpent = values.sum()
+
+        binding.txtMoneyspent.text = "${totalMoneySpent} €"
+    }
+
+//money left
+private fun displayMoneyLeft() {
+    val userId = SessionManager.getLoggedInUserId()
+    val selectedMonth = currentMonthIndex
+    val selectedYear = currentYear
+
+    val monthlyBudget = databaseManager.fetchMonthlyBudget(userId) ?: 0.0
+    val homeExpenses = databaseManager.getSelectedMonthsPurchases(userId, selectedMonth, selectedYear).sum()
+
+    val moneyLeft = monthlyBudget.toDouble() - homeExpenses
+    binding.txtMoneyLeftHome.text = "${String.format("%.2f", moneyLeft)} €"
+}
+
+
+
+
+
+
+
+    //treat meterin setit
+
+    private fun fetchMonthlyBudgetsFromDatabase(): List<Float> {
+        val monthlyBudgets = mutableListOf<Float>()
+
+        // Perform database query using DatabaseManager
+        val cursor = databaseManager.readableDatabase.rawQuery(
+            "SELECT month_budget FROM monthly_budget WHERE strftime('%Y-%m', date) = strftime('%Y-%m', 'now') GROUP BY strftime('%Y-%m', date)",
+            null
+        )
+        try {
+            if (cursor != null && cursor.count > 0) {
+                val budgetIndex = cursor.getColumnIndex("month_budget")
+                if (budgetIndex != -1) {
+                    cursor.moveToFirst()
+                    do {
+                        val budget = cursor.getFloat(budgetIndex)
+                        monthlyBudgets.add(budget)
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+        }
+        return monthlyBudgets
+    }
+
+    private fun fetchMonthlyExpensesFromDatabase(): List<Float> {
+        val monthlyExpenses = mutableListOf<Float>()
+
+        // Perform database query using DatabaseManager
+        val cursor = databaseManager.readableDatabase.rawQuery(
+            "SELECT SUM(value) AS monthly_expense FROM purchase WHERE strftime('%Y-%m', date) = strftime('%Y-%m', 'now') GROUP BY strftime('%Y-%m', date)",
+            null
+        )
+        try {
+            if (cursor != null && cursor.count > 0) {
+                val expenseIndex = cursor.getColumnIndex("monthly_expense")
+                if (expenseIndex != -1) {
+                    cursor.moveToFirst()
+                    do {
+                        val expense = cursor.getFloat(expenseIndex)
+                        monthlyExpenses.add(expense)
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+        }
+        return monthlyExpenses
+    }
+    private fun updateProgressBar() {
+        val monthlyIncome = fetchMonthlyBudgetsFromDatabase().sum()
+        val monthlyExpenses = fetchMonthlyExpensesFromDatabase().sum()
+
+        val progressBar = binding.progressBar2
+        val progressText = binding.progressText2
+
+
+        if (monthlyIncome > 0) {
+            val progressPercentage = (monthlyExpenses / monthlyIncome) * 100
+            progressBar.progress = progressPercentage.toInt()
+            progressText.text = "$progressPercentage%"
+
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
