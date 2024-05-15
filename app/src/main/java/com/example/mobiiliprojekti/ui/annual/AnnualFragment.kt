@@ -1,15 +1,13 @@
 package com.example.mobiiliprojekti.ui.annual
 
-import android.database.Cursor
-import android.database.MatrixCursor
-import android.graphics.Color
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.databinding.FragmentAnnualBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -17,101 +15,89 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.example.mobiiliprojekti.services.DatabaseManager
+
+
 
 class AnnualFragment : Fragment() {
 
     private var _binding: FragmentAnnualBinding? = null
     private lateinit var lineChart: LineChart
+    private lateinit var databaseManager: DatabaseManager
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val annualViewModel =
-            ViewModelProvider(this).get(AnnualViewModel::class.java)
-
         _binding = FragmentAnnualBinding.inflate(inflater, container, false)
+
         val root: View = binding.root
 
-        // Get reference to TextView
-        //val textView: TextView = binding.textAnnual
-       // annualViewModel.text.observe(viewLifecycleOwner) {
-         //   textView.text = it
-       // }
+        // Initialize DatabaseManager
+        databaseManager = DatabaseManager(requireContext())
 
         // Get reference to LineChart
         lineChart = binding.lineChart
 
+        // Fetch monthly budgets from database
+        val monthlyBudgets = fetchMonthlyBudgetsFromDatabase()
+        val monthlyExpenses = fetchMonthlyExpensesFromDatabase()
 
 
-        // Simulated data for income
-        val incomeEntries = mutableListOf<Entry>()
-        incomeEntries.add(Entry(0f, 1000f))
-        incomeEntries.add(Entry(1f, 1500f))
-        incomeEntries.add(Entry(2f, 2000f))
-        incomeEntries.add(Entry(3f, 1800f))
-        incomeEntries.add(Entry(4f, 1000f))
-        incomeEntries.add(Entry(5f, 1500f))
-        incomeEntries.add(Entry(6f, 2000f))
-        incomeEntries.add(Entry(7f, 1800f))
-        incomeEntries.add(Entry(8f, 1800f))
-        incomeEntries.add(Entry(9f, 1000f))
-        incomeEntries.add(Entry(10f, 1500f))
-        incomeEntries.add(Entry(11f, 2000f))
+        // Create Entry objects for monthly budgets
+        val budgetEntries = mutableListOf<Entry>()
+        monthlyBudgets.forEachIndexed { index, budget ->
+            budgetEntries.add(Entry(index.toFloat(), budget))
+        }
 
-        // Simulated data for expenses
+        // Create Entry objects for monthly expenses
         val expenseEntries = mutableListOf<Entry>()
-        expenseEntries.add(Entry(0f, 500f))
-        expenseEntries.add(Entry(1f, 700f))
-        expenseEntries.add(Entry(2f, 1000f))
-        expenseEntries.add(Entry(3f, 1200f))
-        expenseEntries.add(Entry(4f, 500f))
-        expenseEntries.add(Entry(5f, 700f))
-        expenseEntries.add(Entry(6f, 1000f))
-        expenseEntries.add(Entry(7f, 1200f))
-        expenseEntries.add(Entry(8f, 500f))
-        expenseEntries.add(Entry(9f, 700f))
-        expenseEntries.add(Entry(10f, 1000f))
-        expenseEntries.add(Entry(11f, 1200f))
+        monthlyExpenses.forEachIndexed { index, expense ->
+            expenseEntries.add(Entry(index.toFloat(), expense))
+        }
 
-        // Create datasets for LineChart
-        val incomeDataSet = LineDataSet(incomeEntries, "Income")
-        val expenseDataSet = LineDataSet(expenseEntries, "Expenses")
+        // Create LineDataSet object for budgets
+        val budgetDataSet = LineDataSet(budgetEntries, "Monthly Budget")
+        val dark_green = ContextCompat.getColor(requireContext(), R.color.dark_green)
+        val brown = ContextCompat.getColor(requireContext(), R.color.button)
+        budgetDataSet.color = dark_green
+        budgetDataSet.setCircleColor(dark_green)
+        budgetDataSet.setDrawValues(false)
 
-        incomeDataSet.color = Color.GREEN
-        expenseDataSet.color = Color.GRAY
+        // Create LineDataSet object for expenses
+        val expenseDataSet = LineDataSet(expenseEntries, "Monthly Expenses")
+        expenseDataSet.color = brown
+        expenseDataSet.setCircleColor(brown)
+        expenseDataSet.setDrawValues(false)
 
-        // Combine datasets into one data object
-        val lineData = LineData(incomeDataSet, expenseDataSet)
+        // Create LineData object containing both budgets and expenses
+        val lineData = LineData(budgetDataSet, expenseDataSet)
 
-        // Set data to LineChart
+        // Set LineData to LineChart
         lineChart.data = lineData
 
         // Customize LineChart as needed
         lineChart.description.isEnabled = false
         lineChart.animateY(1000)
 
-        // Set X-axis labels (months)
-        val months = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-        val xAxis = lineChart.xAxis
-        xAxis.valueFormatter = IndexAxisValueFormatter(months)
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setCenterAxisLabels(true)
-        xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true
-        xAxis.labelCount = months.size
-
         // Set Y-axis labels (amounts)
         val yAxisLeft = lineChart.axisLeft
-        yAxisLeft.axisMinimum = 100f
-        yAxisLeft.axisMaximum = 2500f
-        yAxisLeft.granularity = 200f
+        yAxisLeft.granularity = 100f // Aseta välit 100 välein
         yAxisLeft.isGranularityEnabled = true
+
+        val yAxisRight = lineChart.axisRight
+        yAxisRight.isEnabled = false // Poista oikeanpuoleinen Y-akseli käytöstä
+
+        val xAxis = lineChart.xAxis
+        xAxis.granularity =12f
+        xAxis.isGranularityEnabled = true
+
+
 
         return root
     }
@@ -119,5 +105,81 @@ class AnnualFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateProgressBar()
+    }
+
+    private fun fetchMonthlyBudgetsFromDatabase(): List<Float> {
+        val monthlyBudgets = mutableListOf<Float>()
+
+        // Perform database query using DatabaseManager
+        val cursor = databaseManager.readableDatabase.rawQuery(
+            "SELECT month_budget FROM monthly_budget WHERE strftime('%Y-%m', date) = strftime('%Y-%m', 'now') GROUP BY strftime('%Y-%m', date)",
+            null
+        )
+        try {
+            if (cursor != null && cursor.count > 0) {
+                val budgetIndex = cursor.getColumnIndex("month_budget")
+                if (budgetIndex != -1) {
+                    cursor.moveToFirst()
+                    do {
+                        val budget = cursor.getFloat(budgetIndex)
+                        monthlyBudgets.add(budget)
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+        }
+        return monthlyBudgets
+    }
+
+    private fun fetchMonthlyExpensesFromDatabase(): List<Float> {
+        val monthlyExpenses = mutableListOf<Float>()
+
+        // Perform database query using DatabaseManager
+        val cursor = databaseManager.readableDatabase.rawQuery(
+            "SELECT SUM(value) AS monthly_expense FROM purchase WHERE strftime('%Y-%m', date) = strftime('%Y-%m', 'now') GROUP BY strftime('%Y-%m', date)",
+            null
+        )
+        try {
+            if (cursor != null && cursor.count > 0) {
+                val expenseIndex = cursor.getColumnIndex("monthly_expense")
+                if (expenseIndex != -1) {
+                    cursor.moveToFirst()
+                    do {
+                        val expense = cursor.getFloat(expenseIndex)
+                        monthlyExpenses.add(expense)
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+        }
+        return monthlyExpenses
+    }
+    private fun updateProgressBar() {
+        val monthlyIncome = fetchMonthlyBudgetsFromDatabase().sum()
+        val monthlyExpenses = fetchMonthlyExpensesFromDatabase().sum()
+
+        val progressBar = binding.progressBar
+        val progressText = binding.progressText
+        val treatText = binding.Treattext
+
+        if (monthlyIncome > 0) {
+            val progressPercentage = (monthlyExpenses / monthlyIncome) * 100
+            progressBar.progress = progressPercentage.toInt()
+            progressText.text = "$progressPercentage%"
+
+            // Laske, kuinka monta kuukautta vastaa nykyistä edistymisprosenttia
+            val monthsPassed = (progressPercentage / 25).toInt()
+            treatText.text = "You have kept your budget $monthsPassed months a row! Keep going and you can treat yourself soon! "
+        }
     }
 }
