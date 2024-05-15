@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobiiliprojekti.databinding.FragmentHomeBinding
+import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.SessionManager
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -21,6 +23,7 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var databaseManager: DatabaseManager
 
     private var currentMonthIndex: Int = LocalDate.now().monthValue
     private var currentYear: Int = LocalDate.now().year
@@ -35,6 +38,8 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        databaseManager = DatabaseManager(requireContext())
 
         val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
@@ -52,7 +57,39 @@ class HomeFragment : Fragment() {
             navigateMonths(1)
         }
 
+        binding.btnAddNew.setOnClickListener {
+            AddPurchase().show(childFragmentManager, "AddPurchaseDialog")
+        }
+
+        displayLastPurchases()
+
         return root
+    }
+
+
+    fun displayLastPurchases() {
+        val userId = SessionManager.getLoggedInUserId()
+        val purchases = databaseManager.getLastPurchases(userId)
+        val purchasesLayout = binding.linLastpaymentsHome
+        purchasesLayout.removeAllViews()
+
+        if (purchases.isEmpty()) {
+            val noPurchasesView = TextView(context).apply {
+                text = "No purchases yet"
+                textSize = 16f
+                setPadding(8, 8, 8, 8)
+            }
+            purchasesLayout.addView(noPurchasesView)
+        } else {
+            purchases.forEach { purchase ->
+                val purchaseView = TextView(context).apply {
+                    text = "${purchase.date}: ${purchase.name} - ${purchase.value} €"
+                    textSize = 16f
+                    setPadding(8, 8, 8, 8)
+                }
+                purchasesLayout.addView(purchaseView)
+            }
+        }
     }
 
 
