@@ -2,37 +2,33 @@
 Suunnittelu, toteutus ja testaus tehtäviä  
 
 ### TODO 
-* [ ] home sivun toiminnallisuudet  
-   * [ ] tietokannasta haku  
-   * [ ] lisää tietokantaan  
-   * [ ] prosenttikaavio  
-* [ ] dashboard sivun toiminnallisuudet  
-   * [ ] tietokannasta haku kategorian mukaan  
-   * [ ] kaavio  
 * [ ] (Kuitin skannaus)  
 * [ ] (mainokset)  
 * [ ] (lähin automaatti)  
 
 ### IN PROGRESS
-* [ ] Käyttöliittymän rakentaminen  
-* [ ] home sivun ui  
-* [ ] dashboard sivun ui 
-* [ ] kirjautumis ui  
-* [ ] kirjautumis sivun toiminnallisuudet  
-   * [ ] passcode (ja sormenjälki)  
-   * [ ] rekisteröityminen  
-   * [ ] "olen unohtanut"
-* [ ] annual sivun ui  
+* [ ] home sivun toiminnallisuudet  
+   * [x] tietokannasta haku  
+   * [x] lisää tietokantaan  
+   * [ ] prosenttikaavio  
+* [ ] dashboard sivun toiminnallisuudet  
+   * [ ] tietokannasta haku kategorian mukaan  
+   * [ ] kaavio 
 * [ ] annual sivun toiminnallisuudet  
    * [ ] aikasarja kuluneesta budjetista ja toteutuneesta  
    * [ ] prosenttikaavio  
-* [ ] profile sivun ui  
 * [ ] profile sivun toiminnallisuudet  
-   * [ ] lisää ja muokkaa tietokantaa  
-   * [ ] laskutoimitukset  
+   * [x] lisää ja muokkaa tietokantaa  
    * [ ] streak ja palkinto 
 
 ### DONE
+* [x] profile sivun ui  
+* [x] Käyttöliittymän rakentaminen  
+* [x] home sivun ui  
+* [x] dashboard sivun ui 
+* [x] kirjautumis ui  
+* [x] kirjautumis sivun toiminnallisuudet  
+* [x] annual sivun ui  
 * [x] Main activity ui
 * [x] Kaavioiden rakennuksen selvitys
 * [x] Iconien, värien ja logon viimeistely
@@ -40,9 +36,6 @@ Suunnittelu, toteutus ja testaus tehtäviä
 * [x] Alapalkki  
 * [x] Idean valinta  
 * [x] Suunnittele ulkoasu Figmalla  
-    * [x] värit  
-    * [x] fontit  
-    * [x] iconit yms  
 * [x] Käyttötapaus UML kaavio  
 * [x] Projektin vaatimuspuu RBS  
 * [x] Hyvä nimi ja logo  
