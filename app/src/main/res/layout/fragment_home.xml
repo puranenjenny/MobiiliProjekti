@@ -250,7 +250,7 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/btn_addNew"
-            android:textAllCaps="false"
+            android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             app:backgroundTint="@null"

@@ -76,7 +76,7 @@
             android:paddingStart="40dp"
             android:paddingEnd="40dp"
             android:text="Select Date"
-            android:textAllCaps="false" />
+            android:textAllCaps="true" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -97,7 +97,7 @@
                 android:backgroundTint="@color/button"
                 android:fontFamily="@font/poppins"
                 android:text="Cancel"
-                android:textAllCaps="false" />
+                android:textAllCaps="true" />
 
             <Button
                 android:id="@+id/btn_save"
@@ -110,7 +110,7 @@
                 android:backgroundTint="@color/button"
                 android:fontFamily="@font/poppins"
                 android:text="Save"
-                android:textAllCaps="false" />
+                android:textAllCaps="true" />
         </LinearLayout>
     </LinearLayout>
 
