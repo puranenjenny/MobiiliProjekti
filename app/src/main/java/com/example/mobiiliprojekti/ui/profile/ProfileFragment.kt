@@ -129,7 +129,7 @@ class ProfileFragment : Fragment() {
             val monthlyBudgetNumber = monthlyBudgetValue.toIntOrNull()
             if (monthlyBudgetNumber != null) {
                 databaseManager.changeMonthlyBudget(monthlyBudgetNumber)
-                Toast.makeText(requireContext(), "New budgets stored successfully!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "New budget stored successfully!", Toast.LENGTH_SHORT).show()
             }
             else {
                 Toast.makeText(requireContext(), "Input budgets!", Toast.LENGTH_SHORT).show()
