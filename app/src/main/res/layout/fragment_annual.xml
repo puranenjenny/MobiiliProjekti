@@ -37,7 +37,6 @@
         android:id="@+id/Treatimg"
         android:layout_width="73dp"
         android:layout_height="62dp"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="76dp"
         android:layout_marginBottom="2dp"
         android:src="@drawable/treat"
@@ -65,7 +64,8 @@
         app:layout_constraintBottom_toTopOf="@+id/Treattext"
         app:layout_constraintEnd_toStartOf="@+id/Treatimg"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Treattv" />
+        app:layout_constraintTop_toBottomOf="@+id/Treattv"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/progressText"
@@ -83,8 +83,8 @@
 
     <TextView
         android:id="@+id/Treattext"
-        android:layout_width="387dp"
-        android:layout_height="wrap_content"
+        android:layout_width="298dp"
+        android:layout_height="80dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="13dp"
@@ -115,15 +115,12 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
-        android:layout_width="398dp"
-        android:layout_height="214dp"
+        android:layout_width="379dp"
+        android:layout_height="207dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="34dp"
         app:layout_constraintBottom_toTopOf="@+id/ProgressText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Yearlytext">
 
