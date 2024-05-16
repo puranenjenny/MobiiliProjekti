@@ -69,7 +69,7 @@
     <string name="delete">Delete</string>
 
     <!--Profile fragment-->
-    <string name="setBudget">Here you can set your monthly budget and set your category and treat goals.</string>
+    <string name="setBudget">Here you can forge your monthly budget, categorize expenditures, and plan a celebratory reward for sticking to your budget. ✨ </string>
     <string name="monthly">Monthly budget</string>
     <string name="monthlyNum">0</string>
     <string name="housing">Housing</string>
@@ -86,10 +86,10 @@
     <string name="entertainNum">0</string>
     <string name="other">Other</string>
     <string name="otherNum">0</string>
-    <string name="savings">Your savings:</string>
+    <string name="savings">Your savings</string>
     <string name="savingsNum">0</string>
     <string name="littleTreat">Little Treat</string>
-    <string name="littleTreat2">After sticking to your budget for 4 month, you deserve a little treat!</string>
+    <string name="littleTreat2">After sticking to your budget for 4 month, you deserve a little treat! 😊</string>
     <string name="treat">Treat:</string>
     <string name="treat2">Add treat</string>
     <string name="treatNum">Treat budget:</string>

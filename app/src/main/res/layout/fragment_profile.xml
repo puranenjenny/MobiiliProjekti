@@ -11,20 +11,19 @@
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:backgroundTint="#FFFFFF"
-        tools:context=".ui.profile.ProfileFragment"
-        >
+        tools:context=".ui.profile.ProfileFragment">
 
 
         <TextView
             android:id="@+id/WelcomeText"
             android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="60dp"
             android:layout_marginTop="28dp"
             android:fontFamily="@font/poppins"
             android:text="@string/welcome"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,12 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="9dp"
             android:fontFamily="@font/poppins"
             android:text="@string/setBudget"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/WelcomeText" />
 
@@ -60,7 +57,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="@string/monthly"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputEditText
@@ -74,7 +71,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -94,7 +91,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/categories"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <ImageButton
@@ -103,8 +100,8 @@
                 android:layout_height="64dp"
                 android:layout_marginStart="20dp"
                 android:backgroundTint="@color/light_grey"
-                app:srcCompat="@drawable/icon_add2"
-                android:contentDescription="@string/addCategory" />
+                android:contentDescription="@string/addCategory"
+                app:srcCompat="@drawable/icon_add2" />
 
         </LinearLayout>
 
@@ -112,7 +109,7 @@
             android:id="@+id/linearLayoutHousing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutCategories"
             tools:layout_editor_absoluteX="255dp">
@@ -127,8 +124,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/housing"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/HousingInput"
@@ -143,7 +139,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -164,8 +160,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/transportation"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TransportationInput"
@@ -180,7 +175,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -202,8 +197,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/clothes"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ClothesInput"
@@ -217,7 +211,7 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -225,8 +219,8 @@
             android:id="@+id/linearLayoutFood"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutTransport">
 
             <TextView
@@ -236,11 +230,10 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="50dp"
                 android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
                 android:text="@string/food"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/FoodInput"
@@ -254,15 +247,15 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayoutWellBeing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutClothes">
 
             <TextView
@@ -272,11 +265,10 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="50dp"
                 android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
                 android:text="@string/wellness"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/HyqieneInput"
@@ -290,15 +282,15 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayoutEntertainment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutWellBeing">
 
             <TextView
@@ -308,11 +300,10 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="50dp"
                 android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
                 android:text="@string/entertain"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/EntertainmentInput"
@@ -326,15 +317,15 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayoutOther"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutEntertainment">
 
             <TextView
@@ -344,11 +335,10 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="50dp"
                 android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
                 android:text="@string/other"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/OtherInput"
@@ -362,15 +352,16 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayoutSavings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutOther">
 
             <TextView
@@ -383,7 +374,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/savings"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -393,8 +384,9 @@
                 android:fontFamily="@font/poppins"
                 android:text="@string/savingsNum"
                 android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textColor="@color/dark_green"
+                android:textSize="22sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Button
@@ -402,13 +394,15 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="270dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/poppins"
+            android:minWidth="160dip"
             android:text="@string/save"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutSavings" />
 
@@ -416,7 +410,7 @@
             android:id="@+id/linearLayoutTreat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/SaveCategoriesButton">
 
@@ -429,7 +423,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/littleTreat"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -437,8 +431,8 @@
                 android:layout_width="67dp"
                 android:layout_height="52dp"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/treat"
-                android:contentDescription="@string/treatPicture" />
+                android:contentDescription="@string/treatPicture"
+                android:src="@drawable/treat" />
 
         </LinearLayout>
 
@@ -452,8 +446,7 @@
             android:fontFamily="@font/poppins"
             android:text="@string/littleTreat2"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutTreat" />
@@ -473,11 +466,10 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
                 android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
                 android:text="@string/treat"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TreatInput"
@@ -489,7 +481,7 @@
                 android:hint="@string/treat2"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="14sp"
                 app:boxStrokeColor="@color/black" />
 
         </LinearLayout>
@@ -510,11 +502,10 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
                 android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
                 android:text="@string/treatNum"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"/>
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TreatBudgetInput"
@@ -523,11 +514,11 @@
                 android:background="@drawable/round_input"
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
+                android:hint="@string/treatNum2"
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
-                android:hint="@string/treatNum2"
+                android:textSize="18sp"
                 app:boxStrokeColor="@color/black" />
 
         </LinearLayout>
@@ -536,11 +527,13 @@
             android:id="@+id/SaveTreatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="270dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
-            android:text="@string/save"
             android:fontFamily="@font/poppins"
+            android:minWidth="160dp"
+            android:text="@string/save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutTreat3" />
 
@@ -548,7 +541,7 @@
             android:id="@+id/linearLayoutProfile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/SaveTreatButton">
 
@@ -561,7 +554,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/editProfile"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -569,8 +562,8 @@
                 android:layout_width="67dp"
                 android:layout_height="52dp"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/icon_profile_large"
-                android:contentDescription="@string/profile" />
+                android:contentDescription="@string/profile"
+                android:src="@drawable/icon_profile_large" />
 
         </LinearLayout>
 
@@ -578,7 +571,7 @@
             android:id="@+id/EditPasswordButton"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/poppins"
             android:text="@string/editUser"
@@ -597,7 +590,7 @@
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/deleteUser"
             android:textColor="@android:color/white"
-            app:backgroundTint="#B80101"
+            app:backgroundTint="@color/cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/EditPasswordButton" />
