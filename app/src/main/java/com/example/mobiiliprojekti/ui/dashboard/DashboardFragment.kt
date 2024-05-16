@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -44,6 +45,7 @@ class DashboardFragment : Fragment() {
         val categories = databaseManager.allCategories() //get categories
         //val categorynames = databaseManager.allCategoryNames() // get only names for the spinner
         val textView: TextView = binding.textDashboard //binding
+
 
         textView.text = categories // set text
         setupCategorySpinner() // set categories to the dropdown spinner

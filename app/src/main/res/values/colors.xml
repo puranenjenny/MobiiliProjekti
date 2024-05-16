@@ -9,6 +9,7 @@
     <color name="dark_grey">#1F1F1F</color>
     <color name="light_grey">#F0F4EF</color>
     <color name="dark_green">#394934</color>
+    <color name="cancel">#8B3A3A</color>
 
 
 </resources>
