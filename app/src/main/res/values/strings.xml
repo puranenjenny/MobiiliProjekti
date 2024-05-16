@@ -45,6 +45,19 @@
     <string name="txt_lastpay">Last Payments</string>
     <string name="category">Category</string>
 
+    <!--dashboard fragment-->
+    <string name="last_payments_listed">Last Payments Listed</string>
+    <string name="last_payments_in">Last payments in ___</string>
+    <string name="_1500">1500 €</string>
+    <string name="_0">0 €</string>
+    <string name="_0_days">0 days</string>
+    <string name="_21">21%</string>
+    <string name="budget_percentage_remaining">Budget percentage remaining</string>
+    <string name="_300">300 €</string>
+    <string name="monthly_budget">Monthly Budget</string>
+    <string name="next_month">next month</string>
+    <string name="previous_month">previous month</string>
+
     <!--edit user fragment-->
     <string name="editUser">Edit user information</string>
     <string name="editUser2">Here you can edit your user information.</string>
