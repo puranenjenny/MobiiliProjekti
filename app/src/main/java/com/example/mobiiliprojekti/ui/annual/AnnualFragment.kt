@@ -80,6 +80,7 @@ class AnnualFragment : Fragment() {
         expenseDataSet.setCircleColor(brown)
         expenseDataSet.setDrawValues(false)
 
+
         // Create LineData object containing both budgets and expenses
         val lineData = LineData(budgetDataSet, expenseDataSet)
 
@@ -89,18 +90,24 @@ class AnnualFragment : Fragment() {
         // Customize LineChart as needed
         lineChart.description.isEnabled = false
         lineChart.animateY(1000)
+        lineChart.setExtraOffsets(0f, 0f, 0f, 16f) // Lisää ylimääräistä tilaa alapuolelle (esim. 16f)
 
         // Set Y-axis labels (amounts)
         val yAxisLeft = lineChart.axisLeft
         yAxisLeft.granularity = 100f // Aseta välit 100 välein
         yAxisLeft.isGranularityEnabled = true
 
+
         val yAxisRight = lineChart.axisRight
-        yAxisRight.isEnabled = true // Poista oikeanpuoleinen Y-akseli käytöstä
+        yAxisRight.isEnabled = true
+
 
         val xAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(false)
+
+
+
 
 // Luo kuukausien nimet
         val monthNames = arrayOf(
