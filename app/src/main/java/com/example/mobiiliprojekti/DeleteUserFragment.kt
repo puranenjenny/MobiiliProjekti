@@ -3,6 +3,8 @@ package com.example.mobiiliprojekti
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -63,6 +65,13 @@ class DeleteUserFragment : DialogFragment() {
         }
 
         return builder.create()
+    }
+
+    override fun onStart() { //makes the background transparent
+        super.onStart()
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
     }
 
 }

@@ -3,9 +3,10 @@
     <!-- Background shape -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
+            <solid android:color="@color/white" />
             <stroke android:width="2dp" android:color="#394934" />
             <corners android:radius="40dp" />
+
         </shape>
     </item>
     <!-- Downward arrow icon on the right side of the Spinner -->
