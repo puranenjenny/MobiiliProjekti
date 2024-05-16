@@ -482,7 +482,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TreatInput"
                 android:layout_width="140dp"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:background="@drawable/round_input"
                 android:backgroundTint="@color/black"
                 android:fontFamily="@font/poppins"
@@ -519,7 +519,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TreatBudgetInput"
                 android:layout_width="140dp"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:background="@drawable/round_input"
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
