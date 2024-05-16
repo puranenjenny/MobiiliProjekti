@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 
 data class Purchase(val name: String, val value: Double, val date: String)
