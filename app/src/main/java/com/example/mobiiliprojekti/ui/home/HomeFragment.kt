@@ -1,5 +1,6 @@
 package com.example.mobiiliprojekti.ui.home
 
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,6 @@ import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -65,7 +65,8 @@ class HomeFragment : Fragment() {
         displayLastPurchases()
         displayMoneySpent()
         displayMoneyLeft()
-
+        
+        
         return root
     }
 
@@ -111,6 +112,10 @@ class HomeFragment : Fragment() {
         updateMonthYearDisplay()
         updateDaysLeftDisplay()
         updateProgressBar()
+        displayMoneySpent()
+        displayMoneyLeft()
+        displayLastPurchases()
+        
     }
     private fun updateMonthYearDisplay() {
         val monthName = LocalDate.of(currentYear, currentMonthIndex, 1).month.getDisplayName(
@@ -154,23 +159,34 @@ class HomeFragment : Fragment() {
         binding.txtMoneyspent.text = "${totalMoneySpent} €"
     }
 
-//money left
-private fun displayMoneyLeft() {
-    val userId = SessionManager.getLoggedInUserId()
-    val selectedMonth = currentMonthIndex
-    val selectedYear = currentYear
+    //money left
+    private fun displayMoneyLeft() {
+        val userId = SessionManager.getLoggedInUserId()
+        var monthlyBudget = 0.0
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
 
-    val monthlyBudget = databaseManager.fetchMonthlyBudget(userId) ?: 0.0
-    val homeExpenses = databaseManager.getSelectedMonthsPurchases(userId, selectedMonth, selectedYear).sum()
+        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-    val moneyLeft = monthlyBudget.toDouble() - homeExpenses
-    binding.txtMoneyLeftHome.text = "${String.format("%.2f", moneyLeft)} €"
-}
+        // TODO: Just testing. Delete when ready. 
+        databaseManager.getSelectedMonthsCategoryBudget(userId, "Food", selectedMonth, selectedYear) 
+
+        if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
+            //if displayed month is in future shows latest monthly budget value
+            val (monthlyBudgetValue, _) = databaseManager.fetchMonthlyBudget(userId)
+            monthlyBudget = monthlyBudgetValue?.toDouble() ?: 0.0
+        } else {
+            //if displayed month is current month or in past shows specific budget for that month or 0 if budget doesn't exist
+            monthlyBudget = (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
+        }
 
 
+        val homeExpenses = databaseManager.getSelectedMonthsPurchases(userId, selectedMonth, selectedYear).sum()
 
-
-
+        val moneyLeft = monthlyBudget - homeExpenses
+        binding.txtMoneyLeftHome.text = "${String.format("%.2f", moneyLeft)} €"
+    }
 
 
     //treat meterin setit

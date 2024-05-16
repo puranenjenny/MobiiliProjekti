@@ -1,5 +1,6 @@
 package com.example.mobiiliprojekti
 
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -7,18 +8,28 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.mobiiliprojekti.databinding.ActivityMainBinding
 import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.SessionManager
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var databaseManager: DatabaseManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val databaseManager = DatabaseManager(this)
+        databaseManager = DatabaseManager(this)
+
+        // Budget update if month changes
+        isNewMonth()
+
         databaseManager.allCategories()
         databaseManager.printMonthBudget() //prints monthly budget table to logcat for debugging
         databaseManager.printCategoryBudgets() //prints category budget table to logcat for debugging
+
+
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -29,5 +40,27 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
         navView.setupWithNavController(navController)
+    }
+
+    // When month changes new monthly budget and category budgets are added to database with previous budget values for current user.
+    private fun isNewMonth() {
+        val userId = SessionManager.getLoggedInUserId()
+        val (_ , date) = databaseManager.fetchMonthlyBudget(userId)
+        println("Time at db before parse: $date")
+        val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        val currentTime = dateFormat.format(Date())
+
+        val previousDate = dateFormat.parse(date)
+        val currentDate = dateFormat.parse(currentTime)
+        println("Db time after parse: $previousDate")
+        println("time now: $currentDate")
+
+        if (currentDate > previousDate){
+            databaseManager.updateBudgetsForNewMonth(userId)
+            println("New budgets added because month have changed")
+        }
+        else {
+            println("Bouget OK")
+        }
     }
 }

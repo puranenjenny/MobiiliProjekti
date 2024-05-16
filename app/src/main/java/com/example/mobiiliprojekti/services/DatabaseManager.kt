@@ -174,16 +174,19 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     //function gets logged in users monthly budget
-    fun fetchMonthlyBudget(userId: Long): Int? {
+    fun fetchMonthlyBudget(userId: Long): Pair<Int?, String?> {
         val db = readableDatabase
-        var monthlyBudget: Int? = null
+        var monthlyBudgetValue: Int? = null
+        var date: String? = null
 
         try {
-            val cursor = db.rawQuery("SELECT month_budget FROM monthly_budget WHERE user = $userId ORDER BY date DESC LIMIT 1", null)
+            val cursor = db.rawQuery("SELECT month_budget, date FROM monthly_budget WHERE user = $userId ORDER BY date DESC LIMIT 1", null)
             if (cursor.moveToFirst()) {
                 val monthlyBudgetIndex = cursor.getColumnIndex("month_budget")
-                if (monthlyBudgetIndex >= 0) {
-                    monthlyBudget = cursor.getInt(monthlyBudgetIndex)
+                val dateIndex = cursor.getColumnIndex("date")
+                if (monthlyBudgetIndex >= 0 && dateIndex >= 0) {
+                    monthlyBudgetValue = cursor.getInt(monthlyBudgetIndex)
+                    date = cursor.getString(dateIndex)
                 }
             }
             cursor.close()
@@ -192,7 +195,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } finally {
             db.close()
         }
-        return monthlyBudget
+        return Pair(monthlyBudgetValue, date)
     }
 
     //function gets logged in users category budget by category name
@@ -682,6 +685,61 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return purchases
     }
 
+    //function gets logged in users monthly budget by mont/year
+    fun getSelectedMonthsBudget(userId: Long, selectedMonth: Int, selectedYear: Int): Int? {
+        val db = readableDatabase
+        var monthlyBudget: Int? = null
+        val month = "%02d".format(selectedMonth)
+        val year = selectedYear.toString()
+
+        try {
+            val query = "SELECT month_budget FROM monthly_budget WHERE user = ? AND strftime('%m', date) = ? AND strftime('%Y', date) = ? ORDER BY date DESC LIMIT 1"
+            Log.d("DatabaseQuery", "Query: $query, User: ${userId}, Month: $month, Year: $year")
+            val cursor = db.rawQuery(query, arrayOf(userId.toString(), month, year))
+            if (cursor.moveToFirst()) {
+                val monthlyBudgetIndex = cursor.getColumnIndex("month_budget")
+                if (monthlyBudgetIndex >= 0) {
+                    monthlyBudget = cursor.getInt(monthlyBudgetIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+        println("Monthly budget is: $monthlyBudget")
+        return monthlyBudget
+    }
+
+    //function gets logged in users category budget by category name and mont/year
+    fun getSelectedMonthsCategoryBudget(userId: Long, categoryName: String, selectedMonth: Int, selectedYear: Int): Int? {
+        val db = readableDatabase
+        var categoryBudget: Int? = null
+        val month = "%02d".format(selectedMonth)
+        val year = selectedYear.toString()
+
+
+        try {
+            val query = "SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = ? AND c.category_name = ? AND strftime('%m', cb.date) = ? AND strftime('%Y', cb.date) = ? ORDER BY date DESC LIMIT 1"
+            Log.d("DatabaseQuery", "Query: $query, User: ${userId}, Category: ${categoryName}, Month: $month, Year: $year")
+            val cursor = db.rawQuery(query, arrayOf(userId.toString(),categoryName, month, year))
+            if (cursor.moveToFirst()) {
+                val categoryBudgetIndex = cursor.getColumnIndex("cat_budget")
+                if (categoryBudgetIndex >= 0) {
+                    categoryBudget = cursor.getInt(categoryBudgetIndex)
+
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+        println("Categorys $categoryName budget is: $categoryBudget")
+        return categoryBudget
+    }
 
     //get selected months purchases
     fun getSelectedMonthsPurchases(userId: Long, selectedMonth: Int, selectedYear: Int): List<Double> {
@@ -709,9 +767,6 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return values
     }
 
-
-
-
     data class Purchase(
         val purchaseId: Long,
         val name: String,
@@ -720,5 +775,33 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val date: String,
         val userId: Long
     )
+
+    //This function is used to add new budgets with previous values when month changes
+    fun updateBudgetsForNewMonth(userId: Long) {
+        writableDatabase.use { db ->
+            val insertCategoryBudgetQuery = "INSERT INTO category_budget (category, cat_budget, date, user) " +
+                    "SELECT category, cat_budget, CURRENT_TIMESTAMP, user " +
+                    "FROM category_budget " +
+                    "WHERE (category, user, date) IN ( " +
+                    "   SELECT category, user, MAX(date) " +
+                    "   FROM category_budget " +
+                    "   WHERE user = $userId " +
+                    "   GROUP BY category, user " +
+                    ");"
+
+            val insertMonthlyBudgetQuery = "INSERT INTO monthly_budget (month_budget, date, user) " +
+                    "SELECT month_budget, CURRENT_TIMESTAMP, user " +
+                    "FROM monthly_budget " +
+                    "WHERE (user, date) IN ( " +
+                    "   SELECT user, MAX(date) " +
+                    "   FROM monthly_budget " +
+                    "   WHERE user = $userId " +
+                    "   GROUP BY user " +
+                    ");"
+
+            db.execSQL(insertCategoryBudgetQuery)
+            db.execSQL(insertMonthlyBudgetQuery)
+        }
+    }
 
 }

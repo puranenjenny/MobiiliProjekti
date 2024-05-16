@@ -63,7 +63,7 @@ class ProfileFragment : Fragment() {
         welcomeTxt.text = "Welcome $username!"
 
         //set monthly budget input field value with value that is stored to db
-        val setMonthlyBudget = databaseManager.fetchMonthlyBudget(userId)
+        val (setMonthlyBudget, _) = databaseManager.fetchMonthlyBudget(userId)
         monthlyBudget.setText(setMonthlyBudget.toString())
 
         // TODO: do this again with some kind of loop and function
