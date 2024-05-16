@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 
+data class Purchase(val name: String, val value: Double, val date: String)
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     // set up security manager
@@ -611,4 +612,112 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             e.printStackTrace()
         }
     }
+
+    // Home
+// add a new purchase to the database
+    fun addPurchase(name: String, value: Double, category: String, date: String, userId: Long): Long {
+        val db = writableDatabase
+        var result: Long = -1
+        try {
+            val categoryId = getCategoryID(category)
+            val contentValues = ContentValues().apply {
+                put("name", name)
+                put("value", value)
+                put("category", categoryId)
+                put("date", date)
+                put("user", userId)
+            }
+            result = db.insertOrThrow("purchase", null, contentValues)
+        } catch (e: SQLiteConstraintException) {
+            e.printStackTrace()
+        } finally {
+            //
+        }
+        return result
+    }
+
+    // get category ID from category name
+    private fun getCategoryID(categoryName: String): Int {
+        var categoryId = -1
+        val db = readableDatabase
+        db.rawQuery("SELECT category_id FROM category WHERE category_name = ?", arrayOf(categoryName)).use { cursor ->
+            if (cursor.moveToFirst()) {
+                categoryId = cursor.getInt(cursor.getColumnIndexOrThrow("category_id"))
+            }
+        }
+        return categoryId
+    }
+
+    // get lats purchases from the user
+    fun getLastPurchases(userId: Long, year: Int, month: Int): List<Purchase> {
+        val db = readableDatabase
+        val purchases = mutableListOf<Purchase>()
+        // Ensuring month is formatted to two digits
+        val monthStr = String.format("%02d", month)
+        val query = """
+        SELECT * FROM purchase 
+        WHERE user = ? AND strftime('%Y', date) = ? AND strftime('%m', date) = ? 
+        ORDER BY date DESC LIMIT 8
+    """
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), year.toString(), monthStr))
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val purchaseId = cursor.getLong(cursor.getColumnIndexOrThrow("purchase_id"))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                    val value = cursor.getDouble(cursor.getColumnIndexOrThrow("value"))
+                    val category = cursor.getInt(cursor.getColumnIndexOrThrow("category"))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+
+                    purchases.add(Purchase(purchaseId, name, value, category, date, userId))
+                } while (cursor.moveToNext())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor.close()
+        }
+        return purchases
+    }
+
+
+    //get selected months purchases
+    fun getSelectedMonthsPurchases(userId: Long, selectedMonth: Int, selectedYear: Int): List<Double> {
+        val db = readableDatabase
+        val values = mutableListOf<Double>()
+        val month = "%02d".format(selectedMonth)
+        val year = selectedYear.toString()
+        val query = "SELECT value FROM purchase WHERE user = ? AND strftime('%m', date) = ? AND strftime('%Y', date) = ? ORDER BY date DESC"
+        Log.d("DatabaseQuery", "Query: $query, User: ${userId}, Month: $month, Year: $year")
+
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), month, year))
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val value = cursor.getDouble(cursor.getColumnIndexOrThrow("value"))
+                    values.add(value)
+                } while (cursor.moveToNext())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor.close()
+        }
+        return values
+    }
+
+
+
+
+    data class Purchase(
+        val purchaseId: Long,
+        val name: String,
+        val value: Double,
+        val category: Int,
+        val date: String,
+        val userId: Long
+    )
+
 }

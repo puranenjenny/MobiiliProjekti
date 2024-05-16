@@ -213,7 +213,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txt_moneyleft"
+                    android:id="@+id/txtMoneyLeftHome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="506 €"
@@ -258,7 +258,7 @@
             app:layout_constraintTop_toBottomOf="@+id/lineChartHome" />
 
         <TextView
-            android:id="@+id/txt_Treat"
+            android:id="@+id/Treattext2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="44dp"
@@ -282,13 +282,14 @@
             android:layout_height="20dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
+            android:indeterminateDrawable="@drawable/progress_bar_custom"
             android:max="100"
             android:progress="20"
             android:progressDrawable="@drawable/progress_bar_custom"
             android:progressTint="@color/main"
             app:layout_constraintEnd_toStartOf="@+id/ivTreat"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_Treat" />
+            app:layout_constraintTop_toBottomOf="@+id/Treattext2" />
 
         <TextView
             android:id="@+id/progressText2"
@@ -301,7 +302,7 @@
             android:text="20%"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_Treat" />
+            app:layout_constraintTop_toBottomOf="@+id/Treattext2" />
 
         <ImageView
             android:id="@+id/ivTreat"
@@ -333,8 +334,8 @@
 
         <ScrollView
             android:id="@+id/sv_lastpayments_home"
-            android:layout_width="354dp"
-            android:layout_height="157dp"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="#F0F4EF"
             android:contentDescription="last payments listed"
@@ -344,6 +345,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_lastpaymentsname">
 
             <LinearLayout
+                android:id="@+id/linLastpaymentsHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
