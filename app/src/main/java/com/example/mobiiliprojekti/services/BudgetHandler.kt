@@ -11,7 +11,4 @@ object BudgetHandler {
         return monhtlyBudgetByMonth
     }
 
-    fun clearMonhtlyBudgetByMonth() {
-        monhtlyBudgetByMonth = 0
-    }
 }

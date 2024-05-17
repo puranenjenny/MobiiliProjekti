@@ -12,10 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.setFragmentResult
 import com.example.mobiiliprojekti.services.BudgetHandler
-import com.example.mobiiliprojekti.services.DatabaseManager
-import com.example.mobiiliprojekti.ui.home.AddPurchaseDialogListener
 import com.example.mobiiliprojekti.ui.home.HomeFragment
 
 interface ChangeMonthlyBudgetDialogListener {

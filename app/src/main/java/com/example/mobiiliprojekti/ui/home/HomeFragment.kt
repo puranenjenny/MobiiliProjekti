@@ -346,8 +346,8 @@ private fun displayLastPurchases() {
         val yearMonth = YearMonth.of(selectedYear, selectedMonth)
         val totalDaysInMonth = yearMonth.lengthOfMonth()
 
-        var futureDate : String?
-        var pastDate : String?
+        val futureDate : String?
+        val pastDate : String?
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val formattedDate = currentDateTime.format(formatter)
