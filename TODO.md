@@ -2,21 +2,21 @@
 Suunnittelu, toteutus ja testaus tehtäviä  
 
 ### TODO 
-* [ ] (Kuitin skannaus)  
-* [ ] (mainokset)  
-* [ ] (lähin automaatti)  
 
 ### IN PROGRESS
 * [ ] home sivun toiminnallisuudet  
    * [x] tietokannasta haku  
    * [x] lisää tietokantaan  
-   * [ ] prosenttikaavio  
+   * [ ] prosenttikaavio
+   * [ ] kk budjetti
+   * [ ] last payments tietokantapäivitys
 * [ ] dashboard sivun toiminnallisuudet  
    * [ ] tietokannasta haku kategorian mukaan  
    * [ ] kaavio 
 * [ ] annual sivun toiminnallisuudet  
-   * [ ] aikasarja kuluneesta budjetista ja toteutuneesta  
-   * [ ] prosenttikaavio  
+   * [x] aikasarja kuluneesta budjetista ja toteutuneesta  
+   * [ ] prosenttikaavio
+   * [ ] teksti  
 * [ ] profile sivun toiminnallisuudet  
    * [x] lisää ja muokkaa tietokantaa  
    * [ ] streak ja palkinto 
