@@ -18,7 +18,7 @@
             android:id="@+id/WelcomeText"
             android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="28dp"
             android:fontFamily="@font/poppins"
             android:text="@string/welcome"
@@ -93,15 +93,6 @@
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/AddCategoryButton"
-                android:layout_width="69dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="20dp"
-                android:backgroundTint="@color/light_grey"
-                android:contentDescription="@string/addCategory"
-                app:srcCompat="@drawable/icon_add2" />
 
         </LinearLayout>
 
