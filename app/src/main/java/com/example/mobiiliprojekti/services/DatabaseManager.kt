@@ -849,7 +849,6 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
-    //purchase update function
     fun updatePurchase(purchase: Purchase): Int {
         val db = writableDatabase
         val contentValues = ContentValues().apply {

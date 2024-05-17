@@ -105,7 +105,7 @@ private fun displayLastPurchases() {
     } else {
         purchases.forEach { purchase ->
             val purchaseView = TextView(context).apply {
-                text = "${purchase.date} - ${purchase.category} - ${purchase.name} - ${purchase.price} €"
+                text = "${purchase.date}: ${purchase.category} - ${purchase.name} - ${purchase.price} €"
                 textSize = 18f
                 setPadding(20, 20, 20, 20)
                 isClickable = true
@@ -219,12 +219,11 @@ private fun displayLastPurchases() {
         val moneyLeft = monthlyBudget - homeExpenses
         binding.txtMoneyLeftHome.text = "${String.format("%.1f", moneyLeft)} €"
 
-        // Aseta tekstin väri punaiseksi, jos moneyLeft on negatiivinen
+        // change the background color of money left element
         if (moneyLeft < 0) {
-            binding.txtMoneyLeftHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.moneyleftBackground.setBackgroundResource(R.drawable.element_background_red)
         } else {
-            // Aseta tekstin väri alkuperäiseksi
-            binding.txtMoneyLeftHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.moneyleftBackground.setBackgroundResource(R.drawable.element_background_orange)
         }
     }
 

@@ -234,6 +234,7 @@
 
             <!-- Money left -->
             <LinearLayout
+                android:id="@+id/moneyleftBackground"
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
