@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
 
-data class Purchase(val name: String, val value: Double, val date: String)
+
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     // set up security manager
@@ -428,9 +428,9 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     // this function gets category id by category name
-    private fun fetchCategoryIdByName(categoryName: String): Long {
+    fun fetchCategoryIdByName(categoryName: String): Int {
         val db = readableDatabase
-        var categoryId: Long = -1
+        var categoryId: Int = -1
 
         try {
             val cursor = db.rawQuery("SELECT category_id FROM category WHERE category_name = '$categoryName'", null)
@@ -439,7 +439,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             if (cursor.moveToFirst()) {
                 val categoryIdIndex = cursor.getColumnIndex("category_id")
                 if (categoryIdIndex >= 0) {
-                    categoryId = cursor.getLong(categoryIdIndex)
+                    categoryId = cursor.getLong(categoryIdIndex).toInt()
                 }
             }
             cursor.close()
@@ -448,6 +448,36 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
 
         return categoryId
+    }
+
+    // this function gets the budget category id by category name for purchase
+    fun fetchCategoryBudgetIdByNameforPurchase(categoryName: String): Int {
+        val db = readableDatabase
+        var categoryBudgetId: Int = -1
+
+        try {
+            // join category_budget and category tables to find the budget entry for a given category name
+            val query = """
+            SELECT cb.cb_id FROM category_budget cb
+            JOIN category c ON cb.category = c.category_id
+            WHERE c.category_name = ?
+        """
+            val cursor = db.rawQuery(query, arrayOf(categoryName))
+
+            if (cursor.moveToFirst()) {
+                val categoryIdIndex = cursor.getColumnIndex("cb_id")
+                if (categoryIdIndex >= 0) {
+                    categoryBudgetId = cursor.getInt(categoryIdIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return categoryBudgetId
     }
 
     // this function is used to add default monthly budget for new user
@@ -790,14 +820,6 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return values
     }
 
-    data class Purchase(
-        val purchaseId: Long,
-        val name: String,
-        val value: Double,
-        val category: Int,
-        val date: String,
-        val userId: Long
-    )
 
     //This function is used to add new budgets with previous values when month changes
     fun updateBudgetsForNewMonth(userId: Long) {
@@ -826,5 +848,21 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             db.execSQL(insertMonthlyBudgetQuery)
         }
     }
+
+    fun updatePurchase(purchase: Purchase): Int {
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("name", purchase.name)
+            put("value", purchase.price.toInt())  // Converting double to int, consider changing DB schema to REAL if necessary.
+            put("category", purchase.category)  // Ensure this is the ID from category_budget.
+            put("date", purchase.date)
+            put("user", purchase.userId)
+        }
+        val success = db.update("purchase", contentValues, "purchase_id = ?", arrayOf(purchase.purchaseId.toString()))
+        db.close()
+        return success
+    }
+
+
 
 }

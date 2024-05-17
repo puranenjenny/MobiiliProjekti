@@ -1,12 +1,10 @@
 package com.example.mobiiliprojekti.ui.home
 
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,48 +21,47 @@ import com.example.mobiiliprojekti.services.SessionManager
 import com.example.mobiiliprojekti.services.Purchase
 import java.util.Calendar
 
-interface AddPurchaseDialogListener {
+interface EditPurchaseDialogListener {
     fun onDialogDismissed()
 }
-class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
+class EditPurchase(private val purchase: Purchase) : DialogFragment() {
 
-    private lateinit var etPrice: EditText
     private lateinit var etName: EditText
+    private lateinit var etPrice: EditText
     private lateinit var spinnerCategory: Spinner
     private lateinit var btnDate: Button
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var databaseManager: DatabaseManager
-    private var listener: AddPurchaseDialogListener? = null
+    private var listener: EditPurchaseDialogListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_add_purchase, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_purchase, container, false)
 
-        super.onViewCreated(view, savedInstanceState)
 
-        etPrice = view.findViewById(R.id.purchase_price)
-        etName = view.findViewById(R.id.purchase_name)
-        spinnerCategory = view.findViewById(R.id.spinner_category)
-        btnDate = view.findViewById(R.id.btn_date)
-        btnSave = view.findViewById(R.id.btn_save)
-        btnCancel = view.findViewById(R.id.btn_cancel)
+        etName = view.findViewById(R.id.edit_purchase_name)
+        etPrice = view.findViewById(R.id.edit_purchase_price)
+        spinnerCategory = view.findViewById(R.id.edit_spinner_category)
+        btnDate = view.findViewById(R.id.edit_btn_date)
+        btnSave = view.findViewById(R.id.edit_btn_save)
+        btnCancel = view.findViewById(R.id.edit_btn_cancel)
 
-       // btnDate.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
         databaseManager = DatabaseManager(requireContext())
         //listener = homeFragment
-        listener = homeFragment
 
+
+        etName.setText(purchase.name)
+        etPrice.setText(purchase.price.toString())
         setupCategorySpinner()
         setupDateButton()
 
-
         btnSave.setOnClickListener {
-            savePurchase()
+            saveUpdatedPurchase()
         }
 
         btnCancel.setOnClickListener {
@@ -81,7 +78,6 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         }
     }
 
-
     private fun setupCategorySpinner() {
         val categories = databaseManager.allCategoryNames()
         if (categories.isEmpty()) {
@@ -94,6 +90,7 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = adapter
     }
+
 
     private fun setupDateButton() {
         val calendar = Calendar.getInstance()
@@ -112,52 +109,40 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
             datePickerDialog.show()
         }
     }
-
-
-    private fun savePurchase() {
-        val name = etName.text.toString()
+    private fun saveUpdatedPurchase() {
+        val name = etName.text.toString().trim()
         val price = etPrice.text.toString().toDoubleOrNull()
         val category = spinnerCategory.selectedItem.toString()
         val date = btnDate.text.toString()
         val userId = SessionManager.getLoggedInUserId()
 
-        Log.d("AddPurchaseFragment", "Name: $name")
-        Log.d("AddPurchaseFragment", "Price: $price")
-        Log.d("AddPurchaseFragment", "Category: $category")
-        Log.d("AddPurchaseFragment", "Date: $date")
-        Log.d("AddPurchaseFragment", "User ID: $userId")
+        if (name.isEmpty() || price == null || userId == -1L) {
+            Toast.makeText(context, "Please ensure all fields are correctly filled.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
-            val result = databaseManager.addPurchase(name, price, category, date, userId)
-            if (result != -1L) {
-                    Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
-                    Toast.makeText(
-                        requireContext(),
-                        "Purchase saved successfully!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    dismiss()
-            } else {
-                if (name.isEmpty()) {
-                    Log.e("AddPurchaseFragment", "Purchase name is empty.")
-                    Toast.makeText(
-                        requireContext(),
-                        "Please enter the purchase name!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                if (date.isEmpty()) {
-                    Log.e("AddPurchaseFragment", "Date is empty.")
-                    Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
+        val updatedPurchase = Purchase(
+            purchaseId = purchase.purchaseId,
+            name = name,
+            price = price,
+            category = getCategoryID(category),
+            date = date,
+            userId = userId
+        )
+
+        val isSuccess = databaseManager.updatePurchase(updatedPurchase)
+        if (isSuccess > 0) {
+            Toast.makeText(context, "Purchase updated successfully!", Toast.LENGTH_SHORT).show()
+            listener?.onDialogDismissed()
+            dismiss()
+        } else {
+            Toast.makeText(context, "Failed to update purchase.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    //for passing info to homeFragment about dismissing this dialog
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        listener?.onDialogDismissed()
+    private fun getCategoryID(categoryName: String): Int {
+        return databaseManager.fetchCategoryBudgetIdByNameforPurchase(categoryName)
     }
+
+
 }

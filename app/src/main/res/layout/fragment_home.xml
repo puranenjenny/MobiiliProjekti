@@ -290,7 +290,8 @@
             android:text="@string/btn_addNew"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.514"
@@ -388,6 +389,7 @@
                 android:id="@+id/linLastpaymentsHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical" />
         </ScrollView>
 
