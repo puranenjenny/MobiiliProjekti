@@ -849,12 +849,13 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
+    //purchase update function
     fun updatePurchase(purchase: Purchase): Int {
         val db = writableDatabase
         val contentValues = ContentValues().apply {
             put("name", purchase.name)
-            put("value", purchase.price.toInt())  // Converting double to int, consider changing DB schema to REAL if necessary.
-            put("category", purchase.category)  // Ensure this is the ID from category_budget.
+            put("value", purchase.price.toInt())
+            put("category", purchase.category)
             put("date", purchase.date)
             put("user", purchase.userId)
         }

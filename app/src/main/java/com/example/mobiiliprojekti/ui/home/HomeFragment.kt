@@ -105,11 +105,11 @@ private fun displayLastPurchases() {
     } else {
         purchases.forEach { purchase ->
             val purchaseView = TextView(context).apply {
-                text = "${purchase.date}: ${purchase.category} - ${purchase.name} - ${purchase.price} €"
+                text = "${purchase.date} - ${purchase.category} - ${purchase.name} - ${purchase.price} €"
                 textSize = 18f
                 setPadding(20, 20, 20, 20)
                 isClickable = true
-                //setBackgroundResource(R.drawable.ripple_effect)
+                setBackgroundResource(R.drawable.ripple_effect)
                 setOnClickListener {
                     showEditPurchaseDialog(purchase)
                 }
@@ -120,7 +120,7 @@ private fun displayLastPurchases() {
 }
 
 
-    fun showEditPurchaseDialog(purchase: Purchase) {
+    private fun showEditPurchaseDialog(purchase: Purchase) {
         val editPurchaseDialog = EditPurchase(purchase)
         editPurchaseDialog.show(parentFragmentManager, "editPurchaseDialog")
     }

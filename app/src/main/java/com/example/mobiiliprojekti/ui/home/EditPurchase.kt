@@ -1,6 +1,7 @@
 package com.example.mobiiliprojekti.ui.home
 
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -24,7 +25,10 @@ import java.util.Calendar
 interface EditPurchaseDialogListener {
     fun onDialogDismissed()
 }
+
 class EditPurchase(private val purchase: Purchase) : DialogFragment() {
+
+    //private lateinit var homeFragment: HomeFragment
 
     private lateinit var etName: EditText
     private lateinit var etPrice: EditText
@@ -52,6 +56,7 @@ class EditPurchase(private val purchase: Purchase) : DialogFragment() {
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
         databaseManager = DatabaseManager(requireContext())
+
         //listener = homeFragment
 
 
@@ -109,6 +114,7 @@ class EditPurchase(private val purchase: Purchase) : DialogFragment() {
             datePickerDialog.show()
         }
     }
+
     private fun saveUpdatedPurchase() {
         val name = etName.text.toString().trim()
         val price = etPrice.text.toString().toDoubleOrNull()
@@ -140,9 +146,14 @@ class EditPurchase(private val purchase: Purchase) : DialogFragment() {
         }
     }
 
+    //get category id for the save updated purchase function
     private fun getCategoryID(categoryName: String): Int {
         return databaseManager.fetchCategoryBudgetIdByNameforPurchase(categoryName)
     }
 
-
+    //for passing info to homeFragment about dismissing this dialog
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        listener?.onDialogDismissed()
+    }
 }

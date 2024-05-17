@@ -56,7 +56,7 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
         databaseManager = DatabaseManager(requireContext())
-        //listener = homeFragment
+
         listener = homeFragment
 
         setupCategorySpinner()
