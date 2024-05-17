@@ -1,11 +1,11 @@
 package com.example.mobiiliprojekti.ui.home
 
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +21,11 @@ import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import java.util.Calendar
 
+interface AddPurchaseDialogListener {
+    fun onDialogDismissed()
+}
 
-class AddPurchase : DialogFragment() {
+class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
 
     private lateinit var etPrice: EditText
     private lateinit var etName: EditText
@@ -31,6 +34,7 @@ class AddPurchase : DialogFragment() {
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var databaseManager: DatabaseManager
+    private var listener: AddPurchaseDialogListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +55,8 @@ class AddPurchase : DialogFragment() {
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
         databaseManager = DatabaseManager(requireContext())
+        //listener = homeFragment
+        listener = homeFragment
 
         setupCategorySpinner()
         setupDateButton()
@@ -166,5 +172,11 @@ class AddPurchase : DialogFragment() {
                 }
             }
         }
+    }
+
+    //for passing info to homeFragment about dismissing this dialog
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        listener?.onDialogDismissed()
     }
 }

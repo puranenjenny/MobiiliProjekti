@@ -125,14 +125,18 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     // get primary users username from db
-    fun fetchAdminUser(): String? {
+    fun fetchAdminUser(): Pair<Long?, String?> {
         val db = readableDatabase
+        var userId: Long? = null
         var adminUsername: String? = null
+
         try {
             val cursor = db.rawQuery("SELECT user_id, username FROM user WHERE is_admin = 1", null)
             if (cursor.moveToFirst()) {
+                val userIdIndex = cursor.getColumnIndex("user_id")
                 val usernameIndex = cursor.getColumnIndex("username")
                 if (usernameIndex >= 0) {
+                    userId = cursor.getString(userIdIndex).toLong()
                     adminUsername = cursor.getString(usernameIndex)
                 }
             }
@@ -142,7 +146,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } finally {
             db.close()
         }
-        return adminUsername
+        return Pair(userId, adminUsername)
     }
 
     //function gets logged in users information
@@ -180,7 +184,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         var date: String? = null
 
         try {
-            val cursor = db.rawQuery("SELECT month_budget, date FROM monthly_budget WHERE user = $userId ORDER BY date DESC LIMIT 1", null)
+            val cursor = db.rawQuery("SELECT month_budget, date FROM monthly_budget WHERE user = $userId ORDER BY mb_id DESC, date DESC LIMIT 1", null)
             if (cursor.moveToFirst()) {
                 val monthlyBudgetIndex = cursor.getColumnIndex("month_budget")
                 val dateIndex = cursor.getColumnIndex("date")
@@ -391,6 +395,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             e.printStackTrace()
         }
     }
+
 
     // this function allows to change category budget by category name. It makes new budget instead of updating old
     // TODO: Is new budget way togo or should old one be updated
@@ -611,7 +616,6 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 }
                 cursor.close()
             }
-            db.close()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -693,7 +697,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val year = selectedYear.toString()
 
         try {
-            val query = "SELECT month_budget FROM monthly_budget WHERE user = ? AND strftime('%m', date) = ? AND strftime('%Y', date) = ? ORDER BY date DESC LIMIT 1"
+            val query = "SELECT month_budget FROM monthly_budget WHERE user = ? AND strftime('%m', date) = ? AND strftime('%Y', date) = ? ORDER BY mb_id DESC, date DESC LIMIT 1"
             Log.d("DatabaseQuery", "Query: $query, User: ${userId}, Month: $month, Year: $year")
             val cursor = db.rawQuery(query, arrayOf(userId.toString(), month, year))
             if (cursor.moveToFirst()) {
@@ -710,6 +714,25 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
         println("Monthly budget is: $monthlyBudget")
         return monthlyBudget
+    }
+
+    fun changeMonthlyBudgetByMonth(monthlyBudget: Int, date: String) {
+        try {
+            println("new budget inserted $monthlyBudget")
+            val userId = SessionManager.getLoggedInUserId() // get user id that is registered
+
+            val db = writableDatabase
+            val contentValues = ContentValues().apply {
+                put("month_budget", monthlyBudget)
+                put("user", userId)
+                put("date", date)
+            }
+            db.insert("monthly_budget", null, contentValues)
+            db.close()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     //function gets logged in users category budget by category name and mont/year

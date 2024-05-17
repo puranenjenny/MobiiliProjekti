@@ -88,13 +88,9 @@
     <string name="editProfile">Edit user profile</string>
     <string name="treatPicture">Treat picture</string>
 
-    Monthly budget
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
 
 </resources>

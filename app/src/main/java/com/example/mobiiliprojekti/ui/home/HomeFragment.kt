@@ -6,23 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.mobiiliprojekti.ChangeMonthlyBudgetDialogListener
+import com.example.mobiiliprojekti.ChangeMonthlyBudgetFragment
+import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.databinding.FragmentHomeBinding
+import com.example.mobiiliprojekti.services.BudgetHandler
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), AddPurchaseDialogListener, ChangeMonthlyBudgetDialogListener {
 
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var databaseManager: DatabaseManager
 
@@ -30,12 +33,10 @@ class HomeFragment : Fragment() {
     private var currentYear: Int = LocalDate.now().year
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -59,19 +60,33 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnAddNew.setOnClickListener {
-            AddPurchase().show(childFragmentManager, "AddPurchaseDialog")
+            val addPurchaseDialog = AddPurchase(this)
+            addPurchaseDialog.show(childFragmentManager, "AddPurchaseDialog")
+        }
+
+        binding.linlaybudget.setOnClickListener {
+            val changeMonthlyBudgetDialog = ChangeMonthlyBudgetFragment(this)
+            changeMonthlyBudgetDialog.show(childFragmentManager, "changeMonthlyBudgetDialog")
         }
 
         displayLastPurchases()
         displayMoneySpent()
         displayMoneyLeft()
-        
-        
+        displayMonthlyBudget()
+
+        // Set up FragmentResultListener
+        parentFragmentManager.setFragmentResultListener("changeBudgetRequestKey", viewLifecycleOwner) { requestKey, bundle ->
+            val newBudgetValue = bundle.getInt("newBudgetValue")
+            println("new budget: $newBudgetValue")
+            println("FragmentResultListener received new budget: $newBudgetValue") // Debug-tuloste
+            handleNewBudget(newBudgetValue)
+        }
+
         return root
     }
 
 // this months last purchases
-    fun displayLastPurchases() {
+private fun displayLastPurchases() {
         val userId = SessionManager.getLoggedInUserId()
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
@@ -115,6 +130,7 @@ class HomeFragment : Fragment() {
         displayMoneySpent()
         displayMoneyLeft()
         displayLastPurchases()
+        displayMonthlyBudget()
         
     }
     private fun updateMonthYearDisplay() {
@@ -154,38 +170,80 @@ class HomeFragment : Fragment() {
         val values = databaseManager.getSelectedMonthsPurchases(userId, selectedMonth, selectedYear)
 
         println("$values")
-        var totalMoneySpent = values.sum()
+        val totalMoneySpent = values.sum()
 
-        binding.txtMoneyspent.text = "${totalMoneySpent} €"
+        binding.txtMoneyspent.text = "${String.format("%.1f", totalMoneySpent)} €"
     }
 
     //money left
     private fun displayMoneyLeft() {
         val userId = SessionManager.getLoggedInUserId()
-        var monthlyBudget = 0.0
+        val monthlyBudget: Double
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
 
         val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-        // TODO: Just testing. Delete when ready. 
-        databaseManager.getSelectedMonthsCategoryBudget(userId, "Food", selectedMonth, selectedYear) 
+        // TODO: Just testing. Delete when ready.
+        databaseManager.getSelectedMonthsCategoryBudget(userId, "Food", selectedMonth, selectedYear)
 
-        if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
-            //if displayed month is in future shows latest monthly budget value
-            val (monthlyBudgetValue, _) = databaseManager.fetchMonthlyBudget(userId)
-            monthlyBudget = monthlyBudgetValue?.toDouble() ?: 0.0
+        monthlyBudget = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
+            val budget = databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0
+            if (budget != 0)
+            (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
+            else{
+                val (monthlyBudgetValue, _) = databaseManager.fetchMonthlyBudget(userId)
+                monthlyBudgetValue?.toDouble() ?: 0.0
+            }
         } else {
             //if displayed month is current month or in past shows specific budget for that month or 0 if budget doesn't exist
-            monthlyBudget = (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
+            (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
         }
 
 
         val homeExpenses = databaseManager.getSelectedMonthsPurchases(userId, selectedMonth, selectedYear).sum()
 
         val moneyLeft = monthlyBudget - homeExpenses
-        binding.txtMoneyLeftHome.text = "${String.format("%.2f", moneyLeft)} €"
+        binding.txtMoneyLeftHome.text = "${String.format("%.1f", moneyLeft)} €"
+
+        // Aseta tekstin väri punaiseksi, jos moneyLeft on negatiivinen
+        if (moneyLeft < 0) {
+            binding.txtMoneyLeftHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+        } else {
+            // Aseta tekstin väri alkuperäiseksi
+            binding.txtMoneyLeftHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        }
+    }
+
+    private fun displayMonthlyBudget() {
+        val userId = SessionManager.getLoggedInUserId()
+        val monthlyBudget: Double
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+
+        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+
+
+        monthlyBudget = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
+            val budget = databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0
+            if (budget != 0)
+                (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
+            else{
+                val (monthlyBudgetValue, _) = databaseManager.fetchMonthlyBudget(userId)
+                monthlyBudgetValue?.toDouble() ?: 0.0
+            }
+        } else {
+            //if displayed month is current month or in past shows specific budget for that month or 0 if budget doesn't exist
+            (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
+
+        }
+
+
+        binding.txtMonthlyBudetNum.text = "${String.format("%.0f", monthlyBudget)} €"
+
     }
 
 
@@ -244,6 +302,7 @@ class HomeFragment : Fragment() {
         }
         return monthlyExpenses
     }
+
     private fun updateProgressBar() {
         val monthlyIncome = fetchMonthlyBudgetsFromDatabase().sum()
         val monthlyExpenses = fetchMonthlyExpensesFromDatabase().sum()
@@ -260,8 +319,73 @@ class HomeFragment : Fragment() {
         }
     }
 
+    ///when add purchase dialog closes these functions are called to update view
+    override fun onDialogDismissed() {
+        displayLastPurchases()
+        displayMoneySpent()
+        displayMoneyLeft()
+    }
+
+    override fun onDialogDismissed2() {
+        handleNewBudget(BudgetHandler.getMonhtlyBudgetByMonth())
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun handleNewBudget(newBudgetValue: Int) {
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+        println("month: $selectedMonth") // Debug-tuloste
+        println("year: $selectedYear") // Debug-tuloste
+
+        val currentDateTime = java.time.LocalDateTime.now()
+
+
+        val yearMonth = YearMonth.of(selectedYear, selectedMonth)
+        val totalDaysInMonth = yearMonth.lengthOfMonth()
+
+        var futureDate : String?
+        var pastDate : String?
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formattedDate = currentDateTime.format(formatter)
+
+        val formatterYear = DateTimeFormatter.ofPattern("yyyy")
+        val currentYear = currentDateTime.format(formatterYear).toInt()
+
+        val formatterMonth = DateTimeFormatter.ofPattern("MM")
+        val currentMonth = currentDateTime.format(formatterMonth).toInt()
+
+
+
+        if (selectedMonth < 10){
+            futureDate = "$selectedYear-0$selectedMonth-01 00:00:01"
+            pastDate = "$selectedYear-0$selectedMonth-$totalDaysInMonth 00:00:01"
+        }
+        else {
+            futureDate = "$selectedYear-$selectedMonth-01 00:00:01"
+            pastDate = "$selectedYear-$selectedMonth-$totalDaysInMonth 23:59:59"
+        }
+
+        println("Handling new budget: $newBudgetValue") // Debug-tuloste
+
+        if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
+            println("Future date: $futureDate + $selectedMonth vs. $currentMonth") // Debug-tuloste
+            databaseManager.changeMonthlyBudgetByMonth(newBudgetValue, futureDate)
+        } else if (selectedYear < currentYear || (selectedYear == currentYear && selectedMonth < currentMonth)) {
+            println("Past date: $pastDate") // Debug-tuloste
+            databaseManager.changeMonthlyBudgetByMonth(newBudgetValue, pastDate)
+        } else {
+            println("current date: $formattedDate") // Debug-tuloste
+            databaseManager.changeMonthlyBudgetByMonth(newBudgetValue, formattedDate)
+        }
+
+        displayMonthlyBudget()
+        displayMoneySpent()
+        displayMoneyLeft()
+    }
+
+
 }
