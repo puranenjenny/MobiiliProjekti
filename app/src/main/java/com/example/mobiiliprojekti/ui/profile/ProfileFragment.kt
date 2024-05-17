@@ -63,8 +63,7 @@ class ProfileFragment : Fragment() {
         welcomeTxt.text = "Welcome $username!"
 
         //set monthly budget input field value with value that is stored to db
-        val (setMonthlyBudget, _) = databaseManager.fetchMonthlyBudget(userId)
-        monthlyBudget.setText(setMonthlyBudget.toString())
+        showMonthlybudget(userId, monthlyBudget)
 
         // TODO: do this again with some kind of loop and function
         //set category budget input field values with values that is stored to db
@@ -205,4 +204,10 @@ class ProfileFragment : Fragment() {
             Toast.makeText(requireContext(), "Input budget $categoryName!", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun showMonthlybudget(userId : Long, monthlyBudget : TextInputEditText){
+        val (setMonthlyBudget, _) = databaseManager.fetchMonthlyBudget(userId)
+        monthlyBudget.setText(setMonthlyBudget.toString())
+    }
+
 }

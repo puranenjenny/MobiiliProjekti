@@ -45,19 +45,6 @@
     <string name="txt_lastpay">Last Payments</string>
     <string name="category">Category</string>
 
-    <!--dashboard fragment-->
-    <string name="last_payments_listed">Last Payments Listed</string>
-    <string name="last_payments_in">Last payments in ___</string>
-    <string name="_1500">1500 €</string>
-    <string name="_0">0 €</string>
-    <string name="_0_days">0 days</string>
-    <string name="_21">21%</string>
-    <string name="budget_percentage_remaining">Budget percentage remaining</string>
-    <string name="_300">300 €</string>
-    <string name="monthly_budget">Monthly Budget</string>
-    <string name="next_month">next month</string>
-    <string name="previous_month">previous month</string>
-
     <!--edit user fragment-->
     <string name="editUser">Edit user information</string>
     <string name="editUser2">Here you can edit your user information.</string>
@@ -69,7 +56,7 @@
     <string name="delete">Delete</string>
 
     <!--Profile fragment-->
-    <string name="setBudget">Here you can forge your monthly budget, categorize expenditures, and plan a celebratory reward for sticking to your budget. ✨ </string>
+    <string name="setBudget">Here you can set your monthly budget and set your category and treat goals.</string>
     <string name="monthly">Monthly budget</string>
     <string name="monthlyNum">0</string>
     <string name="housing">Housing</string>
@@ -86,10 +73,10 @@
     <string name="entertainNum">0</string>
     <string name="other">Other</string>
     <string name="otherNum">0</string>
-    <string name="savings">Your savings</string>
+    <string name="savings">Your savings:</string>
     <string name="savingsNum">0</string>
     <string name="littleTreat">Little Treat</string>
-    <string name="littleTreat2">After sticking to your budget for 4 month, you deserve a little treat! 😊</string>
+    <string name="littleTreat2">After sticking to your budget for 4 month, you deserve a little treat!</string>
     <string name="treat">Treat:</string>
     <string name="treat2">Add treat</string>
     <string name="treatNum">Treat budget:</string>
@@ -105,10 +92,7 @@
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save_budget">Save Budget</string>
     <string name="save_treat">Save treat</string>
-
 
 </resources>

@@ -25,12 +25,6 @@ class MainActivity : AppCompatActivity() {
         // Budget update if month changes
         isNewMonth()
 
-        databaseManager.allCategories()
-        databaseManager.printMonthBudget() //prints monthly budget table to logcat for debugging
-        databaseManager.printCategoryBudgets() //prints category budget table to logcat for debugging
-
-
-
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -46,21 +40,17 @@ class MainActivity : AppCompatActivity() {
     private fun isNewMonth() {
         val userId = SessionManager.getLoggedInUserId()
         val (_ , date) = databaseManager.fetchMonthlyBudget(userId)
-        println("Time at db before parse: $date")
         val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
         val currentTime = dateFormat.format(Date())
 
         val previousDate = dateFormat.parse(date)
         val currentDate = dateFormat.parse(currentTime)
-        println("Db time after parse: $previousDate")
-        println("time now: $currentDate")
+
 
         if (currentDate > previousDate){
             databaseManager.updateBudgetsForNewMonth(userId)
-            println("New budgets added because month have changed")
+
         }
-        else {
-            println("Bouget OK")
-        }
+
     }
 }

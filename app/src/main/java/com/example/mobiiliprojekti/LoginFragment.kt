@@ -14,6 +14,7 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.SessionManager
 
 class LoginFragment : DialogFragment() {
 
@@ -40,7 +41,7 @@ class LoginFragment : DialogFragment() {
 
         // Set admin username to text-field if it is available
         // and also activate biometric authentication when primary user is set
-        val adminUsername = databaseManager.fetchAdminUser()
+        val (adminUserId, adminUsername) = databaseManager.fetchAdminUser()
         if (adminUsername != null) {
             userNameEditText.setText(adminUsername)
 
@@ -97,7 +98,8 @@ class LoginFragment : DialogFragment() {
         }
 
         // Show biometric prompt if admin user is available
-        if (adminUsername != null) {
+        if (adminUsername != null && adminUserId != null) {
+            SessionManager.setLoggedInUserId(adminUserId)
             biometricPrompt.authenticate(promptInfo)
         }
 
@@ -115,7 +117,12 @@ class LoginFragment : DialogFragment() {
     private fun createBiometricPrompt(): BiometricPrompt {
         val executor = ContextCompat.getMainExecutor(requireContext())
         val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                // Handle authentication error
+            }
+
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                // If user and password are correct navigate to main screen
                 val intent = Intent(requireContext(), MainActivity::class.java)
                 startActivity(intent)
                 // close login activity
@@ -124,7 +131,6 @@ class LoginFragment : DialogFragment() {
 
             override fun onAuthenticationFailed() {
                 // Handle authentication failure
-                Toast.makeText(requireContext(), "Identification failed!", Toast.LENGTH_SHORT).show()
             }
         }
         return BiometricPrompt(this, executor, callback)

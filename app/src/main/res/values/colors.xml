@@ -10,6 +10,7 @@
     <color name="light_grey">#F0F4EF</color>
     <color name="dark_green">#394934</color>
     <color name="cancel">#8B3A3A</color>
+    <color name="red">#FF3434</color>
 
 
 </resources>

@@ -114,29 +114,63 @@ class AddPurchase : DialogFragment() {
         val date = btnDate.text.toString()
         val userId = SessionManager.getLoggedInUserId()
 
+        Log.d("AddPurchaseFragment", "Name: $name")
+        Log.d("AddPurchaseFragment", "Price: $price")
+        Log.d("AddPurchaseFragment", "Category: $category")
+        Log.d("AddPurchaseFragment", "Date: $date")
+        Log.d("AddPurchaseFragment", "User ID: $userId")
+
         if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
             val result = databaseManager.addPurchase(name, price, category, date, userId)
-            activity?.runOnUiThread {
+            if (result != -1L) {
                 if (result != -1L) {
-                    Toast.makeText(requireContext(), "Purchase saved successfully!", Toast.LENGTH_SHORT).show()
+                    Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
+                    Toast.makeText(
+                        requireContext(),
+                        "Purchase saved successfully!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                   // purchaseUpdateListener?.onPurchaseUpdated() // vittu ei jaksa x)
                     dismiss()
                 } else {
-                    Toast.makeText(requireContext(), "Error saving purchase.", Toast.LENGTH_SHORT).show()
+                    Log.e("AddPurchaseFragment", "Error saving purchase.")
+                    Toast.makeText(requireContext(), "Error saving purchase.", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            }
-        } else {
-            activity?.runOnUiThread {
+            } else {
                 if (name.isEmpty()) {
-                    Toast.makeText(requireContext(), "Please enter the purchase name!", Toast.LENGTH_SHORT).show()
+                    Log.e("AddPurchaseFragment", "Purchase name is empty.")
+                    Toast.makeText(
+                        requireContext(),
+                        "Please enter the purchase name!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 if (price == null) {
-                    Toast.makeText(requireContext(), "Please enter a valid price!", Toast.LENGTH_SHORT).show()
+                    Log.e("AddPurchaseFragment", "Price is null or invalid.")
+                    Toast.makeText(
+                        requireContext(),
+                        "Please enter a valid price!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 if (date.isEmpty()) {
-                    Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT).show()
+                    Log.e("AddPurchaseFragment", "Date is empty.")
+                    Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                if (userId == -1L) {
+                    Log.e("AddPurchaseFragment", "User ID is not available.")
+                    Toast.makeText(requireContext(), "User ID not available!", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
+    //for passing info to homeFragment about dismissing this dialog
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        listener?.onDialogDismissed()
+    }
 }
