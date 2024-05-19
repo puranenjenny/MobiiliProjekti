@@ -1,6 +1,7 @@
 package com.example.mobiiliprojekti.ui.profile
 
 import android.content.Intent
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import com.example.mobiiliprojekti.services.SessionManager
 import com.google.android.material.textfield.TextInputEditText
 import android.text.TextWatcher
 import android.widget.Toast
+import java.time.LocalDate
 
 class ProfileFragment : Fragment() {
 
@@ -206,8 +208,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showMonthlybudget(userId : Long, monthlyBudget : TextInputEditText){
-        val (setMonthlyBudget, _) = databaseManager.fetchMonthlyBudget(userId)
-        monthlyBudget.setText(setMonthlyBudget.toString())
+        val monthNow = LocalDate.now().monthValue
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        monthlyBudget.setText((databaseManager.getSelectedMonthsBudget(userId, monthNow, currentYear) ?: 0.0).toString())
     }
 
 }

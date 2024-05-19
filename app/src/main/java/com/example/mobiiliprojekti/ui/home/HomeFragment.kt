@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobiiliprojekti.ChangeMonthlyBudgetDialogListener
@@ -194,7 +193,7 @@ private fun displayLastPurchases() {
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
 
-        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+        val currentMonth = LocalDate.now().monthValue
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
         // TODO: Just testing. Delete when ready.
@@ -205,8 +204,7 @@ private fun displayLastPurchases() {
             if (budget != 0)
             (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
             else{
-                val (monthlyBudgetValue, _) = databaseManager.fetchMonthlyBudget(userId)
-                monthlyBudgetValue?.toDouble() ?: 0.0
+                (databaseManager.getSelectedMonthsBudget(userId, currentMonth, currentYear) ?: 0.0).toDouble()
             }
         } else {
             //if displayed month is current month or in past shows specific budget for that month or 0 if budget doesn't exist
@@ -233,18 +231,18 @@ private fun displayLastPurchases() {
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
 
-        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+        val monthNow = LocalDate.now().monthValue
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        println("current: $monthNow/$currentYear")
 
 
 
-        monthlyBudget = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
+        monthlyBudget = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > monthNow)) {
             val budget = databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0
             if (budget != 0)
                 (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
             else{
-                val (monthlyBudgetValue, _) = databaseManager.fetchMonthlyBudget(userId)
-                monthlyBudgetValue?.toDouble() ?: 0.0
+                (databaseManager.getSelectedMonthsBudget(userId, monthNow, currentYear) ?: 0.0).toDouble()
             }
         } else {
             //if displayed month is current month or in past shows specific budget for that month or 0 if budget doesn't exist
@@ -338,7 +336,7 @@ private fun displayLastPurchases() {
     }
 
     override fun onDialogDismissed2() {
-        handleNewBudget(BudgetHandler.getMonhtlyBudgetByMonth())
+        handleNewBudget(BudgetHandler.getMonthlyBudgetByMonth())
     }
     override fun onDestroyView() {
         super.onDestroyView()

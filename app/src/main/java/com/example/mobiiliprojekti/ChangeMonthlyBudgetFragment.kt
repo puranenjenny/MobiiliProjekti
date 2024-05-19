@@ -45,7 +45,7 @@ class ChangeMonthlyBudgetFragment(private var homeFragment: HomeFragment) : Dial
                 Toast.makeText(requireContext(), "Input new budget!", Toast.LENGTH_SHORT).show()
             } else {
                 newBudgetValue = newBudget.text.toString().toInt()
-                BudgetHandler.setMonhtlyBudgetByMonth(newBudgetValue!!)
+                BudgetHandler.setMonthlyBudgetByMonth(newBudgetValue!!)
                 dismiss()
             }
         }

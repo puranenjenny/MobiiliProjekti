@@ -107,5 +107,7 @@
     <string name="img_description2">Coin</string>
     <string name="save_budget">Save Budget</string>
     <string name="save_treat">Save treat</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

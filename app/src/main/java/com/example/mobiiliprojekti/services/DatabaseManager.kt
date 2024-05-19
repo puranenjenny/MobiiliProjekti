@@ -1,5 +1,6 @@
 package com.example.mobiiliprojekti.services
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
@@ -184,7 +185,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         var date: String? = null
 
         try {
-            val cursor = db.rawQuery("SELECT month_budget, date FROM monthly_budget WHERE user = $userId ORDER BY mb_id DESC, date DESC LIMIT 1", null)
+            val cursor = db.rawQuery("SELECT month_budget, date FROM monthly_budget WHERE user = $userId ORDER BY date DESC, mb_id DESC", null)
             if (cursor.moveToFirst()) {
                 val monthlyBudgetIndex = cursor.getColumnIndex("month_budget")
                 val dateIndex = cursor.getColumnIndex("date")
@@ -194,6 +195,8 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 }
             }
             cursor.close()
+            printMonthBudget()
+            println("monthly budget selected : $monthlyBudgetValue")
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -304,7 +307,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
 
 
-    // this prints all user to terminal for debugging -->
+    // this prints all users to terminal for debugging -->
     fun printAllUsers() {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM user", null)
@@ -575,7 +578,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
-    // this function deleter all user related data from database
+    // this function deletes all user related data from database
     fun deleteUserData(userId: Long): Boolean {
         val db = writableDatabase
         val deleteQueries = arrayOf(
@@ -629,7 +632,6 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 }
                 cursor.close()
             }
-            db.close()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -781,6 +783,48 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
+    //db.execSQL("CREATE TABLE category_budget (cb_id INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER, cat_budget INTEGER, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER, FOREIGN KEY(category) REFERENCES category(category_id), FOREIGN KEY(user) REFERENCES user(user_id))")
+
+    fun changeCategoryBudgetByMonth(categoryBudget: Int, date: String, category: String) {
+        try {
+            println("new budget inserted $categoryBudget")
+            val userId = SessionManager.getLoggedInUserId() // get user id that is registered
+
+            val db = writableDatabase
+            println("Searched category: $category")
+
+            // Hae category_id annetulle category-nimelle
+            val categoryIdQuery = "SELECT category_id FROM category WHERE category_name = ?"
+            val cursor = db.rawQuery(categoryIdQuery, arrayOf(category))
+            var categoryId: Int? = null
+            if (cursor.moveToFirst()) {
+                val categoryIdIndex = cursor.getColumnIndex("category_id")
+                categoryId = cursor.getInt(categoryIdIndex)
+            }
+            cursor.close()
+
+            // Jos category_id löytyi, jatka tallentamista
+            if (categoryId != null) {
+                val contentValues = ContentValues().apply {
+                    put("cat_budget", categoryBudget)
+                    put("user", userId)
+                    put("date", date)
+                    put("category", categoryId)
+                }
+                db.insert("category_budget", null, contentValues)
+                printCategoryBudgets()
+            } else {
+                println("Category not found: $category")
+            }
+
+            db.close()
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+
     //function gets logged in users category budget by category name and mont/year
     fun getSelectedMonthsCategoryBudget(userId: Long, categoryName: String, selectedMonth: Int, selectedYear: Int): Int? {
         val db = readableDatabase
@@ -790,7 +834,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
 
         try {
-            val query = "SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = ? AND c.category_name = ? AND strftime('%m', cb.date) = ? AND strftime('%Y', cb.date) = ? ORDER BY date DESC LIMIT 1"
+            val query = "SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = ? AND c.category_name = ? AND strftime('%m', cb.date) = ? AND strftime('%Y', cb.date) = ? ORDER BY cb_id DESC, date DESC LIMIT 1"
             Log.d("DatabaseQuery", "Query: $query, User: ${userId}, Category: ${categoryName}, Month: $month, Year: $year")
             val cursor = db.rawQuery(query, arrayOf(userId.toString(),categoryName, month, year))
             if (cursor.moveToFirst()) {
