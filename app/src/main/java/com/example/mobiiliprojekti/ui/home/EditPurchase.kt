@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,10 @@ import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import com.example.mobiiliprojekti.services.Purchase
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 interface EditPurchaseDialogListener {
     fun onDialogDismissed()
@@ -61,7 +63,7 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
         etName.setText(purchase.name)
         etPrice.setText(purchase.price.toString())
-        setupCategorySpinner()
+        setupCategorySpinner(purchase.category)
         setupDateButton()
 
         btnSave.setOnClickListener {
@@ -82,37 +84,43 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         }
     }
 
-    private fun setupCategorySpinner() {
-        val categories = databaseManager.allCategoryNames()
-        if (categories.isEmpty()) {
-            Log.e("SetupCategorySpinner", "No categories found in database")
-            Toast.makeText(requireContext(), "No categories found!", Toast.LENGTH_SHORT).show()
-        }
+    private fun setupCategorySpinner(currentCategoryId: Int) {
+        val categoryNames = databaseManager.allCategoryNames()
 
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categoryNames)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory.adapter = adapter
+
+        val currentCategoryName = databaseManager.getCategoryNameById(currentCategoryId)
+        val categoryPosition = adapter.getPosition(currentCategoryName)
+        spinnerCategory.setSelection(categoryPosition)
     }
 
 
     private fun setupDateButton() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        btnDate.text = purchase.date
 
-        btnDate.text = String.format("%d-%02d-%02d", year, month + 1, day)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val purchaseDate = dateFormat.parse(purchase.date)
+        val calendar = Calendar.getInstance().apply {
+            time = purchaseDate ?: Date() // fallback to current date if parsing fails
+        }
 
         btnDate.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(requireContext(),
+            DatePickerDialog(requireContext(), //update the selected date when picked
                 { _, selectedYear, selectedMonth, selectedDay ->
-                    btnDate.text = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-                }, year, month, day
-            )
-            datePickerDialog.show()
+                    val selectedDate = Calendar.getInstance().apply {
+                        set(selectedYear, selectedMonth, selectedDay)
+                    }
+                    btnDate.text = dateFormat.format(selectedDate.time)
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
     }
+
 
     private fun saveUpdatedPurchase() {
         val name = etName.text.toString().trim()

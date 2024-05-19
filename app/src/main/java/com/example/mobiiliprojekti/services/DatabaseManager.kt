@@ -450,6 +450,22 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return categoryId
     }
 
+    fun getCategoryNameById(categoryId: Int): String {
+        val db = readableDatabase
+        val cursor = db.query("category", arrayOf("category_name"), "category_id = ?", arrayOf(categoryId.toString()), null, null, null)
+        var categoryName = ""
+        if (cursor != null && cursor.moveToFirst()) {
+            val index = cursor.getColumnIndex("category_name")
+            if (index != -1) {
+                categoryName = cursor.getString(index)
+            }
+            cursor.close()
+        }
+        return categoryName
+    }
+
+
+
     // this function gets the budget category id by category name for purchase
     fun fetchCategoryBudgetIdByNameforPurchase(categoryName: String): Int {
         val db = readableDatabase
