@@ -121,7 +121,7 @@ private fun displayLastPurchases() {
 
 
     private fun showEditPurchaseDialog(purchase: Purchase) {
-        val editPurchaseDialog = EditPurchase(purchase)
+        val editPurchaseDialog = EditPurchase(purchase, this as EditPurchaseDialogListener)
         editPurchaseDialog.show(parentFragmentManager, "editPurchaseDialog")
     }
 

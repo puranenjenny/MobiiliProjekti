@@ -26,9 +26,9 @@ interface EditPurchaseDialogListener {
     fun onDialogDismissed()
 }
 
-class EditPurchase(private val purchase: Purchase) : DialogFragment() {
+class EditPurchase(private val purchase: Purchase, private val listener: EditPurchaseDialogListener) : DialogFragment() {
 
-    //private lateinit var homeFragment: HomeFragment
+    private lateinit var homeFragment: HomeFragment
 
     private lateinit var etName: EditText
     private lateinit var etPrice: EditText
@@ -37,7 +37,6 @@ class EditPurchase(private val purchase: Purchase) : DialogFragment() {
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var databaseManager: DatabaseManager
-    private var listener: EditPurchaseDialogListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +44,7 @@ class EditPurchase(private val purchase: Purchase) : DialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_edit_purchase, container, false)
 
+        super.onViewCreated(view, savedInstanceState)
 
         etName = view.findViewById(R.id.edit_purchase_name)
         etPrice = view.findViewById(R.id.edit_purchase_price)
@@ -57,7 +57,6 @@ class EditPurchase(private val purchase: Purchase) : DialogFragment() {
 
         databaseManager = DatabaseManager(requireContext())
 
-        //listener = homeFragment
 
 
         etName.setText(purchase.name)
@@ -139,7 +138,6 @@ class EditPurchase(private val purchase: Purchase) : DialogFragment() {
         val isSuccess = databaseManager.updatePurchase(updatedPurchase)
         if (isSuccess > 0) {
             Toast.makeText(context, "Purchase updated successfully!", Toast.LENGTH_SHORT).show()
-            listener?.onDialogDismissed()
             dismiss()
         } else {
             Toast.makeText(context, "Failed to update purchase.", Toast.LENGTH_SHORT).show()
