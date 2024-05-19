@@ -36,7 +36,7 @@
 
 
     <!--home fragment-->
-    <string name="btn_addNew">Add New</string>
+    <string name="btn_addNew">Add new purchase</string>
     <string name="txt_MonthYear">Month Year</string>
     <string name="txt_daysleft">Days Left</string>
     <string name="txt_moneyleft">Money Left</string>

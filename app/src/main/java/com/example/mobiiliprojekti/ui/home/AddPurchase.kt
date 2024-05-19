@@ -20,6 +20,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
+import com.example.mobiiliprojekti.services.Purchase
 import java.util.Calendar
 
 interface AddPurchaseDialogListener {
@@ -51,11 +52,10 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         btnSave = view.findViewById(R.id.btn_save)
         btnCancel = view.findViewById(R.id.btn_cancel)
 
-       // btnDate.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
         databaseManager = DatabaseManager(requireContext())
-        //listener = homeFragment
+
         listener = homeFragment
 
         setupCategorySpinner()
@@ -129,20 +129,13 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
             val result = databaseManager.addPurchase(name, price, category, date, userId)
             if (result != -1L) {
-                if (result != -1L) {
                     Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
                     Toast.makeText(
                         requireContext(),
                         "Purchase saved successfully!",
                         Toast.LENGTH_SHORT
                     ).show()
-                   // purchaseUpdateListener?.onPurchaseUpdated() // vittu ei jaksa x)
                     dismiss()
-                } else {
-                    Log.e("AddPurchaseFragment", "Error saving purchase.")
-                    Toast.makeText(requireContext(), "Error saving purchase.", Toast.LENGTH_SHORT)
-                        .show()
-                }
             } else {
                 if (name.isEmpty()) {
                     Log.e("AddPurchaseFragment", "Purchase name is empty.")
@@ -152,22 +145,9 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                if (price == null) {
-                    Log.e("AddPurchaseFragment", "Price is null or invalid.")
-                    Toast.makeText(
-                        requireContext(),
-                        "Please enter a valid price!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
                 if (date.isEmpty()) {
                     Log.e("AddPurchaseFragment", "Date is empty.")
                     Toast.makeText(requireContext(), "Please select a date!", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                if (userId == -1L) {
-                    Log.e("AddPurchaseFragment", "User ID is not available.")
-                    Toast.makeText(requireContext(), "User ID not available!", Toast.LENGTH_SHORT)
                         .show()
                 }
             }

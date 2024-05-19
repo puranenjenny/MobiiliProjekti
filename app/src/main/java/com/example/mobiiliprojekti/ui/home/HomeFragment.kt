@@ -15,6 +15,7 @@ import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.databinding.FragmentHomeBinding
 import com.example.mobiiliprojekti.services.BudgetHandler
 import com.example.mobiiliprojekti.services.DatabaseManager
+import com.example.mobiiliprojekti.services.Purchase
 import com.example.mobiiliprojekti.services.SessionManager
 import java.time.LocalDate
 import java.time.YearMonth
@@ -23,7 +24,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 
-class HomeFragment : Fragment(), AddPurchaseDialogListener, ChangeMonthlyBudgetDialogListener {
+class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogListener, ChangeMonthlyBudgetDialogListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -87,30 +88,41 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, ChangeMonthlyBudgetD
 
 // this months last purchases
 private fun displayLastPurchases() {
-        val userId = SessionManager.getLoggedInUserId()
-        val selectedMonth = currentMonthIndex
-        val selectedYear = currentYear
-        val purchases = databaseManager.getLastPurchases(userId, selectedYear, selectedMonth )
-        val purchasesLayout = binding.linLastpaymentsHome
-        purchasesLayout.removeAllViews()
+    val userId = SessionManager.getLoggedInUserId()
+    val selectedMonth = currentMonthIndex
+    val selectedYear = currentYear
+    val purchases = databaseManager.getLastPurchases(userId, selectedYear, selectedMonth)
+    val purchasesLayout = binding.linLastpaymentsHome
+    purchasesLayout.removeAllViews()
 
-        if (purchases.isEmpty()) {
-            val noPurchasesView = TextView(context).apply {
-                text = "No purchases yet"
-                textSize = 16f
-                setPadding(12, 12, 12, 12)
-            }
-            purchasesLayout.addView(noPurchasesView)
-        } else {
-            purchases.forEach { purchase ->
-                val purchaseView = TextView(context).apply {
-                    text = "${purchase.date}: ${purchase.name} - ${purchase.value} €"
-                    textSize = 16f
-                    setPadding(12, 12, 12, 12)
-                }
-                purchasesLayout.addView(purchaseView)
-            }
+    if (purchases.isEmpty()) {
+        val noPurchasesView = TextView(context).apply {
+            text = "No purchases yet"
+            textSize = 18f
+            setPadding(20, 20, 20, 20)
         }
+        purchasesLayout.addView(noPurchasesView)
+    } else {
+        purchases.forEach { purchase ->
+            val purchaseView = TextView(context).apply { //POISTA KATEGORIA!! 
+                text = "${purchase.date}: ${purchase.category} - ${purchase.name} - ${purchase.price} €"
+                textSize = 18f
+                setPadding(20, 20, 20, 20)
+                isClickable = true
+                setBackgroundResource(R.drawable.ripple_effect)
+                setOnClickListener {
+                    showEditPurchaseDialog(purchase)
+                }
+            }
+            purchasesLayout.addView(purchaseView)
+        }
+    }
+}
+
+
+    private fun showEditPurchaseDialog(purchase: Purchase) {
+        val editPurchaseDialog = EditPurchase(purchase, this as EditPurchaseDialogListener)
+        editPurchaseDialog.show(parentFragmentManager, "editPurchaseDialog")
     }
 
 
@@ -207,12 +219,11 @@ private fun displayLastPurchases() {
         val moneyLeft = monthlyBudget - homeExpenses
         binding.txtMoneyLeftHome.text = "${String.format("%.1f", moneyLeft)} €"
 
-        // Aseta tekstin väri punaiseksi, jos moneyLeft on negatiivinen
+        // change the background color of money left element
         if (moneyLeft < 0) {
-            binding.txtMoneyLeftHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.moneyleftBackground.setBackgroundResource(R.drawable.element_background_red)
         } else {
-            // Aseta tekstin väri alkuperäiseksi
-            binding.txtMoneyLeftHome.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.moneyleftBackground.setBackgroundResource(R.drawable.element_background_orange)
         }
     }
 

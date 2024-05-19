@@ -234,6 +234,7 @@
 
             <!-- Money left -->
             <LinearLayout
+                android:id="@+id/moneyleftBackground"
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
@@ -290,7 +291,8 @@
             android:text="@string/btn_addNew"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.514"
@@ -376,8 +378,6 @@
             android:id="@+id/sv_lastpayments_home"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#F0F4EF"
             android:contentDescription="last payments listed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -388,6 +388,7 @@
                 android:id="@+id/linLastpaymentsHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:orientation="vertical" />
         </ScrollView>
 
