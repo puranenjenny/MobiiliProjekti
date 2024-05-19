@@ -104,7 +104,7 @@ private fun displayLastPurchases() {
         purchasesLayout.addView(noPurchasesView)
     } else {
         purchases.forEach { purchase ->
-            val purchaseView = TextView(context).apply {
+            val purchaseView = TextView(context).apply { //POISTA KATEGORIA!! 
                 text = "${purchase.date}: ${purchase.category} - ${purchase.name} - ${purchase.price} €"
                 textSize = 18f
                 setPadding(20, 20, 20, 20)

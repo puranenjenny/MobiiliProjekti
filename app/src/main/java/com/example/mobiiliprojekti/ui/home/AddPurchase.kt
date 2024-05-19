@@ -52,7 +52,6 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         btnSave = view.findViewById(R.id.btn_save)
         btnCancel = view.findViewById(R.id.btn_cancel)
 
-       // btnDate.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
         databaseManager = DatabaseManager(requireContext())
