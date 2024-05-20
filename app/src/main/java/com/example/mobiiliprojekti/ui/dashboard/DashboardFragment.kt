@@ -75,6 +75,7 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
                 selectedCategoryString = selectedCategory
                 SelectedCategoryHandler.setSelectedCategory(selectedCategoryString)
                 selectedMonthsCategoryBudgetByCategory(selectedCategoryString)
+                updateEverything()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // No-op
@@ -170,7 +171,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
     //money left
     private fun displayMoneyLeft() {
-        println("DashboardFragment, displayMoneyLeft called")
         val userId = SessionManager.getLoggedInUserId()
         val selectedCategory = SelectedCategoryHandler.getSelectedCategory()
         val selectedMonth = currentMonthIndex
@@ -182,23 +182,16 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         val categoryBudget: Double = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > monthNow)) {
             val budget = databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, selectedMonth, selectedYear) ?: 0
             if (budget != 0)
-                (databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, selectedMonth, selectedYear) ?: 0.0).toDouble()
-            else{
-                (databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, monthNow, currentYear) ?: 0.0).toDouble()
-            }
+                budget.toDouble()
+            else
+                databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, monthNow, currentYear)?.toDouble() ?: 0.0
         } else {
-            //if displayed month is current month or in past shows specific budget for that month or 0 if budget doesn't exist
-            (databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, selectedMonth, selectedYear) ?: 0.0).toDouble()
+            databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, selectedMonth, selectedYear)?.toDouble() ?: 0.0
         }
 
         val totalExpenses = databaseManager.getTotalExpenses(userId, selectedCategory, selectedMonth, selectedYear)
 
-        println("Total Expensies are: $totalExpenses")
-
         val moneyLeft = categoryBudget - totalExpenses
-
-        println("Moneyleft $moneyLeft = $categoryBudget - $totalExpenses")
-
         binding.txtMoneyLeftDashboard.text = String.format("%.1f €", moneyLeft)
 
         if (moneyLeft < 0) {
@@ -237,29 +230,37 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
 
-        val totalBudget = databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, selectedMonth, selectedYear)?.toDouble() ?: 0.0
+        val monthNow = LocalDate.now().monthValue
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+        val totalBudget: Double = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > monthNow)) {
+            val budget = databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, selectedMonth, selectedYear) ?: 0
+            if (budget != 0)
+                budget.toDouble()
+            else
+                databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, monthNow, currentYear)?.toDouble() ?: 0.0
+        } else {
+            databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, selectedMonth, selectedYear)?.toDouble() ?: 0.0
+        }
+
         val totalSpent = databaseManager.getTotalExpenses(userId, categoryName, selectedMonth, selectedYear)
 
         val budgetUsagePercent = if (totalBudget > 0) (totalSpent / totalBudget * 100).toInt() else 0
         val budgetRemainingPercent = if (budgetUsagePercent <= 100) 100 - budgetUsagePercent else 0
 
-        println("Budget usage percent is $budgetUsagePercent")
-        println("Budget remaining percent is $budgetRemainingPercent")
-
-        val textViewProgress = binding.txtHomeProgressBudget //update progress text
-        textViewProgress.text = "$budgetRemainingPercent%"
+        val textViewProgress = binding.txtHomeProgressBudget
+        textViewProgress.text = if (budgetUsagePercent <= 100) "$budgetRemainingPercent%" else "0%"
 
         val progressBar = binding.progressBarCategoryBudget
+        progressBar.max = 100
 
         if (budgetUsagePercent > 100) {
-            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel) //change bar color to red
-            progressBar.progress = progressBar.max //update to max
+            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel)
+            progressBar.progress = 100
         } else {
-            progressBar.progress = budgetUsagePercent //update progress bar to the right percent
+            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.button)
+            progressBar.progress = budgetUsagePercent
         }
-
-        progressBar.max = totalBudget.toInt()
-        progressBar.progress = totalSpent.toInt()
     }
 
 
@@ -343,7 +344,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
         val currentDateTime = java.time.LocalDateTime.now()
 
-
         val yearMonth = YearMonth.of(selectedYear, selectedMonth)
         val totalDaysInMonth = yearMonth.lengthOfMonth()
 
@@ -358,8 +358,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
         val formatterMonth = DateTimeFormatter.ofPattern("MM")
         val currentMonth = currentDateTime.format(formatterMonth).toInt()
-
-
 
         if (selectedMonth < 10){
             futureDate = "$selectedYear-0$selectedMonth-01 00:00:01"
