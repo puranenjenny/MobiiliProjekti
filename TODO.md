@@ -9,17 +9,15 @@ Suunnittelu, toteutus ja testaus tehtäviä
    * [x] lisää tietokantaan  
    * [ ] prosenttikaavio
    * [ ] kk budjetti
-   * [ ] last payments tietokantapäivitys
+   * [x] last payments tietokantapäivitys
 * [ ] dashboard sivun toiminnallisuudet  
    * [ ] tietokannasta haku kategorian mukaan  
-   * [ ] kaavio 
 * [ ] annual sivun toiminnallisuudet  
    * [x] aikasarja kuluneesta budjetista ja toteutuneesta  
-   * [ ] prosenttikaavio
-   * [ ] teksti  
+   * [ ] prosenttikaavio tai teksti  
 * [ ] profile sivun toiminnallisuudet  
    * [x] lisää ja muokkaa tietokantaa  
-   * [ ] streak ja palkinto 
+   * [ ] (streak ja palkinto)
 
 ### DONE
 * [x] profile sivun ui  
