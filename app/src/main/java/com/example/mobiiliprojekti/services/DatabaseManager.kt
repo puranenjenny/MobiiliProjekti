@@ -1,6 +1,5 @@
 package com.example.mobiiliprojekti.services
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
@@ -909,6 +908,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
+    // updates selected purchase
     fun updatePurchase(purchase: Purchase): Int {
         val db = writableDatabase
         val contentValues = ContentValues().apply {
@@ -921,6 +921,68 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val success = db.update("purchase", contentValues, "purchase_id = ?", arrayOf(purchase.purchaseId.toString()))
         db.close()
         return success
+    }
+
+
+    //dashboard
+
+    // get total money spent in a category for a given month and year and user
+    fun getTotalExpenses(userId: Long, categoryName: String, month: Int, year: Int): Double {
+        val db = readableDatabase
+        val monthYear = String.format("%04d-%02d", year, month)
+        // joins purchase with category on category_id and filters by user, category name and date
+        val query = """
+        SELECT SUM(p.value) AS total_expense FROM purchase p
+        JOIN category c ON p.category = c.category_id
+        WHERE p.user = ? AND c.category_name = ? AND strftime('%Y-%m', p.date) = ?
+    """
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), categoryName, monthYear))
+        var totalExpense = 0.0
+        if (cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndex("total_expense")
+            if (columnIndex != -1) {
+                totalExpense = cursor.getDouble(columnIndex)
+            }
+        }
+        cursor.close()
+        return totalExpense
+    }
+
+
+
+    fun getSelectedMonthsAndCategoriesPurchases(userId: Long, categoryName: String, selectedMonth: Int, selectedYear: Int): List<Purchase> {
+        val db = readableDatabase
+        val monthFormatted = String.format("%02d", selectedMonth)
+        val yearFormatted = selectedYear.toString()
+        val query = """
+        SELECT p.purchase_id, p.name, p.value, p.category, p.date
+        FROM purchase p
+        JOIN category c ON p.category = c.category_id
+        WHERE p.user = ? AND c.category_name = ? AND strftime('%m', p.date) = ? AND strftime('%Y', p.date) = ?
+        ORDER BY p.date DESC
+    """
+
+        Log.d("SQLQuery", "Executing query: $query")
+        Log.d("SQLParams", "Params: userId=$userId, categoryName=$categoryName, month=$monthFormatted, year=$yearFormatted")
+
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), categoryName, monthFormatted, yearFormatted))
+        val purchases = mutableListOf<Purchase>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val purchaseId = cursor.getLong(cursor.getColumnIndexOrThrow("purchase_id"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val price = cursor.getDouble(cursor.getColumnIndexOrThrow("value"))
+                val category = cursor.getInt(cursor.getColumnIndexOrThrow("category"))
+                val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+
+                purchases.add(Purchase(purchaseId, name, price, category, date, userId))
+            } while (cursor.moveToNext())
+        } else {
+            Log.d("SQLQuery", "No data returned.")
+        }
+        cursor.close()
+        return purchases
     }
 
 
