@@ -103,8 +103,9 @@ private fun displayLastPurchases() {
         purchasesLayout.addView(noPurchasesView)
     } else {
         purchases.forEach { purchase ->
-            val purchaseView = TextView(context).apply { //POISTA KATEGORIA!! 
-                text = "${purchase.date}: ${purchase.category} - ${purchase.name} - ${purchase.price} €"
+            val categoryName = databaseManager.getCategoryNameById(purchase.category)
+            val purchaseView = TextView(context).apply {
+                text = "${purchase.date} - $categoryName - ${purchase.name} - ${purchase.price} €"
                 textSize = 18f
                 setPadding(20, 20, 20, 20)
                 isClickable = true
@@ -117,6 +118,8 @@ private fun displayLastPurchases() {
         }
     }
 }
+
+
 
 
     private fun showEditPurchaseDialog(purchase: Purchase) {
