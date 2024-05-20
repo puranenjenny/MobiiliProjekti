@@ -148,7 +148,6 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
                 index += 1
             }
 
-
             val dataSet = BarDataSet(entries, "Budget Used %")
             dataSet.colors = barColors
             dataSet.valueTextSize = 10f
@@ -182,7 +181,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
 
         val cursor = databaseManager.readableDatabase.rawQuery(
-            "SELECT c.category_name, cb.cat_budget FROM category_budget cb JOIN category c ON cb.category = c.category_id WHERE cb.user = ? AND strftime('%Y-%m', cb.date) = ?",
+            "SELECT c.category_name, cb.cat_budget FROM category_budget cb JOIN category c ON cb.category = c.category_id WHERE cb.user = ? AND strftime('%Y-%m', cb.date) = ? ORDER BY c.category_name DESC ",
             arrayOf(userId.toString(), monthYear)
         )
         try {
@@ -214,7 +213,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
 
         val cursor = databaseManager.readableDatabase.rawQuery(
-            "SELECT c.category_name, SUM(p.value) AS total_expense FROM purchase p JOIN category c ON p.category = c.category_id WHERE p.user = ? AND strftime('%Y-%m', p.date) = ? GROUP BY c.category_name",
+            "SELECT c.category_name, SUM(p.value) AS total_expense FROM purchase p JOIN category c ON p.category = c.category_id WHERE p.user = ? AND strftime('%Y-%m', p.date) = ? GROUP BY c.category_name ORDER BY c.category_name DESC",
             arrayOf(userId.toString(), monthYear)
         )
         try {
