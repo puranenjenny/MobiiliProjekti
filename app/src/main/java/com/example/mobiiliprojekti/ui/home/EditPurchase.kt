@@ -30,7 +30,7 @@ interface EditPurchaseDialogListener {
 
 class EditPurchase(private val purchase: Purchase, private val listener: EditPurchaseDialogListener) : DialogFragment() {
 
-    private lateinit var homeFragment: HomeFragment
+    //private lateinit var homeFragment: HomeFragment
 
     private lateinit var etName: EditText
     private lateinit var etPrice: EditText
@@ -57,8 +57,8 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
-        spinnerCategory.dropDownVerticalOffset = 110 // Set vertical offset to zero or adjust as needed
-        spinnerCategory.dropDownHorizontalOffset = 30 // Set horizontal offset to zero or adjust as needed
+        spinnerCategory.dropDownVerticalOffset = 110 // vertical offset
+        spinnerCategory.dropDownHorizontalOffset = 30 // horizontal offset
 
         databaseManager = DatabaseManager(requireContext())
 
@@ -163,6 +163,6 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
     //for passing info to homeFragment about dismissing this dialog
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        listener?.onDialogDismissed()
+        listener.onDialogDismissed()
     }
 }
