@@ -6,6 +6,11 @@
     <color name="main">#495D42</color>
     <color name="button">#9E6A03</color>
     <color name="font1">#E2E4B2</color>
+    <color name="dark_grey">#1F1F1F</color>
+    <color name="light_grey">#F0F4EF</color>
+    <color name="dark_green">#394934</color>
+    <color name="cancel">#8B3A3A</color>
+    <color name="red">#FF3434</color>
 
 
 </resources>

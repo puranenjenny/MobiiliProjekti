@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_popup_background"
+    android:orientation="vertical"
+    android:paddingTop="40dp"
+    android:paddingBottom="40dp"
+    android:paddingStart="40dp"
+    android:paddingEnd="40dp"
+    tools:context=".LoginFragment">
+
+    <TextView
+        android:id="@+id/txv_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="@font/poppins"
+        android:text="@string/Login"
+        android:textAlignment="textStart"
+        android:textColor="@color/dark_grey"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/txt_login2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txv_login"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="@font/poppins"
+        android:text="@string/Login2" />
+
+    <EditText
+        android:id="@+id/txt_login_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txv_login"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="60dp"
+        android:autofillHints="username"
+        android:ems="10"
+        android:fontFamily="@font/poppins"
+        android:hint="@string/Name"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/txt_psw_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_login_user_name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:autofillHints="password"
+        android:ems="10"
+        android:fontFamily="@font/poppins"
+        android:hint="@string/Password"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/txt_forgot_psw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_psw_login"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:fontFamily="@font/poppins"
+        android:padding="2dp"
+        android:text="@string/Forgot_psw" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_forgot_psw"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel_login"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:gravity="center_horizontal|center_vertical"
+            android:minWidth="110dp"
+            android:text="@string/Cancel"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/cancel" />
+
+        <Button
+            android:id="@+id/btn_login_user"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@null"
+            android:fontFamily="@font/poppins"
+            android:minWidth="110dp"
+            android:text="@string/Login"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/main" />
+
+    </LinearLayout>
+
+</RelativeLayout>

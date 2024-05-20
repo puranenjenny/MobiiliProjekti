@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_popup_background"
+    android:paddingStart="40dp"
+    android:paddingTop="40dp"
+    android:paddingEnd="40dp"
+    android:paddingBottom="40dp"
+    tools:context=".DeleteUserFragment">
+
+    <TextView
+        android:id="@+id/txvDeleteUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="@font/poppins"
+        android:text="@string/deleteUser"
+        android:textAlignment="textStart"
+        android:textColor="@color/dark_grey"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/txvDeleteUser2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txvDeleteUser"
+        android:layout_alignParentStart="true"
+        android:fontFamily="@font/poppins"
+        android:text="@string/deleteUser2" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txvDeleteUser2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancelDeleteUser"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:insetLeft="0dp"
+            android:minWidth="110dip"
+            android:text="@string/Cancel"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/main" />
+
+        <Button
+            android:id="@+id/btnDeleteUser"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:minWidth="110dip"
+            android:text="@string/delete"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/cancel" />
+    </LinearLayout>
+
+</RelativeLayout>

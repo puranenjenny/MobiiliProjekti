@@ -1,10 +1,113 @@
 <resources>
-    <string name="app_name">Mobiili Projekti</string>
+    <string name="app_name">Penny Paladin</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_profile">Profile</string>
     <string name="title_annual">Annual</string>
-    <string name="title_header_main">PENNY PALADIN</string>
-    <string name="title_header_sub">BUDGET BUDDY</string>
-    <string name="img_description">Logo</string>
+
+    <!-- login activity -->
+    <string name="btn_login">Login</string>
+    <string name="btn_register">No account? No Problem.\nRegister here.</string>
+    <string name="motto">Shielding Your Savings,\nOne Penny at a Time</string>
+    <string name="welcome">Welcome</string>
+
+    <!-- login fragment -->
+    <string name="Login">Login</string>
+    <string name="Login2">Please enter the information\nto login.</string>
+    <string name="Name">Name</string>
+    <string name="Password">Password</string>
+    <string name="Forgot_psw">Forgot password?</string>
+    <string name="Cancel">Cancel</string>
+
+    <!-- Biometric login fragment -->
+    <string name="biom_login">Biometric login</string>
+    <string name="biom_login2">Please login by touching\nthe fingerprint scanner of your device.</string>
+    <string name="biom_login_cancel">Login with password\nor change the user.</string>
+
+    <!-- forgot psw fragment -->
+    <string name="Forgot_psw2">Please enter your information and you\'ll receive new password to your email.</string>
+    <string name="Email">Email</string>
+    <string name="Submit">Submit</string>
+
+    <!-- Register psw fragment -->
+    <string name="Register">Register</string>
+    <string name="enter_info">Please enter information to\nregister new user.</string>
+    <string name="primary_user">Set as the primary user.</string>
+
+
+    <!--home fragment-->
+    <string name="btn_addNew">Add new purchase</string>
+    <string name="txt_MonthYear">Month Year</string>
+    <string name="txt_daysleft">Days Left</string>
+    <string name="txt_moneyleft">Money Left</string>
+    <string name="txt_moneyspent">Money Spent</string>
+    <string name="txt_Treat">Treat Meter</string>
+    <string name="txt_lastpay">Last Payments</string>
+    <string name="category">Category</string>
+
+    <!--dashboard fragment-->
+    <string name="last_payments_listed">Last Payments Listed</string>
+    <string name="last_payments_in">Last payments in ___</string>
+    <string name="_1500">1500 €</string>
+    <string name="_0">0 €</string>
+    <string name="_0_days">0 days</string>
+    <string name="_21">21%</string>
+    <string name="budget_percentage_remaining">Budget percentage remaining</string>
+    <string name="_300">300 €</string>
+    <string name="monthly_budget">Monthly Budget</string>
+    <string name="next_month">next month</string>
+    <string name="previous_month">previous month</string>
+
+    <!--edit user fragment-->
+    <string name="editUser">Edit user information</string>
+    <string name="editUser2">Here you can edit your user information.</string>
+    <string name="save">Save</string>
+
+    <!--delete user fragment-->
+    <string name="deleteUser">Delete user</string>
+    <string name="deleteUser2">Here you can delete your user information.\n\n<b>Warning!</b>\nThis deletes all user related information permanently!</string>
+    <string name="delete">Delete</string>
+
+    <!--Profile fragment-->
+    <string name="setBudget">Here you can forge your monthly budget, categorize expenditures, and plan a celebratory reward for sticking to your budget. ✨ </string>
+    <string name="monthly">Monthly budget</string>
+    <string name="monthlyNum">0</string>
+    <string name="housing">Housing</string>
+    <string name="housingNum">0</string>
+    <string name="transportation">Transportation</string>
+    <string name="transportationNum">0</string>
+    <string name="clothes">Clothes</string>
+    <string name="clothesNum">0</string>
+    <string name="food">Food</string>
+    <string name="foodNum">0</string>
+    <string name="wellness">Well-being</string>
+    <string name="wellnessNum">0</string>
+    <string name="entertain">Entertainment</string>
+    <string name="entertainNum">0</string>
+    <string name="other">Other</string>
+    <string name="otherNum">0</string>
+    <string name="savings">Your savings</string>
+    <string name="savingsNum">0</string>
+    <string name="littleTreat">Little Treat</string>
+    <string name="littleTreat2">After sticking to your budget for 4 month, you deserve a little treat! 😊</string>
+    <string name="treat">Treat:</string>
+    <string name="treat2">Add treat</string>
+    <string name="treatNum">Treat budget:</string>
+    <string name="treatNum2">0</string>
+    <string name="logout">Logout</string>
+    <string name="categories">Categories</string>
+    <string name="addCategory">Add category button</string>
+    <string name="profile">Profile picture</string>
+    <string name="editProfile">Edit user profile</string>
+    <string name="treatPicture">Treat picture</string>
+
+    Monthly budget
+    <!-- image descriptions -->
+    <string name="img_description">Penny Paladin Logo</string>
+    <string name="img_description2">Coin</string>
+    <string name="save_budget">Save Budget</string>
+    <string name="save_treat">Save treat</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

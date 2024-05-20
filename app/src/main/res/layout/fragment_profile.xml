@@ -1,22 +1,646 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_profile"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        tools:context=".ui.profile.ProfileFragment">
+
+
+        <TextView
+            android:id="@+id/WelcomeText"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="28dp"
+            android:fontFamily="@font/poppins"
+            android:text="@string/welcome"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/InfoText"
+            android:layout_width="354dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins"
+            android:text="@string/setBudget"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/WelcomeText" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMonth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/InfoText">
+
+            <TextView
+                android:id="@+id/BudgetText"
+                android:layout_width="229dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/monthly"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/MonthlyInput"
+                android:layout_width="116dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/monthlyNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutCategories"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutMonth">
+
+            <TextView
+                android:id="@+id/CategoriesText"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/categories"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutHousing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCategories"
+            tools:layout_editor_absoluteX="255dp">
+
+            <TextView
+                android:id="@+id/HousingText"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/housing"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/HousingInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/housingNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTransport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutHousing">
+
+            <TextView
+                android:id="@+id/TransportationText"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/transportation"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TransportationInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/transportationNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutClothes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutFood">
+
+            <TextView
+                android:id="@+id/ClothesText"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/clothes"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ClothesInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/clothesNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutFood"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutTransport">
+
+            <TextView
+                android:id="@+id/FoodText"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/food"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/FoodInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/foodNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutWellBeing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutClothes">
+
+            <TextView
+                android:id="@+id/HygieneText"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/wellness"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/HyqieneInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/wellnessNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutEntertainment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutWellBeing">
+
+            <TextView
+                android:id="@+id/OtherEntertainment"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/entertain"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/EntertainmentInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/entertainNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutOther"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutEntertainment">
+
+            <TextView
+                android:id="@+id/OtherText"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/other"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/OtherInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/otherNum"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSavings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutOther">
+
+            <TextView
+                android:id="@+id/SavingsText"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/savings"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/SavingsNumberText"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="@string/savingsNum"
+                android:textAlignment="center"
+                android:textColor="@color/dark_green"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/SaveCategoriesButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:minWidth="160dip"
+            android:text="@string/save_budget"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutSavings" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTreat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/SaveCategoriesButton">
+
+            <TextView
+                android:id="@+id/TreatText"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/littleTreat"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="67dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="20dp"
+                android:contentDescription="@string/treatPicture"
+                android:src="@drawable/treat" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/TreatInfoText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/poppins"
+            android:text="@string/littleTreat2"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutTreat" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTreat2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/TreatInfoText">
+
+            <TextView
+                android:id="@+id/TreatTextDown"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/treat"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TreatInput"
+                android:layout_width="140dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/poppins"
+                android:hint="@string/treat2"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:boxStrokeColor="@color/black" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTreat3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutTreat2">
+
+            <TextView
+                android:id="@+id/TreatBudgetText"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/treatNum"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TreatBudgetInput"
+                android:layout_width="140dp"
+                android:layout_height="48dp"
+                android:background="@drawable/round_input"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:hint="@string/treatNum2"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:boxStrokeColor="@color/black" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/SaveTreatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:minWidth="160dp"
+            android:text="@string/save_treat"
+            app:backgroundTint="@color/button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutTreat3" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/SaveTreatButton">
+
+            <TextView
+                android:id="@+id/ProfileText"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="@string/editProfile"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="67dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="20dp"
+                android:contentDescription="@string/profile"
+                android:src="@drawable/icon_profile_large" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/EditPasswordButton"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:text="@string/editUser"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutProfile" />
+
+        <Button
+            android:id="@+id/DeleteUserBtn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/deleteUser"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/EditPasswordButton" />
+
+        <Button
+            android:id="@+id/LogoutBtn"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/rounded_button"
+            android:fontFamily="@font/poppins"
+            android:text="@string/logout"
+            app:backgroundTint="@color/button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/DeleteUserBtn" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bg_grey"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:layout_marginStart="-160dp"
+            android:layout_marginTop="-270dp"
+            app:cardBackgroundColor="@color/light_grey"
+            app:cardCornerRadius="300dp"
+            app:cardElevation="-10dp"
+            android:elevation="-10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bg_grey2"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="360dp"
+            android:layout_marginTop="300dp"
+            app:cardBackgroundColor="@color/light_grey"
+            app:cardCornerRadius="300dp"
+            app:cardElevation="-10dp"
+            android:elevation="-10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bg_grey3"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="-170dp"
+            android:layout_marginTop="830dp"
+            android:elevation="-10dp"
+            app:cardBackgroundColor="@color/light_grey"
+            app:cardCornerRadius="300dp"
+            app:cardElevation="-10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
