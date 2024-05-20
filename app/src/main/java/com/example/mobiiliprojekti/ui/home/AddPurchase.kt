@@ -52,8 +52,8 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         btnSave = view.findViewById(R.id.btn_save)
         btnCancel = view.findViewById(R.id.btn_cancel)
 
-        spinnerCategory.dropDownVerticalOffset = 110 // Set vertical offset to zero or adjust as needed
-        spinnerCategory.dropDownHorizontalOffset = 30 // Set horizontal offset to zero or adjust as needed
+        spinnerCategory.dropDownVerticalOffset = 110
+        spinnerCategory.dropDownHorizontalOffset = 30
 
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 

@@ -89,6 +89,8 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
         // Set up FragmentResultListener
         parentFragmentManager.setFragmentResultListener("changeBudgetRequestKey", viewLifecycleOwner) { requestKey, bundle ->
             val newBudgetValue = bundle.getInt("newBudgetValue")
+            println("new budget: $newBudgetValue")
+            println("FragmentResultListener received new budget: $newBudgetValue") // Debug-tuloste
             handleNewBudget(newBudgetValue)
             displayBudgetUsageChart() // Update chart when budget changes
         }
@@ -260,6 +262,7 @@ private fun displayLastPurchases() {
     }
 }
 
+
     private fun showEditPurchaseDialog(purchase: Purchase) {
         val editPurchaseDialog = EditPurchase(purchase, this as EditPurchaseDialogListener)
         editPurchaseDialog.show(parentFragmentManager, "editPurchaseDialog")
@@ -284,7 +287,7 @@ private fun displayLastPurchases() {
         displayLastPurchases()
         displayMonthlyBudget()
         displayBudgetUsageChart()
-        
+
     }
     private fun updateMonthYearDisplay() {
         val monthName = LocalDate.of(currentYear, currentMonthIndex, 1).month.getDisplayName(
