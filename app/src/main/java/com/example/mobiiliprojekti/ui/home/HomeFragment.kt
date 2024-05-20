@@ -109,6 +109,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
             axisRight.isEnabled = false
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setDrawGridLines(false)
+            animateY(2000)
         }
     }
 
@@ -126,19 +127,31 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
             val labels = mutableListOf<String>()
             var index = 0f
 
+            val barColors = mutableListOf<Int>()
+
             for ((category, budget) in categoryBudgets) {
                 val expense = categoryExpenses[category] ?: 0f
-                val usedPercentage = if (budget > 0) String.format("%.0f", (expense / budget) * 100) else "0"
-                entries.add(BarEntry(index, usedPercentage.toFloat()))
+                val usedPercentage = if (budget > 0) (expense / budget) * 100 else 0f
+
+                val usedPercentageFormatted = if (usedPercentage > 100) 100f else usedPercentage
+
+                val barColor = if (usedPercentageFormatted >= 100) {
+                    ContextCompat.getColor(requireContext(), R.color.cancel)
+                } else {
+                    ContextCompat.getColor(requireContext(), R.color.dark_green)
+                }
+
+                entries.add(BarEntry(index, usedPercentageFormatted))
                 labels.add(category)
+                barColors.add(barColor)
+
                 index += 1
             }
 
+
             val dataSet = BarDataSet(entries, "Budget Used %")
-            dataSet.color = ContextCompat.getColor(requireContext(), R.color.dark_green)
+            dataSet.colors = barColors
             dataSet.valueTextSize = 10f
-
-
             dataSet.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return "${value.toInt()} %"
@@ -153,23 +166,21 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
                 xAxis.valueFormatter = IndexAxisValueFormatter(labels)
                 xAxis.granularity = 1f
                 setExtraOffsets(0f, 0f, 0f, 16f)
-                animateY(2000, Easing.EaseInOutQuad)
-
-
                 invalidate()
             }
         } else {
             barChart.clear()
+
         }
     }
 
     private fun fetchCategoryBudgetsFromDatabase(userId: Int, month: Int, year: Int): Map<String, Float> {
         val categoryBudgets = mutableMapOf<String, Float>()
 
-        // Muunnetaan kuukausi ja vuosi oikeaan muotoon
+
         val monthYear = String.format("%d-%02d", year, month)
 
-        // Suoritetaan SQL-kysely
+
         val cursor = databaseManager.readableDatabase.rawQuery(
             "SELECT c.category_name, cb.cat_budget FROM category_budget cb JOIN category c ON cb.category = c.category_id WHERE cb.user = ? AND strftime('%Y-%m', cb.date) = ?",
             arrayOf(userId.toString(), monthYear)
@@ -198,10 +209,10 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     private fun fetchCategoryExpensesFromDatabase(userId: Int, month: Int, year: Int): Map<String, Float> {
         val categoryExpenses = mutableMapOf<String, Float>()
 
-        // Muunnetaan kuukausi ja vuosi oikeaan muotoon
+
         val monthYear = String.format("%d-%02d", year, month)
 
-        // Suoritetaan SQL-kysely
+
         val cursor = databaseManager.readableDatabase.rawQuery(
             "SELECT c.category_name, SUM(p.value) AS total_expense FROM purchase p JOIN category c ON p.category = c.category_id WHERE p.user = ? AND strftime('%Y-%m', p.date) = ? GROUP BY c.category_name",
             arrayOf(userId.toString(), monthYear)
@@ -225,6 +236,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
             cursor?.close()
         }
         return categoryExpenses
+
     }
 
 
@@ -541,6 +553,7 @@ private fun displayLastPurchases() {
         displayMonthlyBudget()
         displayMoneySpent()
         displayMoneyLeft()
+        displayBudgetUsageChart()
     }
 
 
