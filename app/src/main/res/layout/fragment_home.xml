@@ -266,8 +266,8 @@
         </LinearLayout>
 
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChartHome"
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/BarChartHome"
             android:layout_width="389dp"
             android:layout_height="165dp"
             android:layout_marginStart="10dp"
@@ -297,7 +297,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.514"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChartHome" />
+            app:layout_constraintTop_toBottomOf="@+id/BarChartHome" />
 
         <TextView
             android:id="@+id/Treattext2"

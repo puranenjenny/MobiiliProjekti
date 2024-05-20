@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobiiliprojekti.ChangeMonthlyBudgetDialogListener
@@ -16,6 +17,14 @@ import com.example.mobiiliprojekti.services.BudgetHandler
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.Purchase
 import com.example.mobiiliprojekti.services.SessionManager
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.HorizontalBarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -28,6 +37,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var databaseManager: DatabaseManager
+    private lateinit var barChart: HorizontalBarChart
 
     private var currentMonthIndex: Int = LocalDate.now().monthValue
     private var currentYear: Int = LocalDate.now().year
@@ -73,17 +83,149 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
         displayMoneySpent()
         displayMoneyLeft()
         displayMonthlyBudget()
+        setupBarChart() // Initialize the bar chart
+        displayBudgetUsageChart() // Display the budget usage chart
 
         // Set up FragmentResultListener
         parentFragmentManager.setFragmentResultListener("changeBudgetRequestKey", viewLifecycleOwner) { requestKey, bundle ->
             val newBudgetValue = bundle.getInt("newBudgetValue")
-            println("new budget: $newBudgetValue")
-            println("FragmentResultListener received new budget: $newBudgetValue") // Debug-tuloste
             handleNewBudget(newBudgetValue)
+            displayBudgetUsageChart() // Update chart when budget changes
         }
 
         return root
     }
+
+    private fun setupBarChart() {
+        barChart = binding.BarChartHome
+        barChart.apply {
+            description.isEnabled = false
+            setDrawValueAboveBar(true)
+            setPinchZoom(false)
+            setDrawGridBackground(false)
+            axisLeft.isEnabled = false
+            axisRight.isEnabled = false
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.setDrawGridLines(false)
+        }
+    }
+
+    private fun displayBudgetUsageChart() {
+        val userId = SessionManager.getLoggedInUserId().toInt()
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+
+        val categoryBudgets = fetchCategoryBudgetsFromDatabase(userId, selectedMonth, selectedYear)
+        val categoryExpenses = fetchCategoryExpensesFromDatabase(userId, selectedMonth, selectedYear)
+
+
+        if (categoryBudgets.isNotEmpty() && categoryExpenses.isNotEmpty()) {
+            val entries = mutableListOf<BarEntry>()
+            val labels = mutableListOf<String>()
+            var index = 0f
+
+            for ((category, budget) in categoryBudgets) {
+                val expense = categoryExpenses[category] ?: 0f
+                val usedPercentage = if (budget > 0) String.format("%.0f", (expense / budget) * 100) else "0"
+                entries.add(BarEntry(index, usedPercentage.toFloat()))
+                labels.add(category)
+                index += 1
+            }
+
+            val dataSet = BarDataSet(entries, "Budget Used %")
+            dataSet.color = ContextCompat.getColor(requireContext(), R.color.dark_green)
+            dataSet.valueTextSize = 10f
+
+
+            dataSet.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return "${value.toInt()} %"
+                }
+            }
+
+            val data = BarData(dataSet)
+            data.barWidth = 0.9f
+
+            barChart.apply {
+                this.data = data
+                xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+                xAxis.granularity = 1f
+                setExtraOffsets(0f, 0f, 0f, 16f)
+                animateY(2000, Easing.EaseInOutQuad)
+
+
+                invalidate()
+            }
+        } else {
+            barChart.clear()
+        }
+    }
+
+    private fun fetchCategoryBudgetsFromDatabase(userId: Int, month: Int, year: Int): Map<String, Float> {
+        val categoryBudgets = mutableMapOf<String, Float>()
+
+        // Muunnetaan kuukausi ja vuosi oikeaan muotoon
+        val monthYear = String.format("%d-%02d", year, month)
+
+        // Suoritetaan SQL-kysely
+        val cursor = databaseManager.readableDatabase.rawQuery(
+            "SELECT c.category_name, cb.cat_budget FROM category_budget cb JOIN category c ON cb.category = c.category_id WHERE cb.user = ? AND strftime('%Y-%m', cb.date) = ?",
+            arrayOf(userId.toString(), monthYear)
+        )
+        try {
+            if (cursor != null && cursor.count > 0) {
+                val categoryIndex = cursor.getColumnIndex("category_name")
+                val budgetIndex = cursor.getColumnIndex("cat_budget")
+                if (categoryIndex != -1 && budgetIndex != -1) {
+                    cursor.moveToFirst()
+                    do {
+                        val category = cursor.getString(categoryIndex)
+                        val budget = cursor.getFloat(budgetIndex)
+                        categoryBudgets[category] = budget
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+        }
+        return categoryBudgets
+    }
+
+    private fun fetchCategoryExpensesFromDatabase(userId: Int, month: Int, year: Int): Map<String, Float> {
+        val categoryExpenses = mutableMapOf<String, Float>()
+
+        // Muunnetaan kuukausi ja vuosi oikeaan muotoon
+        val monthYear = String.format("%d-%02d", year, month)
+
+        // Suoritetaan SQL-kysely
+        val cursor = databaseManager.readableDatabase.rawQuery(
+            "SELECT c.category_name, SUM(p.value) AS total_expense FROM purchase p JOIN category c ON p.category = c.category_id WHERE p.user = ? AND strftime('%Y-%m', p.date) = ? GROUP BY c.category_name",
+            arrayOf(userId.toString(), monthYear)
+        )
+        try {
+            if (cursor != null && cursor.count > 0) {
+                val categoryIndex = cursor.getColumnIndex("category_name")
+                val expenseIndex = cursor.getColumnIndex("total_expense")
+                if (categoryIndex != -1 && expenseIndex != -1) {
+                    cursor.moveToFirst()
+                    do {
+                        val category = cursor.getString(categoryIndex)
+                        val expense = cursor.getFloat(expenseIndex)
+                        categoryExpenses[category] = expense
+                    } while (cursor.moveToNext())
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+        }
+        return categoryExpenses
+    }
+
+
 
 // this months last purchases
 private fun displayLastPurchases() {
@@ -118,7 +260,6 @@ private fun displayLastPurchases() {
     }
 }
 
-
     private fun showEditPurchaseDialog(purchase: Purchase) {
         val editPurchaseDialog = EditPurchase(purchase, this as EditPurchaseDialogListener)
         editPurchaseDialog.show(parentFragmentManager, "editPurchaseDialog")
@@ -142,6 +283,7 @@ private fun displayLastPurchases() {
         displayMoneyLeft()
         displayLastPurchases()
         displayMonthlyBudget()
+        displayBudgetUsageChart()
         
     }
     private fun updateMonthYearDisplay() {
@@ -333,10 +475,12 @@ private fun displayLastPurchases() {
         displayLastPurchases()
         displayMoneySpent()
         displayMoneyLeft()
+        displayBudgetUsageChart()
     }
 
     override fun onDialogDismissed2() {
         handleNewBudget(BudgetHandler.getMonthlyBudgetByMonth())
+        displayBudgetUsageChart()
     }
     override fun onDestroyView() {
         super.onDestroyView()
