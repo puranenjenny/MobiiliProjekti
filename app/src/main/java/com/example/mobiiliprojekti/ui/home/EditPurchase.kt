@@ -31,12 +31,11 @@ interface EditPurchaseDialogListener {
 
 class EditPurchase(private val purchase: Purchase, private val listener: EditPurchaseDialogListener) : DialogFragment() {
 
-    //private lateinit var homeFragment: HomeFragment
-
     private lateinit var etName: EditText
     private lateinit var etPrice: EditText
     private lateinit var spinnerCategory: Spinner
     private lateinit var btnDate: Button
+    private lateinit var btnDelete: Button
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var databaseManager: DatabaseManager
@@ -55,6 +54,7 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         btnDate = view.findViewById(R.id.edit_btn_date)
         btnSave = view.findViewById(R.id.edit_btn_save)
         btnCancel = view.findViewById(R.id.edit_btn_cancel)
+        btnDelete = view.findViewById(R.id.btnDeletePurchase)
 
         btnCancel.backgroundTintList = context?.let { ContextCompat.getColorStateList(it, R.color.button) }
 
@@ -62,8 +62,6 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         spinnerCategory.dropDownHorizontalOffset = 30 // horizontal offset
 
         databaseManager = DatabaseManager(requireContext())
-
-
 
         etName.setText(purchase.name)
         etPrice.setText(purchase.price.toString())
@@ -80,6 +78,15 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
             dismiss()
         }
 
+        btnDelete.setOnClickListener {
+            val result = databaseManager.deletePurchase(purchase)
+            if (result > 0) {
+                Toast.makeText(context, "Purchase deleted successfully.", Toast.LENGTH_SHORT).show()
+                dismiss()
+                } else {
+                    Toast.makeText(context, "Failed to delete purchase.", Toast.LENGTH_SHORT).show()
+                }
+            }
         return view
     }
 
