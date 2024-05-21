@@ -20,12 +20,12 @@
 
         <TextView
             android:id="@+id/Treattv"
-            android:layout_width="159dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="28dp"
             android:fontFamily="@font/poppins"
-            android:text="Treat Meter"
+            android:text="@string/txt_Treat"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="22sp"
@@ -37,22 +37,20 @@
             android:id="@+id/Treatimg"
             android:layout_width="73dp"
             android:layout_height="62dp"
-            android:layout_marginTop="76dp"
-            android:layout_marginBottom="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="-20dp"
             android:src="@drawable/treat"
-            app:layout_constraintBottom_toTopOf="@+id/Treattext"
-            app:layout_constraintStart_toEndOf="@+id/progressBar"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/progressBarAnnual"
+            app:layout_constraintTop_toTopOf="@+id/progressBarAnnual" />
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progressBarAnnual"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="312dp"
+            android:layout_width="300dp"
             android:layout_height="20dp"
             android:layout_margin="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="4dp"
-            android:layout_marginBottom="20dp"
             android:background="@color/white"
             android:backgroundTint="@color/white"
             android:indeterminateDrawable="@drawable/progress_bar_custom"
@@ -61,52 +59,50 @@
             android:progressBackgroundTint="@color/light_grey"
             android:progressDrawable="@drawable/progress_bar_custom"
             android:progressTint="@color/main"
-            app:layout_constraintBottom_toTopOf="@+id/Treattext"
             app:layout_constraintEnd_toStartOf="@+id/Treatimg"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Treattv"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/ProgressTextAnnual" />
 
         <TextView
             android:id="@+id/progressText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="144dp"
             android:fontFamily="@font/poppins"
             android:text="20%"
             android:textColor="@android:color/black"
             android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/Treatimg"
-            app:layout_constraintTop_toBottomOf="@+id/Treattv" />
+            app:layout_constraintEnd_toEndOf="@+id/progressBarAnnual"
+            app:layout_constraintStart_toStartOf="@+id/progressBarAnnual"
+            app:layout_constraintTop_toTopOf="@+id/progressBarAnnual" />
 
         <TextView
-            android:id="@+id/Treattext"
-            android:layout_width="298dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="16dp"
+            android:id="@+id/ProgressTextAnnual"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
-            android:text="You have kept your budget 2 month a row! Keep going and you can treat yourself soon! "
+            android:text="@string/treatMeterText"
             android:textColor="@color/black"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/Yearlytext"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Treatimg" />
+            app:layout_constraintEnd_toEndOf="@+id/progressBarAnnual"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/Treattv"
+            app:layout_constraintTop_toBottomOf="@+id/Treattv" />
 
         <TextView
             android:id="@+id/Yearlytext"
             android:layout_width="218dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins"
             android:text="Yearly Budget"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Treattext" />
+            app:layout_constraintTop_toBottomOf="@+id/txtGoalTextAnnual" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
@@ -164,6 +160,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lineChart"
             app:srcCompat="@drawable/icon_coin" />
+
+        <TextView
+            android:id="@+id/txtGoalTextAnnual"
+            android:layout_width="270dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/progressBarAnnual"
+            app:layout_constraintStart_toStartOf="@+id/progressBarAnnual"
+            app:layout_constraintTop_toBottomOf="@+id/progressBarAnnual" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

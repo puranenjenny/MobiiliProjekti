@@ -382,6 +382,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         }
 
         val category = SelectedCategoryHandler.getSelectedCategory()
-            selectedMonthsCategoryBudgetByCategory(category)
+        selectedMonthsCategoryBudgetByCategory(category)
     }
 }

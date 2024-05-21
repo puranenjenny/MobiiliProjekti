@@ -41,7 +41,7 @@
     <string name="txt_daysleft">Days Left</string>
     <string name="txt_moneyleft">Money Left</string>
     <string name="txt_moneyspent">Money Spent</string>
-    <string name="txt_Treat">Treat Meter</string>
+    <string name="txt_Treat">Savings Goal Meter</string>
     <string name="txt_lastpay">Last Payments</string>
     <string name="category">Category</string>
 
@@ -88,11 +88,11 @@
     <string name="otherNum">0</string>
     <string name="savings">Your savings</string>
     <string name="savingsNum">0</string>
-    <string name="littleTreat">Little Treat</string>
-    <string name="littleTreat2">After sticking to your budget for 4 month, you deserve a little treat! 😊</string>
-    <string name="treat">Treat:</string>
+    <string name="littleTreat">Savings Goal</string>
+    <string name="littleTreat2">Here you can set your savings goal. You can track your progress towards the goal from the bars found on the home screen and the annual review screen.  </string>
+    <string name="treat">Your goal:</string>
     <string name="treat2">Add treat</string>
-    <string name="treatNum">Treat budget:</string>
+    <string name="treatNum">Savings needed:</string>
     <string name="treatNum2">0</string>
     <string name="logout">Logout</string>
     <string name="categories">Categories</string>
@@ -101,13 +101,15 @@
     <string name="editProfile">Edit user profile</string>
     <string name="treatPicture">Treat picture</string>
 
-    Monthly budget
+    <!-- annual fragment -->
+    <string name="treatMeterText">Here you can follow your progress towards your savings goal.</string>
+
     <!-- image descriptions -->
     <string name="img_description">Penny Paladin Logo</string>
     <string name="img_description2">Coin</string>
     <string name="save_budget">Save Budget</string>
-    <string name="save_treat">Save treat</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save_treat">Save new goal</string>
+
+
 
 </resources>

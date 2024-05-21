@@ -2,7 +2,9 @@ package com.example.mobiiliprojekti.ui.annual
 
 
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -135,6 +137,9 @@ class AnnualFragment : Fragment() {
 
 // Aseta akselin avainmatriisin tyyppi kuukausittaiseksi
         xAxis.setAvoidFirstLastClipping(true)
+
+        displayTreatMeterAnnual()
+
         return root
 
     }
@@ -146,7 +151,6 @@ class AnnualFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
     }
 
     private fun fetchMonthlyBudgetsFromDatabase(userId: Long): List<Float> {
@@ -252,6 +256,49 @@ class AnnualFragment : Fragment() {
         }
 
         return totalExpense
+    }
+
+    private fun displayTreatMeterAnnual() {
+        val goalText = binding.txtGoalTextAnnual
+        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
+        val (treat, treatValue) = databaseManager.getTreat()
+        var budgetUsagePercent = 0
+
+        if (treatValue != null && savingsValue != null) {
+            budgetUsagePercent = if (treatValue > 0) (savingsValue / treatValue!! * 100).toInt() else 0
+        }
+        println("treat% : $budgetUsagePercent")
+
+        val budgetRemainingPercent = if (budgetUsagePercent <= 100) budgetUsagePercent else 100
+
+        val textViewProgress = binding.progressText
+        textViewProgress.text = if (budgetUsagePercent <= 100) "$budgetRemainingPercent%" else "100%"
+
+        val progressBar = binding.progressBarAnnual
+        progressBar.progress = budgetUsagePercent
+        progressBar.max = 100
+
+        if (budgetUsagePercent >= 100) {
+            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.button)
+            progressBar.progress = 100
+            val layoutParams = goalText.layoutParams
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            goalText.layoutParams = layoutParams
+            val formattedText = "<b>Great job!</b> You have achieved your goal!<br>Set new goal at profile page!"
+            goalText.text = Html.fromHtml(formattedText, Html.FROM_HTML_MODE_LEGACY)
+        }
+        if (budgetUsagePercent < 0) {
+            progressBar.progress = 100
+            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel)
+            textViewProgress.setTextColor(Color.WHITE)
+        }
+        if (budgetUsagePercent > 60) {
+            textViewProgress.setTextColor(Color.WHITE)
+        }
+        else {
+            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+            progressBar.progress = budgetUsagePercent
+        }
     }
 }
 

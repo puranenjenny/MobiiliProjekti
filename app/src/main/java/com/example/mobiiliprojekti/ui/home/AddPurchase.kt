@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
-import com.example.mobiiliprojekti.services.Purchase
+import java.time.LocalDate
 import java.util.Calendar
 
 interface AddPurchaseDialogListener {
@@ -123,6 +122,12 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         val date = btnDate.text.toString()
         val userId = SessionManager.getLoggedInUserId()
 
+        val selectedMonth = date?.substring(5,7)?.toInt()
+        var selectedYear = date?.substring(0, 4)?.toInt()
+
+        var month = LocalDate.now().monthValue
+        var year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
+
         Log.d("AddPurchaseFragment", "Name: $name")
         Log.d("AddPurchaseFragment", "Price: $price")
         Log.d("AddPurchaseFragment", "Category: $category")
@@ -131,6 +136,11 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
 
         if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
             val result = databaseManager.addPurchase(name, price, category, date, userId)
+            if (selectedYear != null && selectedMonth != null) {
+                if (selectedYear < year || selectedYear == year && selectedMonth < month){
+                    updateSavings(price)
+                }
+            }
             if (result != -1L) {
                     Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
                     Toast.makeText(
@@ -162,4 +172,17 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         super.onDismiss(dialog)
         listener?.onDialogDismissed()
     }
+
+    private fun updateSavings(price: Double){
+
+        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
+
+        if (savingsId != null && savingsValue != 0.0) {
+            val saved = savingsValue?.minus(price)
+            if (saved != null) {
+                databaseManager.updateSavings(savingsId, saved)
+            }
+        }
+    }
+
 }

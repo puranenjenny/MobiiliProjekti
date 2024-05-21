@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-
+import java.time.format.DateTimeFormatter
 
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -27,6 +27,9 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db.execSQL("CREATE TABLE monthly_budget (mb_id INTEGER PRIMARY KEY AUTOINCREMENT, month_budget INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE purchase (purchase_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER DEFAULT 0, category INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, FOREIGN KEY(category) REFERENCES category_budget(category), FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0, salt TEXT NOT NULL, is_logged_in INTEGER DEFAULT 0)")
+        db.execSQL("CREATE TABLE treat (treat_id INTEGER PRIMARY KEY AUTOINCREMENT, treat_name TEXT NOT NULL, value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
+        db.execSQL("CREATE TABLE saved (saving_id INTEGER PRIMARY KEY AUTOINCREMENT, saving_value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
+
 
         val categories = arrayOf("Food", "Transportation", "Housing", "Clothes", "Well-being", "Entertainment", "Other")
         val insertStatement = db.compileStatement("INSERT INTO category (category_name) VALUES (?)")
@@ -775,7 +778,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 put("date", date)
             }
             db.insert("monthly_budget", null, contentValues)
-            db.close()
+
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -879,6 +882,23 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return values
     }
 
+    fun addCategoryBudgetsForNewMonthlyBudget(userId: Long, date: String) {
+        writableDatabase.use { db ->
+            val insertCategoryBudgetQuery = "INSERT INTO category_budget (category, cat_budget, date, user) " +
+                    "SELECT category, cat_budget, '$date', user " +
+                    "FROM category_budget " +
+                    "WHERE (category, user, date) IN ( " +
+                    "   SELECT category, user, MAX(date) " +
+                    "   FROM category_budget " +
+                    "   WHERE user = $userId " +
+                    "   GROUP BY category, user " +
+                    ");"
+
+
+            db.execSQL(insertCategoryBudgetQuery)
+            println("category budgets added")
+        }
+    }
 
     //This function is used to add new budgets with previous values when month changes
     fun updateBudgetsForNewMonth(userId: Long) {
@@ -986,6 +1006,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     //db.execSQL("CREATE TABLE treat (treat_id INTEGER PRIMARY KEY AUTOINCREMENT, treat_name TEXT NOT NULL, value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
+    //db.execSQL("CREATE TABLE saved (saving_id INTEGER PRIMARY KEY AUTOINCREMENT, saving_value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
     //add treat to db
     fun addTreat(name: String, value: Int) {
         val db = writableDatabase
@@ -998,12 +1019,12 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 put("user", userId)
             }
             db.insertOrThrow("treat", null, contentValues)
+            addSavings(0.0)
         } catch (e: SQLiteConstraintException) {
             e.printStackTrace()
         } finally {
-            //
+            db.close()
         }
-
     }
 
     //get treat from db
@@ -1035,9 +1056,9 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return Pair(treat, treatValue)
     }
 
-    //db.execSQL("CREATE TABLE saved (saving_id INTEGER PRIMARY KEY AUTOINCREMENT, saving_value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
+    //
 
-    fun addSavings(value: Int) {
+    private fun addSavings(value: Double) {
         val db = writableDatabase
         val userId = SessionManager.getLoggedInUserId()
 
@@ -1055,22 +1076,25 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
     }
 
-    fun getSavings(): Pair<Int?, Int?> {
+    fun getSavings(): Triple<Int?, Double?, String?> {
         val db = readableDatabase
         val userId = SessionManager.getLoggedInUserId()
         var savingsId: Int? = null
-        var savingsValue: Int? = null
+        var savingsValue: Double? = null
+        var savingsDate: String? = null
 
         try {
-            val query = "SELECT saving_id, saving_value FROM saved WHERE user = ? ORDER BY saving_id DESC, date DESC"
+            val query = "SELECT saving_id, saving_value, date FROM saved WHERE user = ? ORDER BY saving_id DESC, date DESC"
             Log.d("DatabaseQuery", "Query: $query, User: $userId")
             val cursor = db.rawQuery(query, arrayOf(userId.toString()))
             if (cursor.moveToFirst()) {
                 val savingsIdIndex = cursor.getColumnIndex("saving_id")
                 val savingsValueIndex = cursor.getColumnIndex("saving_value")
+                val savingsDateIndex = cursor.getColumnIndex("date")
                 if (savingsValueIndex >= 0 && savingsValueIndex >= 0) {
                     savingsId = cursor.getInt(savingsIdIndex)
-                    savingsValue = cursor.getInt(savingsValueIndex)
+                    savingsValue = cursor.getDouble(savingsValueIndex)
+                    savingsDate = cursor.getString(savingsDateIndex)
                 }
             }
             cursor.close()
@@ -1080,13 +1104,19 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             db.close()
         }
 
-        return Pair(savingsId, savingsValue)
+        return Triple(savingsId, savingsValue, savingsDate)
     }
 
-    fun updateSavings(savingsId: Int, savingsValue: Int) {
+    fun updateSavings(savingsId: Int, savingsValue: Double) {
         val db = writableDatabase
+        val currentDateTime = java.time.LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val savingsDate =  currentDateTime.format(formatter)
+
+
         val contentValues = ContentValues().apply {
             put("saving_value", savingsValue)
+            put("date", savingsDate)
         }
         return try {
             val result =

@@ -20,6 +20,7 @@ import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import com.example.mobiiliprojekti.services.Purchase
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -69,8 +70,10 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         setupCategorySpinner(purchase.category)
         setupDateButton()
 
+        val oldprice = purchase.price
+
         btnSave.setOnClickListener {
-            saveUpdatedPurchase()
+            saveUpdatedPurchase(oldprice)
         }
 
         btnCancel.setOnClickListener {
@@ -125,12 +128,20 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
     }
 
 
-    private fun saveUpdatedPurchase() {
+    private fun saveUpdatedPurchase(oldPrice: Double) {
         val name = etName.text.toString().trim()
         val price = etPrice.text.toString().toDoubleOrNull()
         val category = spinnerCategory.selectedItem.toString()
         val date = btnDate.text.toString()
         val userId = SessionManager.getLoggedInUserId()
+
+        val priceDifference = oldPrice - price!!
+
+        val selectedMonth = date.substring(5,7).toInt()
+        val selectedYear = date.substring(0, 4).toInt()
+
+        val month = LocalDate.now().monthValue
+        val year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
 
         if (name.isEmpty() || price == null || userId == -1L) {
             Toast.makeText(context, "Please ensure all fields are correctly filled.", Toast.LENGTH_SHORT).show()
@@ -148,6 +159,9 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
         val isSuccess = databaseManager.updatePurchase(updatedPurchase)
         if (isSuccess > 0) {
+            if (selectedYear < year || selectedYear == year && selectedMonth < month){
+                updateSavings(priceDifference)
+            }
             Toast.makeText(context, "Purchase updated successfully!", Toast.LENGTH_SHORT).show()
             dismiss()
         } else {
@@ -164,5 +178,16 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         listener.onDialogDismissed()
+    }
+
+    private fun updateSavings(price: Double){
+        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
+
+        if (savingsId != null && savingsValue != 0.0) {
+            val saved = savingsValue?.plus((price))
+            if (saved != null) {
+                databaseManager.updateSavings(savingsId, saved)
+            }
+        }
     }
 }
