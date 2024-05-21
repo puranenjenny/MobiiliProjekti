@@ -149,6 +149,10 @@ class AnnualFragment : Fragment() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        displayTreatMeterAnnual()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
@@ -262,44 +266,52 @@ class AnnualFragment : Fragment() {
         val goalText = binding.txtGoalTextAnnual
         val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
         val (treat, treatValue) = databaseManager.getTreat()
-        var budgetUsagePercent = 0
+        var treatPercent = 0
 
         if (treatValue != null && savingsValue != null) {
-            budgetUsagePercent = if (treatValue > 0) (savingsValue / treatValue!! * 100).toInt() else 0
+            treatPercent = if (treatValue > 0) (savingsValue / treatValue * 100).toInt() else 0
         }
-        println("treat% : $budgetUsagePercent")
+        println("treat% : $treatPercent")
 
-        val budgetRemainingPercent = if (budgetUsagePercent <= 100) budgetUsagePercent else 100
+        val treatRemainingPercent = if (treatPercent <= 100) treatPercent else 100
 
         val textViewProgress = binding.progressText
-        textViewProgress.text = if (budgetUsagePercent <= 100) "$budgetRemainingPercent%" else "100%"
+        textViewProgress.text = if (treatPercent <= 100) "$treatRemainingPercent%" else "100%"
 
         val progressBar = binding.progressBarAnnual
-        progressBar.progress = budgetUsagePercent
         progressBar.max = 100
 
-        if (budgetUsagePercent >= 100) {
-            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.button)
-            progressBar.progress = 100
-            val layoutParams = goalText.layoutParams
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            goalText.layoutParams = layoutParams
-            val formattedText = "<b>Great job!</b> You have achieved your goal!<br>Set new goal at profile page!"
-            goalText.text = Html.fromHtml(formattedText, Html.FROM_HTML_MODE_LEGACY)
-        }
-        if (budgetUsagePercent < 0) {
-            progressBar.progress = 100
-            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel)
-            textViewProgress.setTextColor(Color.WHITE)
-        }
-        if (budgetUsagePercent > 60) {
-            textViewProgress.setTextColor(Color.WHITE)
-        }
-        else {
-            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
-            progressBar.progress = budgetUsagePercent
+        when {
+            treatPercent >= 100 -> {
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.button)
+                progressBar.progress = 100
+                val layoutParams = goalText.layoutParams
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                goalText.layoutParams = layoutParams
+                val formattedText = "<b>Great job!</b> You have achieved your goal!<br>Set new goal at profile page!"
+                goalText.text = Html.fromHtml(formattedText, Html.FROM_HTML_MODE_LEGACY)
+            }
+            treatPercent < 0 -> {
+                progressBar.progress = 100
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel)
+                textViewProgress.setTextColor(Color.WHITE)
+            }
+            treatPercent > 53 -> {
+                progressBar.progress = treatPercent
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+                textViewProgress.setTextColor(Color.WHITE)
+            }
+            treatPercent == 0 -> {
+                progressBar.progress = 0
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+            }
+            else -> {
+                progressBar.progress = treatPercent
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+            }
         }
     }
+
 }
 
 
