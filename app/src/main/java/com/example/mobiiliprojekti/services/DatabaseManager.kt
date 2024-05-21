@@ -1,6 +1,5 @@
 package com.example.mobiiliprojekti.services
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
@@ -28,8 +27,6 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db.execSQL("CREATE TABLE monthly_budget (mb_id INTEGER PRIMARY KEY AUTOINCREMENT, month_budget INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE purchase (purchase_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER DEFAULT 0, category INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, FOREIGN KEY(category) REFERENCES category_budget(category), FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0, salt TEXT NOT NULL, is_logged_in INTEGER DEFAULT 0)")
-        db.execSQL("CREATE TABLE treat (treat_id INTEGER PRIMARY KEY AUTOINCREMENT, treat_name TEXT NOT NULL, value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
-        db.execSQL("CREATE TABLE saved (saving_id INTEGER PRIMARY KEY AUTOINCREMENT,  saving_value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
 
         val categories = arrayOf("Food", "Transportation", "Housing", "Clothes", "Well-being", "Entertainment", "Other")
         val insertStatement = db.compileStatement("INSERT INTO category (category_name) VALUES (?)")
@@ -213,7 +210,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         var categoryBudget: Int? = null
 
         try {
-            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = '$categoryName' ORDER BY cb.date DESC, cb_id DESC", null)
+            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = '$categoryName' ORDER BY cb.date DESC LIMIT 1", null)
             if (cursor.moveToFirst()) {
                 val categoryBudgetIndex = cursor.getColumnIndex("cat_budget")
                 if (categoryBudgetIndex >= 0) {
@@ -911,6 +908,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
+    // updates selected purchase
     fun updatePurchase(purchase: Purchase): Int {
         val db = writableDatabase
         val contentValues = ContentValues().apply {
@@ -925,6 +923,67 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return success
     }
 
+
+    //dashboard
+
+    // get total money spent in a category for a given month and year and user
+    fun getTotalExpenses(userId: Long, categoryName: String, month: Int, year: Int): Double {
+        val db = readableDatabase
+        val monthYear = String.format("%04d-%02d", year, month)
+        // joins purchase with category on category_id and filters by user, category name and date
+        val query = """
+        SELECT SUM(p.value) AS total_expense FROM purchase p
+        JOIN category c ON p.category = c.category_id
+        WHERE p.user = ? AND c.category_name = ? AND strftime('%Y-%m', p.date) = ?
+    """
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), categoryName, monthYear))
+        var totalExpense = 0.0
+        if (cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndex("total_expense")
+            if (columnIndex != -1) {
+                totalExpense = cursor.getDouble(columnIndex)
+            }
+        }
+        cursor.close()
+        return totalExpense
+    }
+
+
+
+    fun getSelectedMonthsAndCategoriesPurchases(userId: Long, categoryName: String, selectedMonth: Int, selectedYear: Int): List<Purchase> {
+        val db = readableDatabase
+        val monthFormatted = String.format("%02d", selectedMonth)
+        val yearFormatted = selectedYear.toString()
+        val query = """
+        SELECT p.purchase_id, p.name, p.value, p.category, p.date
+        FROM purchase p
+        JOIN category c ON p.category = c.category_id
+        WHERE p.user = ? AND c.category_name = ? AND strftime('%m', p.date) = ? AND strftime('%Y', p.date) = ?
+        ORDER BY p.date DESC
+    """
+
+        Log.d("SQLQuery", "Executing query: $query")
+        Log.d("SQLParams", "Params: userId=$userId, categoryName=$categoryName, month=$monthFormatted, year=$yearFormatted")
+
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), categoryName, monthFormatted, yearFormatted))
+        val purchases = mutableListOf<Purchase>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val purchaseId = cursor.getLong(cursor.getColumnIndexOrThrow("purchase_id"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val price = cursor.getDouble(cursor.getColumnIndexOrThrow("value"))
+                val category = cursor.getInt(cursor.getColumnIndexOrThrow("category"))
+                val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+
+                purchases.add(Purchase(purchaseId, name, price, category, date, userId))
+            } while (cursor.moveToNext())
+        } else {
+            Log.d("SQLQuery", "No data returned.")
+        }
+        cursor.close()
+        return purchases
+    }
 
     //db.execSQL("CREATE TABLE treat (treat_id INTEGER PRIMARY KEY AUTOINCREMENT, treat_name TEXT NOT NULL, value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
     //add treat to db
