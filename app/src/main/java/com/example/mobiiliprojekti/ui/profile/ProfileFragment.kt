@@ -60,34 +60,34 @@ class ProfileFragment : Fragment() {
         val otherBudget: TextInputEditText = root.findViewById(R.id.OtherInput)
         val savings: TextView = root.findViewById(R.id.SavingsNumberText)
 
+        val treat: TextInputEditText = root.findViewById(R.id.TreatInput)
+        val treatValue: TextInputEditText = root.findViewById(R.id.TreatBudgetInput)
+        val btnSaveTreat : Button = root.findViewById(R.id.SaveTreatButton)
+
+        //Show treat if it is set
+        getTreat(treat, treatValue)
+
         //set text for welcome text
         val (username) = databaseManager.fetchUser(userId)
         welcomeTxt.text = "Welcome $username!"
 
         //set monthly budget input field value with value that is stored to db
-        showMonthlybudget(userId, monthlyBudget)
+        showMonthlyBudget(userId, monthlyBudget)
 
-        // TODO: do this again with some kind of loop and function
-        //set category budget input field values with values that is stored to db
-        val setHousingBudget = databaseManager.fetchCategoryBudget(userId, "Housing")
-        housingBudget.setText(setHousingBudget.toString())
+        // List of category names and corresponding TextView elements
+        val categoriesAndViews = listOf(
+            Pair("Housing", housingBudget),
+            Pair("Transportation", transportBudget),
+            Pair("Food", foodBudget),
+            Pair("Clothes", clothesBudget),
+            Pair("Well-being", wellnessBudget),
+            Pair("Entertainment", entertainmentBudget),
+            Pair("Other", otherBudget)
+        )
 
-        val setTransportBudget = databaseManager.fetchCategoryBudget(userId, "Transportation")
-        transportBudget.setText(setTransportBudget.toString())
+        // Iterate through the list and set the budget for each category
+        showCategoryBudget(userId, categoriesAndViews)
 
-        val setFoodBudget = databaseManager.fetchCategoryBudget(userId, "Food")
-        foodBudget.setText(setFoodBudget.toString())
-        val setClothesBudget = databaseManager.fetchCategoryBudget(userId, "Clothes")
-        clothesBudget.setText(setClothesBudget.toString())
-
-        val setWellnessBudget = databaseManager.fetchCategoryBudget(userId, "Well-being")
-        wellnessBudget.setText(setWellnessBudget.toString())
-
-        val setEntertainmentBudget = databaseManager.fetchCategoryBudget(userId, "Entertainment")
-        entertainmentBudget.setText(setEntertainmentBudget.toString())
-
-        val setOtherBudget = databaseManager.fetchCategoryBudget(userId, "Other")
-        otherBudget.setText(setOtherBudget.toString())
 
         //Calculate savings
         calculateSavings(monthlyBudget, housingBudget, transportBudget, foodBudget, clothesBudget, wellnessBudget, entertainmentBudget, otherBudget, savings)
@@ -104,16 +104,57 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        // TODO: do this again with some kind of loop?
-        // Add TextWatcher to all TextInputEditText fields
-        monthlyBudget.addTextChangedListener(textWatcher)
-        housingBudget.addTextChangedListener(textWatcher)
-        transportBudget.addTextChangedListener(textWatcher)
-        foodBudget.addTextChangedListener(textWatcher)
-        clothesBudget.addTextChangedListener(textWatcher)
-        wellnessBudget.addTextChangedListener(textWatcher)
-        entertainmentBudget.addTextChangedListener(textWatcher)
-        otherBudget.addTextChangedListener(textWatcher)
+        val budgetFields = listOf(
+            monthlyBudget,
+            housingBudget,
+            transportBudget,
+            foodBudget,
+            clothesBudget,
+            wellnessBudget,
+            entertainmentBudget,
+            otherBudget
+        )
+
+        // Iterate through the list and set the TextWatcher for each category
+        for (field in budgetFields) {
+            field.addTextChangedListener(textWatcher)
+        }
+
+        // Set click listener for save budget button for saving new budgets
+        // TODO: should be changed so that if value is not changed no need for update?
+        btnSaveBudget.setOnClickListener {
+            val monthlyBudgetValue = monthlyBudget.text.toString()
+            val monthlyBudgetNumber = monthlyBudgetValue.toIntOrNull()
+            if (checkEmptyFields(budgetFields) && monthlyBudgetNumber != null) {
+                databaseManager.changeMonthlyBudget(monthlyBudgetNumber)
+                for ((categoryName, textView) in categoriesAndViews) {
+                    saveBudget(textView, categoryName)
+
+                }
+                Toast.makeText(requireContext(), "New budget stored successfully!", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(requireContext(), "Input budgets!", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        // Set click listener for save treat button
+        btnSaveTreat.setOnClickListener {
+            val treatName = treat.text.toString()
+            val treatPrice = treatValue.text.toString()
+            println("treat: $treatName and $treatPrice")
+            if (treatPrice != null  && treatName.isNotEmpty()) {
+                val treatValue = treatPrice.trim().toInt()
+                println("treat value: $treatValue")
+                databaseManager.addTreat(treatName, treatValue)
+                Toast.makeText(requireContext(), "Treat saved successfully!", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(requireContext(), "Input treat!", Toast.LENGTH_SHORT).show()
+            }
+            getTreat(treat, treatValue)
+        }
 
         // Set click listener for edit user button
         btnEditUser.setOnClickListener {
@@ -121,28 +162,6 @@ class ProfileFragment : Fragment() {
             val fragmentEditUser = EditUserFragment()
             // Show fragment as dialog
             fragmentEditUser.show(parentFragmentManager, "edit_user_dialog")
-        }
-
-        // Set click listener for save budget button for saving new budget
-        // TODO: should be changed so that if value is not changed no need for update?
-        btnSaveBudget.setOnClickListener {
-            val monthlyBudgetValue = monthlyBudget.text.toString()
-            val monthlyBudgetNumber = monthlyBudgetValue.toIntOrNull()
-            if (monthlyBudgetNumber != null) {
-                databaseManager.changeMonthlyBudget(monthlyBudgetNumber)
-                Toast.makeText(requireContext(), "New budget stored successfully!", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                Toast.makeText(requireContext(), "Input budgets!", Toast.LENGTH_SHORT).show()
-            }
-            // TODO: do this again with some kind of loop?
-            saveBudget(housingBudget, "Housing")
-            saveBudget(transportBudget, "Transportation")
-            saveBudget(foodBudget, "Food")
-            saveBudget(clothesBudget, "Clothes")
-            saveBudget(wellnessBudget, "Well-being")
-            saveBudget(entertainmentBudget, "Entertainment")
-            saveBudget(otherBudget, "Other")
         }
 
         // Set click listener for delete user button
@@ -207,10 +226,39 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun showMonthlybudget(userId : Long, monthlyBudget : TextInputEditText){
+    private fun showMonthlyBudget(userId : Long, monthlyBudget : TextInputEditText){
         val monthNow = LocalDate.now().monthValue
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         monthlyBudget.setText((databaseManager.getSelectedMonthsBudget(userId, monthNow, currentYear) ?: 0.0).toString())
+    }
+
+    private fun showCategoryBudget(userId: Long, categoriesAndViews: List<Pair<String, TextView>>) {
+        val monthNow = LocalDate.now().monthValue
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+        for ((categoryName, textView) in categoriesAndViews) {
+            val budget = databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, monthNow, currentYear)
+            textView.text = budget?.toString() ?: "0"
+        }
+    }
+
+    private fun checkEmptyFields(budgetFields: List<TextInputEditText>): Boolean {
+        for (field in budgetFields) {
+            if (field.text.toString().trim().isEmpty()) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun getTreat(treat: TextInputEditText, treatNum : TextInputEditText) {
+        val (treatName, treatValue) = databaseManager.getTreat()
+        println("price of treat: $treatValue")
+        if (treatName != null && treatValue != null){
+            treat.setText(treatName)
+            treatNum.setText(treatValue.toString())
+            println("price of treat: $treatValue")
+        }
     }
 
 }

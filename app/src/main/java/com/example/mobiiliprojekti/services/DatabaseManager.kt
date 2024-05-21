@@ -28,6 +28,8 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         db.execSQL("CREATE TABLE monthly_budget (mb_id INTEGER PRIMARY KEY AUTOINCREMENT, month_budget INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE purchase (purchase_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER DEFAULT 0, category INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, user INTEGER NOT NULL, FOREIGN KEY(category) REFERENCES category_budget(category), FOREIGN KEY(user) REFERENCES user(user_id))")
         db.execSQL("CREATE TABLE user (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, is_admin INTEGER DEFAULT 0, salt TEXT NOT NULL, is_logged_in INTEGER DEFAULT 0)")
+        db.execSQL("CREATE TABLE treat (treat_id INTEGER PRIMARY KEY AUTOINCREMENT, treat_name TEXT NOT NULL, value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
+        db.execSQL("CREATE TABLE saved (saving_id INTEGER PRIMARY KEY AUTOINCREMENT,  saving_value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
 
         val categories = arrayOf("Food", "Transportation", "Housing", "Clothes", "Well-being", "Entertainment", "Other")
         val insertStatement = db.compileStatement("INSERT INTO category (category_name) VALUES (?)")
@@ -211,7 +213,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         var categoryBudget: Int? = null
 
         try {
-            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = '$categoryName' ORDER BY cb.date DESC LIMIT 1", null)
+            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = '$categoryName' ORDER BY cb.date DESC, cb_id DESC", null)
             if (cursor.moveToFirst()) {
                 val categoryBudgetIndex = cursor.getColumnIndex("cat_budget")
                 if (categoryBudgetIndex >= 0) {
@@ -924,5 +926,117 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
 
+    //db.execSQL("CREATE TABLE treat (treat_id INTEGER PRIMARY KEY AUTOINCREMENT, treat_name TEXT NOT NULL, value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
+    //add treat to db
+    fun addTreat(name: String, value: Int) {
+        val db = writableDatabase
+        val userId = SessionManager.getLoggedInUserId()
+
+        try {
+            val contentValues = ContentValues().apply {
+                put("treat_name", name)
+                put("value", value)
+                put("user", userId)
+            }
+            db.insertOrThrow("treat", null, contentValues)
+        } catch (e: SQLiteConstraintException) {
+            e.printStackTrace()
+        } finally {
+            //
+        }
+
+    }
+
+    //get treat from db
+    fun getTreat(): Pair<String?, Int?> {
+        val db = readableDatabase
+        val userId = SessionManager.getLoggedInUserId()
+        var treat: String? = null
+        var treatValue: Int? = null
+
+        try {
+            val query = "SELECT treat_name, value FROM treat WHERE user = ? ORDER BY treat_id DESC, date DESC"
+            Log.d("DatabaseQuery", "Query: $query, User: $userId")
+            val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+            if (cursor.moveToFirst()) {
+                val treatIndex = cursor.getColumnIndex("treat_name")
+                val treatValueIndex = cursor.getColumnIndex("value")
+                if (treatIndex >= 0 && treatValueIndex >= 0) {
+                    treat = cursor.getString(treatIndex)
+                    treatValue = cursor.getInt(treatValueIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return Pair(treat, treatValue)
+    }
+
+    //db.execSQL("CREATE TABLE saved (saving_id INTEGER PRIMARY KEY AUTOINCREMENT, saving_value INTEGER DEFAULT 0, user INTEGER NOT NULL, date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES user(user_id))")
+
+    fun addSavings(value: Int) {
+        val db = writableDatabase
+        val userId = SessionManager.getLoggedInUserId()
+
+        try {
+            val contentValues = ContentValues().apply {
+                put("saving_value", value)
+                put("user", userId)
+            }
+            db.insertOrThrow("saved", null, contentValues)
+        } catch (e: SQLiteConstraintException) {
+            e.printStackTrace()
+        } finally {
+            //
+        }
+
+    }
+
+    fun getSavings(): Pair<Int?, Int?> {
+        val db = readableDatabase
+        val userId = SessionManager.getLoggedInUserId()
+        var savingsId: Int? = null
+        var savingsValue: Int? = null
+
+        try {
+            val query = "SELECT saving_id, saving_value FROM saved WHERE user = ? ORDER BY saving_id DESC, date DESC"
+            Log.d("DatabaseQuery", "Query: $query, User: $userId")
+            val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+            if (cursor.moveToFirst()) {
+                val savingsIdIndex = cursor.getColumnIndex("saving_id")
+                val savingsValueIndex = cursor.getColumnIndex("saving_value")
+                if (savingsValueIndex >= 0 && savingsValueIndex >= 0) {
+                    savingsId = cursor.getInt(savingsIdIndex)
+                    savingsValue = cursor.getInt(savingsValueIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return Pair(savingsId, savingsValue)
+    }
+
+    fun updateSavings(savingsId: Int, savingsValue: Int) {
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("saving_value", savingsValue)
+        }
+        return try {
+            val result =
+                db.update("saved", contentValues, "saving_id = ?", arrayOf(savingsId.toString()))
+            db.close()
+            println("user: $result")
+        } catch (e: SQLiteConstraintException) {
+            e.printStackTrace()
+        }
+    }
 
 }

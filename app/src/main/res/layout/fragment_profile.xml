@@ -472,7 +472,7 @@
                 android:hint="@string/treat2"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textSize="18sp"
                 app:boxStrokeColor="@color/black" />
 
         </LinearLayout>
