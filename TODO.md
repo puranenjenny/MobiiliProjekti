@@ -2,16 +2,23 @@
 Suunnittelu, toteutus ja testaus tehtäviä  
 
 ### TODO 
-
-### IN PROGRESS
+* [ ] lopputestaukset 
+   * [ ] login  
+   * [ ] home  
+   * [ ] dashboard  
+   * [ ] annual  
+   * [ ] profile  
+         
+### IN PROGRESS  
 * [ ] home sivun toiminnallisuudet  
    * [x] tietokannasta haku  
    * [x] lisää tietokantaan  
    * [ ] prosenttikaavio
-   * [ ] kk budjetti
+   * [x] palkkikaavio  
+   * [x] kk budjetti
    * [x] last payments tietokantapäivitys
-* [ ] dashboard sivun toiminnallisuudet  
-   * [ ] tietokannasta haku kategorian mukaan  
+* [x] dashboard sivun toiminnallisuudet  
+   * [x] tietokannasta haku kategorian mukaan  
 * [ ] annual sivun toiminnallisuudet  
    * [x] aikasarja kuluneesta budjetista ja toteutuneesta  
    * [ ] prosenttikaavio tai teksti  
