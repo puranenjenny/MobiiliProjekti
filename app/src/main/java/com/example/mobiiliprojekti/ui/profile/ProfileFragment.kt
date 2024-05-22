@@ -167,7 +167,7 @@ class ProfileFragment : Fragment() {
                 treatValueNew = treatPrice.trim().toInt()
                 println("treat value: $treatValue")
                 databaseManager.addTreat(treatName, treatValueNew)
-                Toast.makeText(requireContext(), "Treat saved successfully!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Goal saved successfully!", Toast.LENGTH_SHORT).show()
 
                 val imm = view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(view?.windowToken, 0)
