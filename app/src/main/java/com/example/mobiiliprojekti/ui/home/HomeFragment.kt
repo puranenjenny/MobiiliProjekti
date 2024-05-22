@@ -579,8 +579,12 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
     ///when change monthly budget dialog closes these functions are called to update view
     override fun onDialogDismissed2() {
-        handleNewBudget(BudgetHandler.getMonthlyBudgetByMonth())
-        displayBudgetUsageChart()
+        val newBudget = BudgetHandler.getMonthlyBudgetByMonth()
+
+        if (newBudget != null) {
+            handleNewBudget(newBudget)
+            displayBudgetUsageChart()
+        }
     }
 
     override fun onResume() {
