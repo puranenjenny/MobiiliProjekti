@@ -21,7 +21,6 @@ import com.example.mobiiliprojekti.services.SessionManager
 import com.example.mobiiliprojekti.services.Purchase
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
@@ -80,10 +79,36 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
             dismiss()
         }
 
+        // TODO: repeated code here
+        val price = purchase.price
+        var purchaseDate = purchase.date
+
+        val selectedMonth = purchaseDate.substring(5,7).toInt()
+        val selectedYear = purchaseDate.substring(0, 4).toInt()
+
+        val month = LocalDate.now().monthValue
+        val year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
+
+        val goalDate = databaseManager.getTreatDate()
+        var goalDateTime : LocalDate? = null
+        var purchaseDateTime : LocalDate? = null
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        if (goalDate != null){
+            goalDateTime = LocalDate.parse(goalDate, formatter)
+            purchaseDateTime = LocalDate.parse("$purchaseDate 00:00:01", formatter)
+        }
+
         btnDelete.setOnClickListener {
             val result = databaseManager.deletePurchase(purchase)
             if (result > 0) {
                 Toast.makeText(context, "Purchase deleted successfully.", Toast.LENGTH_SHORT).show()
+                if (goalDateTime != null) {
+                    if (selectedYear < year && goalDateTime <= purchaseDateTime || selectedYear == year && selectedMonth < month && goalDateTime <= purchaseDateTime){
+                        println("change2: $price")
+                        updateSavings(price)
+                    }
+                }
                 dismiss()
                 } else {
                     Toast.makeText(context, "Failed to delete purchase.", Toast.LENGTH_SHORT).show()
@@ -146,6 +171,7 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
         val priceDifference = oldPrice - price!!
 
+        // TODO: here
         val selectedMonth = date.substring(5,7).toInt()
         val selectedYear = date.substring(0, 4).toInt()
 
