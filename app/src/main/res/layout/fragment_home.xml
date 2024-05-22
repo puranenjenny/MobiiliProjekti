@@ -82,26 +82,27 @@
             android:paddingStart="15dp"
             android:paddingTop="5dp"
             android:paddingEnd="15dp"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linlaymonthyear">
 
             <TextView
                 android:id="@+id/txt_MonthlyBudgetName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins"
                 android:text="Monthly budget"
-                android:textAlignment="textEnd"
+                android:textAlignment="center"
                 android:textColor="@color/dark_grey"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtMonthlyBudetNum"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="300 €"
@@ -177,6 +178,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
                 android:background="@drawable/element_background_orange"
+                android:elevation="2dp"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -187,7 +189,7 @@
                     android:text="@string/txt_daysleft"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -197,7 +199,7 @@
                     android:text="8/30"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -208,6 +210,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/element_background_orange"
+                android:elevation="2dp"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -218,7 +221,7 @@
                     android:text="@string/txt_moneyspent"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -228,7 +231,7 @@
                     android:text="736 €"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -240,6 +243,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:background="@drawable/element_background_orange"
+                android:elevation="2dp"
                 android:orientation="vertical"
                 android:padding="12dp">
 
@@ -250,7 +254,7 @@
                     android:text="@string/txt_moneyleft"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -260,7 +264,7 @@
                     android:text="506 €"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
@@ -269,10 +273,8 @@
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/BarChartHome"
             android:layout_width="389dp"
-            android:layout_height="165dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="10dp"
+            android:layout_height="220dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linlaystatus" />
@@ -281,17 +283,17 @@
             android:id="@+id/btn_addNew"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/rounded_button"
             android:drawableEnd="@drawable/icon_add2"
             android:elevation="2dp"
             android:fontFamily="@font/poppins"
+            android:gravity="center_vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/btn_addNew"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
             android:textStyle="bold"
             app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
@@ -304,7 +306,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="44dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="26dp"
             android:layout_weight="1"
             android:fontFamily="@font/poppins"
             android:padding="5dp"
@@ -362,7 +364,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="44dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="18dp"
             android:layout_weight="1"
             android:fontFamily="@font/poppins"
             android:padding="5dp"
@@ -398,13 +400,12 @@
             android:layout_height="500dp"
             android:layout_marginStart="-160dp"
             android:layout_marginTop="-160dp"
+            android:elevation="-10dp"
             app:cardBackgroundColor="@color/light_grey"
             app:cardCornerRadius="300dp"
             app:cardElevation="-10dp"
-            android:elevation="-10dp"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtGoalAchieved"

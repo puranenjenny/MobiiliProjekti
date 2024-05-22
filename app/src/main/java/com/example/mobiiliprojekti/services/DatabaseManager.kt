@@ -694,6 +694,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return result
     }
 
+
     // get category ID from category name
     private fun getCategoryID(categoryName: String): Int {
         var categoryId = -1
@@ -715,7 +716,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val query = """
         SELECT * FROM purchase 
         WHERE user = ? AND strftime('%Y', date) = ? AND strftime('%m', date) = ? 
-        ORDER BY date DESC LIMIT 8
+        ORDER BY date DESC LIMIT 20
     """
         val cursor = db.rawQuery(query, arrayOf(userId.toString(), year.toString(), monthStr))
 
@@ -939,6 +940,14 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             put("user", purchase.userId)
         }
         val success = db.update("purchase", contentValues, "purchase_id = ?", arrayOf(purchase.purchaseId.toString()))
+        db.close()
+        return success
+    }
+
+    //deletes the purchase
+  fun deletePurchase(purchase: Purchase): Int {
+        val db = writableDatabase
+        val success = db.delete("purchase", "purchase_id = ?", arrayOf(purchase.purchaseId.toString()))
         db.close()
         return success
     }

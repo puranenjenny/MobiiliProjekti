@@ -91,7 +91,7 @@
     <string name="littleTreat">Savings Goal</string>
     <string name="littleTreat2">Here you can set your savings goal. You can track your progress towards the goal from the bars found on the home screen and the annual review screen.  </string>
     <string name="treat">Your goal:</string>
-    <string name="treat2">Add treat</string>
+    <string name="treat2">Add goal</string>
     <string name="treatNum">Savings needed:</string>
     <string name="treatNum2">0</string>
     <string name="logout">Logout</string>

@@ -115,7 +115,11 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
             axisRight.isEnabled = false
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setDrawGridLines(false)
+            xAxis.setDrawAxisLine(false)
             animateY(2000)
+            xAxis.textSize = 13f
+            legend.textSize = 14f
+            extraBottomOffset = 10f
         }
     }
 
@@ -156,21 +160,25 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
             val dataSet = BarDataSet(entries, "Budget Used %")
             dataSet.colors = barColors
-            dataSet.valueTextSize = 10f
+            dataSet.valueTextSize = 14f
             dataSet.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return "${value.toInt()} %"
+                    return "${value.toInt()}% "
                 }
             }
 
             val data = BarData(dataSet)
-            data.barWidth = 0.9f
+            data.barWidth = 0.8f
 
             barChart.apply {
                 this.data = data
                 xAxis.valueFormatter = IndexAxisValueFormatter(labels)
                 xAxis.granularity = 1f
-                setExtraOffsets(0f, 0f, 0f, 16f)
+                xAxis.textSize = 14f
+                axisLeft.textSize = 13f
+                axisRight.textSize = 13f
+                setExtraOffsets(0f, 0f, 40f, 16f)
+                setFitBars(true)
                 invalidate()
             }
         } else {
@@ -182,12 +190,10 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     private fun fetchCategoryBudgetsFromDatabase(userId: Int, month: Int, year: Int): Map<String, Float> {
         val categoryBudgets = mutableMapOf<String, Float>()
 
-
         val monthYear = String.format("%d-%02d", year, month)
 
-
         val cursor = databaseManager.readableDatabase.rawQuery(
-            "SELECT c.category_name, cb.cat_budget FROM category_budget cb JOIN category c ON cb.category = c.category_id WHERE cb.user = ? AND strftime('%Y-%m', cb.date) = ? ORDER BY c.category_name DESC ",
+            "SELECT c.category_name, cb.cat_budget FROM category_budget cb JOIN category c ON cb.category = c.category_id WHERE cb.user = ? AND strftime('%Y-%m', cb.date) = ? ORDER BY c.category_id DESC ",
             arrayOf(userId.toString(), monthYear)
         )
         try {
@@ -214,12 +220,10 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     private fun fetchCategoryExpensesFromDatabase(userId: Int, month: Int, year: Int): Map<String, Float> {
         val categoryExpenses = mutableMapOf<String, Float>()
 
-
         val monthYear = String.format("%d-%02d", year, month)
 
-
         val cursor = databaseManager.readableDatabase.rawQuery(
-            "SELECT c.category_name, SUM(p.value) AS total_expense FROM purchase p JOIN category c ON p.category = c.category_id WHERE p.user = ? AND strftime('%Y-%m', p.date) = ? GROUP BY c.category_name ORDER BY c.category_name DESC",
+            "SELECT c.category_name, SUM(p.value) AS total_expense FROM purchase p JOIN category c ON p.category = c.category_id WHERE p.user = ? AND strftime('%Y-%m', p.date) = ? GROUP BY c.category_name ORDER BY c.category_id DESC",
             arrayOf(userId.toString(), monthYear)
         )
         try {
