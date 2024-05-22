@@ -81,13 +81,11 @@
             android:minWidth="200dp"
             android:padding="8dp"
             android:paddingEnd="30dp"
-            android:paddingStart="0dp"
             android:spinnerMode="dropdown"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_categoryName"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/txt_categoryName" />
 
 
         <LinearLayout
@@ -200,7 +198,8 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:elevation="6dp"
-                app:srcCompat="@drawable/calendar" />
+                app:srcCompat="@drawable/calendar"
+                android:contentDescription="@string/calendar_image" />
 
             <ImageView
                 android:id="@+id/ivSpentDashboard"
@@ -212,7 +211,8 @@
                 android:elevation="6dp"
                 android:paddingStart="15dp"
                 android:paddingEnd="0dp"
-                app:srcCompat="@drawable/spent" />
+                app:srcCompat="@drawable/spent"
+                android:contentDescription="@string/image_spent" />
 
             <ImageView
                 android:id="@+id/ivLeftDashboard"
@@ -222,7 +222,8 @@
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
                 android:elevation="6dp"
-                app:srcCompat="@drawable/left" />
+                app:srcCompat="@drawable/left"
+                android:contentDescription="@string/arrow_left" />
         </LinearLayout>
 
         <LinearLayout
@@ -234,7 +235,8 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linlayImagesDashboard">
+            app:layout_constraintTop_toBottomOf="@+id/linlayImagesDashboard"
+            android:baselineAligned="false">
 
 
             <LinearLayout
@@ -357,7 +359,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtlastPayCategory">
+            app:layout_constraintTop_toBottomOf="@+id/txtlastPayCategory"
+            tools:ignore="NestedScrolling">
 
             <LinearLayout
                 android:id="@+id/linLastpaymentsDash"
@@ -384,7 +387,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="1sp"
+            android:textSize="11sp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

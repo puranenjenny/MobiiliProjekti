@@ -30,7 +30,7 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/poppins"
             android:paddingTop="20dp"
-            android:text="Add new purchase"
+            android:text="@string/add_new_purchase"
             android:textAlignment="center"
             android:textColor="@color/dark_grey"
             android:textSize="20sp"
@@ -42,9 +42,10 @@
             android:layout_height="48dp"
             android:layout_margin="10dp"
             android:fontFamily="@font/poppins"
-            android:hint="Purchase Name"
+            android:hint="@string/purchase_name"
             android:inputType="text"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:autofillHints="Purchase name" />
 
         <EditText
             android:id="@+id/purchase_price"
@@ -52,9 +53,10 @@
             android:layout_height="48dp"
             android:layout_margin="10dp"
             android:fontFamily="@font/poppins"
-            android:hint="Price"
+            android:hint="@string/price"
             android:inputType="numberDecimal"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:autofillHints="Price" />
 
         <Spinner
             android:id="@+id/spinner_category"
@@ -63,7 +65,8 @@
             android:layout_margin="10dp"
             android:background="@drawable/round_dropdown"
             android:padding="10dp"
-            android:paddingEnd="30dp" />
+            android:paddingEnd="30dp"
+            android:paddingStart="10dp"/>
 
         <Button
             android:id="@+id/btn_date"
@@ -97,8 +100,7 @@
                 android:backgroundTint="@color/button"
                 android:fontFamily="@font/poppins"
                 android:text="@string/Cancel"
-                android:textAllCaps="true"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:textAllCaps="true" />
 
             <Button
                 android:id="@+id/btn_save"
@@ -110,7 +112,7 @@
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/button"
                 android:fontFamily="@font/poppins"
-                android:text="Save"
+                android:text="@string/save"
                 android:textAllCaps="true" />
         </LinearLayout>
     </LinearLayout>

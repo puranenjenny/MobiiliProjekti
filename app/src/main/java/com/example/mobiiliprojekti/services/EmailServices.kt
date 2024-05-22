@@ -10,7 +10,7 @@ import javax.mail.internet.AddressException
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
-
+// Enables sending new password to user via email
 class EmailServices {
     fun sendEmail(email:String, newPassword:String) {
         try {

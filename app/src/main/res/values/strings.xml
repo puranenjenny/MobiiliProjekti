@@ -109,7 +109,21 @@
     <string name="img_description2">Coin</string>
     <string name="save_budget">Save Budget</string>
     <string name="save_treat">Save new goal</string>
-
-
-
+    <string name="select_date">Select Date</string>
+    <string name="purchase_name">Purchase Name</string>
+    <string name="add_new_purchase">Add new purchase</string>
+    <string name="price">Price</string>
+    <string name="your_progress">Here\'s your progress this year! Let\'s keep the momentum going!</string>
+    <string name="yearly_budget">Yearly Budget</string>
+    <string name="_20">20%</string>
+    <string name="category_budget">Change selected category\'s budget for this month</string>
+    <string name="budget">Budget</string>
+    <string name="calendar_image">Calendar image</string>
+    <string name="arrow_left">Arrow left</string>
+    <string name="image_spent">Image spent</string>
+    <string name="delete_purchase">Delete purchase</string>
+    <string name="edit_purchase">Edit purchase</string>
+    <string name="_506">506 €</string>
+    <string name="_8_30">8/30</string>
+    <string name="_736">736 €</string>
 </resources>

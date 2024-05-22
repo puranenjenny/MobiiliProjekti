@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/InfoText"
-            android:layout_width="354dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
@@ -403,7 +403,8 @@
             android:layout_height="match_parent"
             android:layout_marginTop="40dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/SaveCategoriesButton">
+            app:layout_constraintTop_toBottomOf="@+id/SaveCategoriesButton"
+            tools:ignore="UseCompoundDrawables">
 
             <TextView
                 android:id="@+id/TreatText"
@@ -534,7 +535,8 @@
             android:layout_height="match_parent"
             android:layout_marginTop="40dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/SaveTreatButton">
+            app:layout_constraintTop_toBottomOf="@+id/SaveTreatButton"
+            tools:ignore="UseCompoundDrawables">
 
             <TextView
                 android:id="@+id/ProfileText"

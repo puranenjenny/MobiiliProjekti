@@ -55,7 +55,7 @@
             />
 
         <ImageView
-            android:id="@+id/Treatimg"
+            android:id="@+id/TreatImg"
             android:layout_width="73dp"
             android:layout_height="62dp"
             android:layout_marginTop="-20dp"
@@ -63,7 +63,8 @@
             android:src="@drawable/treat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/progressBarAnnual"
-            app:layout_constraintTop_toTopOf="@+id/progressBarAnnual" />
+            app:layout_constraintTop_toTopOf="@+id/progressBarAnnual"
+            android:contentDescription="@string/treatPicture" />
 
         <ProgressBar
             android:id="@+id/progressBarAnnual"
@@ -81,7 +82,7 @@
             android:progressBackgroundTint="@color/light_grey"
             android:progressDrawable="@drawable/progress_bar_custom"
             android:progressTint="@color/main"
-            app:layout_constraintEnd_toStartOf="@+id/Treatimg"
+            app:layout_constraintEnd_toStartOf="@+id/TreatImg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ProgressTextAnnual" />
 
@@ -91,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/poppins"
-            android:text="20%"
+            android:text="@string/_20"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/progressBarAnnual"
@@ -119,7 +120,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins"
-            android:text="Yearly Budget"
+            android:text="@string/yearly_budget"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -146,7 +147,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
-            android:text="Here's your progress this year! Let's keep the momentum going!"
+            android:text="@string/your_progress"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"

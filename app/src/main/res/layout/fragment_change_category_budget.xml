@@ -31,7 +31,7 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/poppins"
             android:paddingTop="20dp"
-            android:text="Change selected category's budget for this month"
+            android:text="@string/category_budget"
             android:textAlignment="center"
             android:textColor="@color/dark_grey"
             android:textSize="20sp"
@@ -43,9 +43,10 @@
             android:layout_height="48dp"
             android:layout_margin="10dp"
             android:fontFamily="@font/poppins"
-            android:hint="Budget"
+            android:hint="@string/budget"
             android:inputType="numberDecimal"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:autofillHints="Budget value" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -65,7 +66,7 @@
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/button"
                 android:fontFamily="@font/poppins"
-                android:text="Cancel"
+                android:text="@string/Cancel"
                 android:textAllCaps="false" />
 
             <Button
@@ -78,7 +79,7 @@
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/button"
                 android:fontFamily="@font/poppins"
-                android:text="Save"
+                android:text="@string/save"
                 android:textAllCaps="false" />
         </LinearLayout>
 

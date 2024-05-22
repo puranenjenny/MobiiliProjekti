@@ -3,6 +3,8 @@ package com.example.mobiiliprojekti.services
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.Base64
+
+// used to add salt and hash password stored to db
 class SecurityManager {
 
     // Generate salt for password

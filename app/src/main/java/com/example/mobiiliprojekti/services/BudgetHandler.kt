@@ -1,5 +1,6 @@
 package com.example.mobiiliprojekti.services
 
+// object for passing budget value from fragment to other
 object BudgetHandler {
     private var monhtlyBudgetByMonth: Int = 0
 

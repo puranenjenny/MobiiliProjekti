@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 
+// Class that holds database related functions
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     // set up security manager
@@ -990,5 +992,66 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } catch (e: SQLiteConstraintException) {
             e.printStackTrace()
         }
+    }
+
+    // get monthly budgets for annual screens diagram
+    fun fetchMonthlyBudgetsFromDatabase(userId: Long): List<Float> {
+        val monthlyBudgets = mutableListOf<Float>()
+
+        try {
+            val db = readableDatabase
+
+            for (month in Calendar.JANUARY..Calendar.DECEMBER) {
+                val cursor = db.rawQuery(
+                    "SELECT month_budget FROM monthly_budget WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ? AND user = ? ORDER BY date DESC LIMIT 1",
+                    arrayOf(Calendar.getInstance().get(Calendar.YEAR).toString(), (month + 1).toString().padStart(2, '0'), userId.toString())
+                )
+
+                if (cursor != null) {
+                    val budgetIndex = cursor.getColumnIndex("month_budget")
+
+                    if (budgetIndex != -1 && cursor.moveToFirst()) {
+                        val monthBudget = cursor.getFloat(budgetIndex)
+                        monthlyBudgets.add(monthBudget)
+                    } else {
+                        monthlyBudgets.add(0f) // set zero if budget doesn't exist
+                    }
+                    cursor.close()
+                }
+            }
+            db.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return monthlyBudgets
+    }
+
+    // get monthly expenses for annual screens diagram
+    fun getExpensesForMonth(month: Int, year: Int, userId: Long): Float {
+        val db = readableDatabase
+        var totalExpense = 0f
+
+        // get monthly expenses for logged in user
+        val cursor = db.rawQuery(
+            "SELECT SUM(value) AS total_expense FROM purchase WHERE strftime('%Y-%m', date) = ? AND user = ?",
+            arrayOf(String.format("%d-%02d", year, month), userId.toString())
+        )
+
+        try {
+            if (cursor.moveToFirst()) {
+                val expenseIndex = cursor.getColumnIndex("total_expense")
+                if (expenseIndex != -1) {
+                    totalExpense = cursor.getFloat(expenseIndex)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+            db.close()
+        }
+
+        return totalExpense
     }
 }

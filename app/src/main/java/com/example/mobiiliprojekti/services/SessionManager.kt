@@ -1,4 +1,6 @@
 package com.example.mobiiliprojekti.services
+
+//object to keep track and pass info between fragments who is logged in user
 object SessionManager {
 
     private var loggedInUserId: Long = -1

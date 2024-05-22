@@ -17,8 +17,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.example.mobiiliprojekti.services.DatabaseManager
-import java.util.Calendar
 import com.example.mobiiliprojekti.services.SessionManager
+import java.util.Calendar
 
 class AnnualFragment : Fragment() {
 
@@ -48,7 +48,7 @@ class AnnualFragment : Fragment() {
 
         // Fetch monthly budgets and expenses from database
         val monthlyExpenses = fetchMonthlyExpensesFromDatabase(loggedInUserId)
-        val monthlyBudgets = fetchMonthlyBudgetsFromDatabase(loggedInUserId)
+        val monthlyBudgets = databaseManager.fetchMonthlyBudgetsFromDatabase(loggedInUserId)
 
         // Create Entry objects for monthly budgets
         val budgetEntries = mutableListOf<Entry>()
@@ -146,86 +146,28 @@ class AnnualFragment : Fragment() {
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        displayTreatMeterAnnual()
-    }
-
-    private fun fetchMonthlyBudgetsFromDatabase(userId: Long): List<Float> {
-        val monthlyBudgets = mutableListOf<Float>()
-
-        try {
-            val db = databaseManager.readableDatabase
-
-            for (month in Calendar.JANUARY..Calendar.DECEMBER) {
-                val cursor = db.rawQuery(
-                    "SELECT month_budget FROM monthly_budget WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ? AND user = ? ORDER BY date DESC LIMIT 1",
-                    arrayOf(Calendar.getInstance().get(Calendar.YEAR).toString(), (month + 1).toString().padStart(2, '0'), userId.toString())
-                )
-
-                if (cursor != null) {
-                    val budgetIndex = cursor.getColumnIndex("month_budget")
-
-                    if (budgetIndex != -1 && cursor.moveToFirst()) {
-                        val monthBudget = cursor.getFloat(budgetIndex)
-                        monthlyBudgets.add(monthBudget)
-                    } else {
-                        monthlyBudgets.add(0f) // set zero if budget doesn't exist
-                    }
-                    cursor.close()
-                }
-            }
-            db.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return monthlyBudgets
-    }
-
+    // get whole years monthly expenses for annual screens diagram
     private fun fetchMonthlyExpensesFromDatabase(userId: Long): List<Float> {
         val monthlyExpenses = mutableListOf<Float>()
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
         // get monthly expenses for current year
         for (month in 1..12) {
-            val expensesForMonth = getExpensesForMonth(month, currentYear, userId)
+            val expensesForMonth = databaseManager.getExpensesForMonth(month, currentYear, userId)
             monthlyExpenses.add(expensesForMonth)
         }
 
         return monthlyExpenses
     }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-    private fun getExpensesForMonth(month: Int, year: Int, userId: Long): Float {
-        val db = databaseManager.readableDatabase
-        var totalExpense = 0f
-
-        // get monthly expenses for logged in user
-        val cursor = db.rawQuery(
-            "SELECT SUM(value) AS total_expense FROM purchase WHERE strftime('%Y-%m', date) = ? AND user = ?",
-            arrayOf(String.format("%d-%02d", year, month), userId.toString())
-        )
-
-        try {
-            if (cursor.moveToFirst()) {
-                val expenseIndex = cursor.getColumnIndex("total_expense")
-                if (expenseIndex != -1) {
-                    totalExpense = cursor.getFloat(expenseIndex)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            cursor?.close()
-            db.close()
-        }
-
-        return totalExpense
+    // update progressbar view when returned to this screen
+    override fun onResume() {
+        super.onResume()
+        displayTreatMeterAnnual()
     }
 
     // function for showing treat meters value

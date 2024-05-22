@@ -45,7 +45,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/icon_back"
-                android:contentDescription="previous month"
+                android:contentDescription="@string/previous_month"
                 android:textSize="20sp" />
 
             <TextView
@@ -67,7 +67,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/icon_next"
-                android:contentDescription="next month"
+                android:contentDescription="@string/next_month"
                 android:padding="20dp"
                 android:textSize="20sp" />
 
@@ -94,7 +94,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins"
-                android:text="Monthly budget"
+                android:text="@string/monthly_budget"
                 android:textAlignment="center"
                 android:textColor="@color/dark_grey"
                 android:textSize="18sp"
@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="300 €"
+                android:text="@string/_300"
                 android:textAlignment="center"
                 android:textColor="@color/dark_grey"
                 android:textSize="20sp"
@@ -135,7 +135,8 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:elevation="6dp"
-                app:srcCompat="@drawable/calendar" />
+                app:srcCompat="@drawable/calendar"
+                android:contentDescription="@string/calendar_image" />
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -145,8 +146,10 @@
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
                 android:elevation="6dp"
-                android:paddingLeft="15dp"
-                app:srcCompat="@drawable/spent" />
+                android:paddingStart="15dp"
+                android:paddingEnd="0dp"
+                app:srcCompat="@drawable/spent"
+                android:contentDescription="@string/image_spent" />
 
             <ImageView
                 android:id="@+id/imageView5"
@@ -156,7 +159,8 @@
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
                 android:elevation="6dp"
-                app:srcCompat="@drawable/left" />
+                app:srcCompat="@drawable/left"
+                android:contentDescription="@string/arrow_left" />
         </LinearLayout>
 
         <LinearLayout
@@ -168,7 +172,8 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linlayimages">
+            app:layout_constraintTop_toBottomOf="@+id/linlayimages"
+            android:baselineAligned="false">
 
             <!-- Days left -->
 
@@ -196,7 +201,7 @@
                     android:id="@+id/txt_daysleft"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="8/30"
+                    android:text="@string/_8_30"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
@@ -228,7 +233,7 @@
                     android:id="@+id/txt_moneyspent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="736 €"
+                    android:text="@string/_736"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
@@ -261,7 +266,7 @@
                     android:id="@+id/txtMoneyLeftHome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="506 €"
+                    android:text="@string/_506"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
@@ -337,13 +342,13 @@
 
         <TextView
             android:id="@+id/progressText2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="156dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/poppins"
-            android:text="20%"
+            android:text="@string/_20"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Treattext2" />
@@ -357,7 +362,8 @@
             android:src="@drawable/treat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/progressBar2"
-            app:layout_constraintTop_toBottomOf="@+id/btn_addNew" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_addNew"
+            android:contentDescription="@string/treatPicture" />
 
         <TextView
             android:id="@+id/txt_lastpaymentsname"
@@ -380,11 +386,12 @@
             android:id="@+id/sv_lastpayments_home"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:contentDescription="last payments listed"
+            android:contentDescription="@string/last_payments_listed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_lastpaymentsname">
+            app:layout_constraintTop_toBottomOf="@+id/txt_lastpaymentsname"
+            tools:ignore="NestedScrolling">
 
             <LinearLayout
                 android:id="@+id/linLastpaymentsHome"
