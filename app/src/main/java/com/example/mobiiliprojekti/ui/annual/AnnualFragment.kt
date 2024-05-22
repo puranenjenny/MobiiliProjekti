@@ -63,12 +63,13 @@ class AnnualFragment : Fragment() {
         }
 
         // Create LineDataSet object for budgets
-        val budgetDataSet = LineDataSet(budgetEntries, "Monthly Budget")
+        val budgetDataSet = LineDataSet(budgetEntries, "Monthly Budget    ")
         val dark_green = ContextCompat.getColor(requireContext(), R.color.dark_green)
         budgetDataSet.color = dark_green
         budgetDataSet.lineWidth = 5f
         budgetDataSet.setCircleColor(dark_green)
         budgetDataSet.setDrawValues(false)
+        budgetDataSet.valueTextSize = 14f
 
         // Create LineDataSet object for expenses
         val expenseDataSet = LineDataSet(expenseEntries, "Monthly Expenses")
@@ -77,6 +78,7 @@ class AnnualFragment : Fragment() {
         expenseDataSet.lineWidth = 5f
         expenseDataSet.setCircleColor(brown)
         expenseDataSet.setDrawValues(false)
+        expenseDataSet.valueTextSize = 14f
 
 
         // Create LineData object containing both budgets and expenses
@@ -94,17 +96,21 @@ class AnnualFragment : Fragment() {
         val yAxisLeft = lineChart.axisLeft
         yAxisLeft.granularity = 100f // Aseta välit 100 välein
         yAxisLeft.isGranularityEnabled = true
+        yAxisLeft.textSize = 14f
 
 
         val yAxisRight = lineChart.axisRight
         yAxisRight.isEnabled = true
+        yAxisRight.textSize = 14f
 
 
         val xAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(false)
 
-
+// Customize legend text size
+        val legend = lineChart.legend
+        legend.textSize = 14f // Set text size for legend labels
 
 
 // Luo kuukausien nimet
