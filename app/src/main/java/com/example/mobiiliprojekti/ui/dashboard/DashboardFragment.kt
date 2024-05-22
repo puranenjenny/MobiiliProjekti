@@ -328,6 +328,7 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
     override fun onDialogDismissed3() {
         val selectedCategoryString = SelectedCategoryHandler.getSelectedCategory()
         handleNewCategoryBudget(CategoryBudgetHandler.getMonthlyCategoryBudgetByMonth(), selectedCategoryString)
+        displayMoneyLeft()
     }
 
     override fun onDestroyView() {
