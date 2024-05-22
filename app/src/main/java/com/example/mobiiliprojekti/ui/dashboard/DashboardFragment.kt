@@ -17,6 +17,7 @@ import com.example.mobiiliprojekti.ChangeCategoryBudgetDialogListener
 import com.example.mobiiliprojekti.ChangeCategoryBudgetFragment
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.databinding.FragmentDashboardBinding
+import com.example.mobiiliprojekti.services.BudgetHandler
 import com.example.mobiiliprojekti.services.CategoryBudgetHandler
 import com.example.mobiiliprojekti.services.SelectedCategoryHandler
 import com.example.mobiiliprojekti.services.SessionManager
@@ -323,8 +324,13 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
 
     override fun onDialogDismissed3() {
+        val newBudget = CategoryBudgetHandler.getMonthlyCategoryBudgetByMonth()
         val selectedCategoryString = SelectedCategoryHandler.getSelectedCategory()
-        handleNewCategoryBudget(CategoryBudgetHandler.getMonthlyCategoryBudgetByMonth(), selectedCategoryString)
+
+            if (newBudget != null) {
+                handleNewCategoryBudget(newBudget, selectedCategoryString)
+                displayMoneyLeft()
+            }
     }
 
     override fun onDestroyView() {
