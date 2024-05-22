@@ -417,30 +417,6 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
     }
 
-    ///when add purchase dialog closes these functions are called to update view
-    override fun onDialogDismissed() {
-        displayLastPurchases()
-        displayMoneySpent()
-        displayMoneyLeft()
-        displayBudgetUsageChart()
-        displayTreatMeter()
-    }
-
-    ///when change monthly budget dialog closes these functions are called to update view
-    override fun onDialogDismissed2() {
-        handleNewBudget(BudgetHandler.getMonthlyBudgetByMonth())
-        displayBudgetUsageChart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        displayTreatMeter()
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     //This function handles monthly budget change
     private fun handleNewBudget(newBudgetValue: Int) {
         val selectedMonth = currentMonthIndex
@@ -590,6 +566,30 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
                 goalText.text = ""
             }
         }
+    }
+
+    ///when add purchase dialog closes these functions are called to update view
+    override fun onDialogDismissed() {
+        displayLastPurchases()
+        displayMoneySpent()
+        displayMoneyLeft()
+        displayBudgetUsageChart()
+        displayTreatMeter()
+    }
+
+    ///when change monthly budget dialog closes these functions are called to update view
+    override fun onDialogDismissed2() {
+        handleNewBudget(BudgetHandler.getMonthlyBudgetByMonth())
+        displayBudgetUsageChart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        displayTreatMeter()
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

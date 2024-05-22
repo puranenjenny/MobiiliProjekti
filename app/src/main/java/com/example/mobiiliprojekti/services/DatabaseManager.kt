@@ -679,7 +679,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
 
         try {
-            val query = "SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = ? AND c.category_name = ? AND strftime('%m', cb.date) = ? AND strftime('%Y', cb.date) = ? ORDER BY cb_id DESC, date DESC LIMIT 1"
+            val query = "SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = ? AND c.category_name = ? AND strftime('%m', cb.date) = ? AND strftime('%Y', cb.date) = ? ORDER BY cb_id DESC, date DESC"
             Log.d("DatabaseQuery", "Query: $query, User: ${userId}, Category: ${categoryName}, Month: $month, Year: $year")
             val cursor = db.rawQuery(query, arrayOf(userId.toString(),categoryName, month, year))
             if (cursor.moveToFirst()) {

@@ -220,6 +220,37 @@ class ProfileFragment : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        val userId = SessionManager.getLoggedInUserId()
+
+        val monthlyBudget: TextInputEditText = binding.MonthlyInput
+        val housingBudget: TextInputEditText = binding.HousingInput
+        val transportBudget: TextInputEditText = binding.TransportationInput
+        val foodBudget: TextInputEditText = binding.FoodInput
+        val clothesBudget: TextInputEditText = binding.ClothesInput
+        val wellnessBudget: TextInputEditText = binding.HyqieneInput
+        val entertainmentBudget: TextInputEditText = binding.EntertainmentInput
+        val otherBudget: TextInputEditText = binding.OtherInput
+
+        // Iterate through the list and set the budget for each category
+        //set monthly budget input field value with value that is stored to db
+        showMonthlyBudget(userId, monthlyBudget)
+
+        // List of category names and corresponding TextView elements
+        val categoriesAndViews = listOf(
+            Pair("Housing", housingBudget),
+            Pair("Transportation", transportBudget),
+            Pair("Food", foodBudget),
+            Pair("Clothes", clothesBudget),
+            Pair("Well-being", wellnessBudget),
+            Pair("Entertainment", entertainmentBudget),
+            Pair("Other", otherBudget)
+        )
+
+        // Iterate through the list and set the budget for each category
+        showCategoryBudget(userId, categoriesAndViews)
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
