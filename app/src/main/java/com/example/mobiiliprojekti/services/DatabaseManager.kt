@@ -1056,6 +1056,33 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return Pair(treat, treatValue)
     }
 
+    fun getTreatDate(): String? {
+        val db = readableDatabase
+        val userId = SessionManager.getLoggedInUserId()
+        var treatDate: String? = null
+
+
+        try {
+            val query = "SELECT date FROM treat WHERE user = ? ORDER BY treat_id DESC, date DESC"
+            Log.d("DatabaseQuery", "Query: $query, User: $userId")
+            val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+            if (cursor.moveToFirst()) {
+                val treatDateIndex = cursor.getColumnIndex("date")
+
+                if (treatDateIndex >= 0) {
+                    treatDate = cursor.getString(treatDateIndex)
+                }
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return treatDate
+    }
+
     //
 
     private fun addSavings(value: Double) {

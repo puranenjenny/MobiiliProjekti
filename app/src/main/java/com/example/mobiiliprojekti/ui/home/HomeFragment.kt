@@ -579,19 +579,23 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
                 progressBar.progress = 100
                 progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel)
                 textViewProgress.setTextColor(Color.WHITE)
+                goalText.text = ""
             }
             treatPercent > 53 -> {
                 progressBar.progress = treatPercent
                 progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
                 textViewProgress.setTextColor(Color.WHITE)
+                goalText.text = ""
             }
             treatPercent == 0 -> {
                 progressBar.progress = 0
                 progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+                goalText.text = ""
             }
             else -> {
                 progressBar.progress = treatPercent
                 progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+                goalText.text = ""
             }
         }
     }

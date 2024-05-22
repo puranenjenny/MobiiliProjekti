@@ -21,6 +21,8 @@ import com.example.mobiiliprojekti.services.SessionManager
 import com.example.mobiiliprojekti.services.Purchase
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -70,10 +72,10 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         setupCategorySpinner(purchase.category)
         setupDateButton()
 
-        val oldprice = purchase.price
+        val oldPrice = purchase.price
 
         btnSave.setOnClickListener {
-            saveUpdatedPurchase(oldprice)
+            saveUpdatedPurchase(oldPrice)
         }
 
         btnCancel.setOnClickListener {
@@ -143,6 +145,21 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         val month = LocalDate.now().monthValue
         val year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
 
+        var purchaseDate = purchase.date
+        val goalDate = databaseManager.getTreatDate()
+        println("date1: $goalDate")
+        println("date2: $date")
+        var goalDateTime : LocalDate? = null
+        var selectedDateTime2 : LocalDate? = null
+        var purchaseDateTime2 : LocalDate? = null
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        if (goalDate != null){
+            goalDateTime = LocalDate.parse(goalDate, formatter)
+            selectedDateTime2 = LocalDate.parse("$date 23:59:59", formatter)
+            purchaseDateTime2 = LocalDate.parse("$purchaseDate 00:00:01", formatter)
+        }
+
         if (name.isEmpty() || price == null || userId == -1L) {
             Toast.makeText(context, "Please ensure all fields are correctly filled.", Toast.LENGTH_SHORT).show()
             return
@@ -159,8 +176,19 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
         val isSuccess = databaseManager.updatePurchase(updatedPurchase)
         if (isSuccess > 0) {
-            if (selectedYear < year || selectedYear == year && selectedMonth < month){
-                updateSavings(priceDifference)
+            if (goalDateTime != null) {
+                if (goalDateTime.isBefore(purchaseDateTime2) && goalDateTime.isAfter(selectedDateTime2)){
+                    println("change2: $price")
+                    updateSavings(price)
+                }
+                else if (goalDateTime.isAfter(purchaseDateTime2) && goalDateTime.isBefore(selectedDateTime2)){
+                    println("change3: $-(price)")
+                    updateSavings((-(price)))
+                }
+                else if (selectedYear < year && goalDateTime <= selectedDateTime2 || selectedYear == year && selectedMonth < month && goalDateTime <= selectedDateTime2){
+                    println("change1: $priceDifference")
+                    updateSavings(priceDifference)
+                }
             }
             Toast.makeText(context, "Purchase updated successfully!", Toast.LENGTH_SHORT).show()
             dismiss()

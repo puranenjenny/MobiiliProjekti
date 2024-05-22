@@ -20,7 +20,10 @@ import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 
 interface AddPurchaseDialogListener {
     fun onDialogDismissed()
@@ -122,11 +125,24 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         val date = btnDate.text.toString()
         val userId = SessionManager.getLoggedInUserId()
 
-        val selectedMonth = date?.substring(5,7)?.toInt()
-        var selectedYear = date?.substring(0, 4)?.toInt()
+        val selectedMonth = date.substring(5,7).toInt()
+        val selectedYear = date.substring(0, 4).toInt()
 
-        var month = LocalDate.now().monthValue
-        var year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
+        val month = LocalDate.now().monthValue
+        val year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
+
+        val goalDate = databaseManager.getTreatDate()
+        println("date1: $goalDate")
+        println("date2: $date")
+        var goalDateTime : LocalDate? = null
+        var selectedDateTime2 : LocalDate? = null
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        if (goalDate != null){
+            goalDateTime = LocalDate.parse(goalDate, formatter)
+            selectedDateTime2 = LocalDate.parse("$date 23:59:59", formatter)
+        }
+
 
         Log.d("AddPurchaseFragment", "Name: $name")
         Log.d("AddPurchaseFragment", "Price: $price")
@@ -136,8 +152,8 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
 
         if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
             val result = databaseManager.addPurchase(name, price, category, date, userId)
-            if (selectedYear != null && selectedMonth != null) {
-                if (selectedYear < year || selectedYear == year && selectedMonth < month){
+            if (goalDateTime != null) {
+                if (selectedYear < year && goalDateTime.isBefore(selectedDateTime2)|| selectedYear == year && selectedMonth < month && goalDateTime.isBefore(selectedDateTime2)){
                     updateSavings(price)
                 }
             }
