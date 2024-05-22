@@ -117,7 +117,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
             animateY(2000)
-            xAxis.textSize = 14f
+            xAxis.textSize = 13f
             legend.textSize = 14f
             extraBottomOffset = 10f
         }
@@ -175,9 +175,9 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
                 xAxis.valueFormatter = IndexAxisValueFormatter(labels)
                 xAxis.granularity = 1f
                 xAxis.textSize = 14f
-                axisLeft.textSize = 14f
-                axisRight.textSize = 14f
-                setExtraOffsets(-10f, 0f, 20f, 16f)
+                axisLeft.textSize = 13f
+                axisRight.textSize = 13f
+                setExtraOffsets(0f, 0f, 40f, 16f)
                 setFitBars(true)
                 invalidate()
             }
