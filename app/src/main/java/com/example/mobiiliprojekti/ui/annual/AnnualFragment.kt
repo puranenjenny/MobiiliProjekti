@@ -1,7 +1,5 @@
 package com.example.mobiiliprojekti.ui.annual
 
-
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
@@ -19,10 +17,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.example.mobiiliprojekti.services.DatabaseManager
-import java.time.LocalDate
 import java.util.Calendar
 import com.example.mobiiliprojekti.services.SessionManager
-
 
 class AnnualFragment : Fragment() {
 
@@ -262,6 +258,7 @@ class AnnualFragment : Fragment() {
         return totalExpense
     }
 
+    // function for showing treat meters value
     private fun displayTreatMeterAnnual() {
         val goalText = binding.txtGoalTextAnnual
         val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()

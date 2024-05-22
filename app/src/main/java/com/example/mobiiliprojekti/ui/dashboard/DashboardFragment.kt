@@ -53,10 +53,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         spinner.dropDownVerticalOffset = 150
         spinner.dropDownHorizontalOffset = 40
 
-        val categories = databaseManager.allCategories() //get categories
-        val textView: TextView = binding.textDashboard //binding
-
-        textView.text = categories // set text
         setupCategorySpinner() // set categories to the dropdown spinner
 
         updateMonthYearDisplay() // setting initial month and year

@@ -189,6 +189,7 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         listener?.onDialogDismissed()
     }
 
+    //for updating savings in db if purchase is added after month has changed
     private fun updateSavings(price: Double){
 
         val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()

@@ -550,6 +550,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
         return moneyLeft
     }
 
+    // function for showing treat meters value
     private fun displayTreatMeter() {
         val goalText = binding.txtGoalAchieved
         val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
