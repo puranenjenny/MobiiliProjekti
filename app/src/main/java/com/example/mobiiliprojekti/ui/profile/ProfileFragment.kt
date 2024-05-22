@@ -1,5 +1,6 @@
 package com.example.mobiiliprojekti.ui.profile
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
@@ -33,6 +34,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -162,10 +164,9 @@ class ProfileFragment : Fragment() {
             val treatName = treat.text.toString()
             val treatPrice = treatValue.text.toString()
             var treatValueNew = 0
-            println("treat: $treatName and $treatPrice")
-            if (treatPrice != null  && treatName.isNotEmpty()) {
+
+            if (treatName.isNotEmpty()) {
                 treatValueNew = treatPrice.trim().toInt()
-                println("treat value: $treatValue")
                 databaseManager.addTreat(treatName, treatValueNew)
                 Toast.makeText(requireContext(), "Treat saved successfully!", Toast.LENGTH_SHORT).show()
 
@@ -191,7 +192,7 @@ class ProfileFragment : Fragment() {
 
         // Set click listener for delete user button
         btnDeleteUser.setOnClickListener {
-            // New instance of Delete user fragent
+            // New instance of Delete user fragment
             val fragmentDeleteUser = DeleteUserFragment()
             // Show fragment as dialog
             fragmentDeleteUser.show(parentFragmentManager, "Delete_user_dialog")
@@ -282,11 +283,10 @@ class ProfileFragment : Fragment() {
     //function for getting savings goal from db
     private fun getTreat(treat: TextInputEditText, treatNum : TextInputEditText) {
         val (treatName, treatValue) = databaseManager.getTreat()
-        println("price of treat: $treatValue")
+
         if (treatName != null && treatValue != null){
             treat.setText(treatName)
             treatNum.setText(treatValue.toString())
-            println("price of treat: $treatValue")
         }
     }
 

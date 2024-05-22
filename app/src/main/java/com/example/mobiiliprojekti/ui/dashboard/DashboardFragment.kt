@@ -1,5 +1,6 @@
 package com.example.mobiiliprojekti.ui.dashboard
 
+import android.annotation.SuppressLint
 import android.icu.util.Calendar
 import com.example.mobiiliprojekti.R
 
@@ -104,7 +105,7 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
             displayMoneyLeft()
             updateMonthYearDisplay()
             updateDaysLeftDisplay()
-            displayLastPaymenttxt()
+            displayLastPaymentTxt()
             displayLastPurchases()
             displayBudgetProgressItems()
             selectedMonthsCategoryBudgetByCategory(SelectedCategoryHandler.getSelectedCategory())
@@ -125,6 +126,7 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun updateMonthYearDisplay() {
         val monthName = LocalDate.of(currentYear, currentMonthIndex, 1).month.getDisplayName(
             TextStyle.FULL, Locale.getDefault())
@@ -151,17 +153,14 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
     //money spent
     private fun displayMoneySpent() {
-        println("DashboardFragment, displayMoneySpent called")
+
         val userId = SessionManager.getLoggedInUserId()
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
         val categoryName = SelectedCategoryHandler.getSelectedCategory()
 
-        println("Selected month and year: $selectedMonth and $selectedYear")
-
         val totalMoneySpent = databaseManager.getTotalExpenses(userId, categoryName, selectedMonth, selectedYear)
 
-        println("Total money spent: $totalMoneySpent")
         binding.txtMoneySpentDashboard.text = String.format("%.1f €", totalMoneySpent)
     }
 
@@ -204,8 +203,9 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, categories)
         binding.spinnerCategory.adapter = adapter
 
-        // listenerr to update everything when a new category is selected
+        // listener to update everything when a new category is selected
         binding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @SuppressLint("SetTextI18n")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedCategory = parent.getItemAtPosition(position).toString()
                 SelectedCategoryHandler.setSelectedCategory(selectedCategory)
@@ -261,12 +261,14 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
 
     //payments items
-    private fun displayLastPaymenttxt() {
+    @SuppressLint("SetTextI18n")
+    private fun displayLastPaymentTxt() {
         val category = SelectedCategoryHandler.getSelectedCategory()
         selectedMonthsCategoryBudgetByCategory(category)
         binding.txtlastPayCategory.text = "Last payments in $category"
     }
 
+    @SuppressLint("SetTextI18n")
     private fun displayLastPurchases(){
         val userId = SessionManager.getLoggedInUserId()
         val categoryName = SelectedCategoryHandler.getSelectedCategory()
@@ -295,6 +297,7 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun selectedMonthsCategoryBudgetByCategory(categoryName: String) {
         val userId = SessionManager.getLoggedInUserId()
         val monthlyBudget: Double
@@ -335,8 +338,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
     private fun handleNewCategoryBudget(newBudgetValue: Int, category: String) {
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
-        println("month: $selectedMonth") // Debug-tuloste
-        println("year: $selectedYear") // Debug-tuloste
 
         val currentDateTime = java.time.LocalDateTime.now()
 
@@ -364,20 +365,15 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
             pastDate = "$selectedYear-$selectedMonth-$totalDaysInMonth 23:59:59"
         }
 
-        println("Handling new budget: $newBudgetValue") // Debug-tuloste
-
         if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
-            println("Future date: $futureDate + $selectedMonth vs. $currentMonth") // Debug-tuloste
             databaseManager.changeCategoryBudgetByMonth(newBudgetValue, futureDate, category)
         } else if (selectedYear < currentYear || (selectedYear == currentYear && selectedMonth < currentMonth)) {
-            println("Past date: $pastDate") // Debug-tuloste
             databaseManager.changeCategoryBudgetByMonth(newBudgetValue, pastDate, category)
         } else {
-            println("current date: $formattedDate") // Debug-tuloste
             databaseManager.changeCategoryBudgetByMonth(newBudgetValue, formattedDate, category)
         }
 
-        val category = SelectedCategoryHandler.getSelectedCategory()
-        selectedMonthsCategoryBudgetByCategory(category)
+        val selectedCategory = SelectedCategoryHandler.getSelectedCategory()
+        selectedMonthsCategoryBudgetByCategory(selectedCategory)
     }
 }

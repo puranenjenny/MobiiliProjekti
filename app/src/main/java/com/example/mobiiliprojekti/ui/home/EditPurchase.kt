@@ -81,7 +81,7 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
         // TODO: repeated code here
         val price = purchase.price
-        var purchaseDate = purchase.date
+        val purchaseDate = purchase.date
 
         val selectedMonth = purchaseDate.substring(5,7).toInt()
         val selectedYear = purchaseDate.substring(0, 4).toInt()
@@ -105,7 +105,6 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
                 Toast.makeText(context, "Purchase deleted successfully.", Toast.LENGTH_SHORT).show()
                 if (goalDateTime != null) {
                     if (selectedYear < year && goalDateTime <= purchaseDateTime || selectedYear == year && selectedMonth < month && goalDateTime <= purchaseDateTime){
-                        println("change2: $price")
                         updateSavings(price)
                     }
                 }
@@ -178,10 +177,9 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         val month = LocalDate.now().monthValue
         val year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
 
-        var purchaseDate = purchase.date
+        val purchaseDate = purchase.date
         val goalDate = databaseManager.getTreatDate()
-        println("date1: $goalDate")
-        println("date2: $date")
+
         var goalDateTime : LocalDate? = null
         var selectedDateTime2 : LocalDate? = null
         var purchaseDateTime2 : LocalDate? = null
@@ -193,7 +191,7 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
             purchaseDateTime2 = LocalDate.parse("$purchaseDate 00:00:01", formatter)
         }
 
-        if (name.isEmpty() || price == null || userId == -1L) {
+        if (name.isEmpty() || userId == -1L) {
             Toast.makeText(context, "Please ensure all fields are correctly filled.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -211,15 +209,12 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
         if (isSuccess > 0) {
             if (goalDateTime != null) {
                 if (goalDateTime.isBefore(purchaseDateTime2) && goalDateTime.isAfter(selectedDateTime2)){
-                    println("change2: $price")
                     updateSavings(price)
                 }
                 else if (goalDateTime.isAfter(purchaseDateTime2) && goalDateTime.isBefore(selectedDateTime2)){
-                    println("change3: $-(price)")
                     updateSavings((-(price)))
                 }
                 else if (selectedYear < year && goalDateTime <= selectedDateTime2 || selectedYear == year && selectedMonth < month && goalDateTime <= selectedDateTime2){
-                    println("change1: $priceDifference")
                     updateSavings(priceDifference)
                 }
             }
@@ -232,7 +227,7 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
     //get category id for the save updated purchase function
     private fun getCategoryID(categoryName: String): Int {
-        return databaseManager.fetchCategoryBudgetIdByNameforPurchase(categoryName)
+        return databaseManager.fetchCategoryBudgetIdByNameForPurchase(categoryName)
     }
 
     //for passing info to homeFragment about dismissing this dialog
@@ -243,7 +238,7 @@ class EditPurchase(private val purchase: Purchase, private val listener: EditPur
 
     //for updating savings in db if purchase is added after month has changed
     private fun updateSavings(price: Double){
-        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
+        val (savingsId, savingsValue, _) = databaseManager.getSavings()
 
         if (savingsId != null && savingsValue != 0.0) {
             val saved = savingsValue?.plus((price))

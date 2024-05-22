@@ -203,29 +203,6 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return Pair(monthlyBudgetValue, date)
     }
 
-    //function gets logged in users category budget by category name
-    fun fetchCategoryBudget(userId: Long, categoryName: String): Int? {
-        val db = readableDatabase
-        var categoryBudget: Int? = null
-
-        try {
-            val cursor = db.rawQuery("SELECT cb.cat_budget FROM category_budget AS cb JOIN category AS c ON cb.category = c.category_id WHERE cb.user = $userId AND c.category_name = '$categoryName' ORDER BY cb.date DESC LIMIT 1", null)
-            if (cursor.moveToFirst()) {
-                val categoryBudgetIndex = cursor.getColumnIndex("cat_budget")
-                if (categoryBudgetIndex >= 0) {
-                    categoryBudget = cursor.getInt(categoryBudgetIndex)
-
-                }
-            }
-            cursor.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-        return categoryBudget
-    }
-
     //Check if user and password matches to user in db for login
     fun loginUser(username: String, password: String): Boolean {
         var result = false
@@ -302,6 +279,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return false
     }
 
+    //this gets category names for spinner
     fun allCategoryNames(): List<String> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT category_name FROM category", null)
@@ -350,14 +328,14 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             // Use other function to get category id by category name
             val categoryId = fetchCategoryIdByName(categoryName)
 
-            if (categoryId.toInt() != -1) {
+            if (categoryId != -1) {
                 val contentValues = ContentValues().apply {
                     put("cat_budget", categoryBudget)
                     put("user", userId)
                     put("category", categoryId)
                 }
 
-                val result = db.insert("category_budget", null, contentValues)
+                db.insert("category_budget", null, contentValues)
                 db.close()
 
             } else {
@@ -370,7 +348,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     // this function gets category id by category name
-    fun fetchCategoryIdByName(categoryName: String): Int {
+    private fun fetchCategoryIdByName(categoryName: String): Int {
         val db = readableDatabase
         var categoryId: Int = -1
 
@@ -409,7 +387,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
 
     // this function gets the budget category id by category name for purchase
-    fun fetchCategoryBudgetIdByNameforPurchase(categoryName: String): Int {
+    fun fetchCategoryBudgetIdByNameForPurchase(categoryName: String): Int {
         val db = readableDatabase
         var categoryBudgetId: Int = -1
 
@@ -450,7 +428,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 put("user", userId)
             }
 
-            val result = db.insert("monthly_budget", null, contentValues)
+            db.insert("monthly_budget", null, contentValues)
             db.close()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -633,6 +611,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return monthlyBudget
     }
 
+    // this allows changing monthly budget month by month
     fun changeMonthlyBudgetByMonth(monthlyBudget: Int, date: String) {
         try {
             val userId = SessionManager.getLoggedInUserId() // get user id that is registered
@@ -651,6 +630,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
     }
 
+    // this allows changing each category budgets month by month
     fun changeCategoryBudgetByMonth(categoryBudget: Int, date: String, category: String) {
         try {
             val userId = SessionManager.getLoggedInUserId() // get user id that is registered
@@ -834,6 +814,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return totalExpense
     }
 
+    // this gets purchases by category
     fun getSelectedMonthsAndCategoriesPurchases(userId: Long, categoryName: String, selectedMonth: Int, selectedYear: Int): List<Purchase> {
         val db = readableDatabase
         val monthFormatted = String.format("%02d", selectedMonth)
@@ -881,7 +862,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 put("user", userId)
             }
             db.insertOrThrow("treat", null, contentValues)
-            addSavings(0.0)
+            addSavings()
         } catch (e: SQLiteConstraintException) {
             e.printStackTrace()
         } finally {
@@ -914,10 +895,10 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } finally {
             db.close()
         }
-
         return Pair(treat, treatValue)
     }
 
+    //get treats date from db
     fun getTreatDate(): String? {
         val db = readableDatabase
         val userId = SessionManager.getLoggedInUserId()
@@ -941,30 +922,26 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } finally {
             db.close()
         }
-
         return treatDate
     }
 
-    //
-
-    private fun addSavings(value: Double) {
+    //add new saving with value 0.0 to db when adding goal
+    private fun addSavings() {
         val db = writableDatabase
         val userId = SessionManager.getLoggedInUserId()
 
         try {
             val contentValues = ContentValues().apply {
-                put("saving_value", value)
+                put("saving_value", 0.0)
                 put("user", userId)
             }
             db.insertOrThrow("saved", null, contentValues)
         } catch (e: SQLiteConstraintException) {
             e.printStackTrace()
-        } finally {
-            //
         }
-
     }
 
+    // Get newest saving from db
     fun getSavings(): Triple<Int?, Double?, String?> {
         val db = readableDatabase
         val userId = SessionManager.getLoggedInUserId()
@@ -980,7 +957,7 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 val savingsIdIndex = cursor.getColumnIndex("saving_id")
                 val savingsValueIndex = cursor.getColumnIndex("saving_value")
                 val savingsDateIndex = cursor.getColumnIndex("date")
-                if (savingsValueIndex >= 0 && savingsValueIndex >= 0) {
+                if (savingsValueIndex >= 0) {
                     savingsId = cursor.getInt(savingsIdIndex)
                     savingsValue = cursor.getDouble(savingsValueIndex)
                     savingsDate = cursor.getString(savingsDateIndex)
@@ -992,10 +969,10 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         } finally {
             db.close()
         }
-
         return Triple(savingsId, savingsValue, savingsDate)
     }
 
+    // Update newest saving to db
     fun updateSavings(savingsId: Int, savingsValue: Double) {
         val db = writableDatabase
         val currentDateTime = java.time.LocalDateTime.now()
@@ -1008,12 +985,10 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             put("date", savingsDate)
         }
         return try {
-            val result =
-                db.update("saved", contentValues, "saving_id = ?", arrayOf(savingsId.toString()))
+            db.update("saved", contentValues, "saving_id = ?", arrayOf(savingsId.toString()))
             db.close()
         } catch (e: SQLiteConstraintException) {
             e.printStackTrace()
         }
     }
-
 }

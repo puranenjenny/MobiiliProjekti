@@ -1,7 +1,5 @@
 package com.example.mobiiliprojekti
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -19,7 +17,6 @@ class LoginActivity : AppCompatActivity() {
         databaseManager = DatabaseManager(this)
 
         SessionManager.clearLoggedInUserId()
-        println(SessionManager.getLoggedInUserId())
 
         // set register button to variable
         val btnRegister: Button = findViewById(R.id.btn_register)

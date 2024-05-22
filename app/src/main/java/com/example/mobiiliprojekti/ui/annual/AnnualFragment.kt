@@ -64,10 +64,10 @@ class AnnualFragment : Fragment() {
 
         // Create LineDataSet object for budgets
         val budgetDataSet = LineDataSet(budgetEntries, "Monthly Budget    ")
-        val dark_green = ContextCompat.getColor(requireContext(), R.color.dark_green)
-        budgetDataSet.color = dark_green
+        val darkGreen = ContextCompat.getColor(requireContext(), R.color.dark_green)
+        budgetDataSet.color = darkGreen
         budgetDataSet.lineWidth = 5f
-        budgetDataSet.setCircleColor(dark_green)
+        budgetDataSet.setCircleColor(darkGreen)
         budgetDataSet.setDrawValues(false)
         budgetDataSet.valueTextSize = 14f
 
@@ -90,11 +90,11 @@ class AnnualFragment : Fragment() {
         // Customize LineChart as needed
         lineChart.description.isEnabled = false
         lineChart.animateY(1000)
-        lineChart.setExtraOffsets(0f, 0f, 0f, 16f) // Lisää ylimääräistä tilaa alapuolelle (esim. 16f)
+        lineChart.setExtraOffsets(0f, 0f, 0f, 16f) // Add extra space (example. 16f)
 
         // Set Y-axis labels (amounts)
         val yAxisLeft = lineChart.axisLeft
-        yAxisLeft.granularity = 100f // Aseta välit 100 välein
+        yAxisLeft.granularity = 100f // Set gaps
         yAxisLeft.isGranularityEnabled = true
         yAxisLeft.textSize = 14f
 
@@ -108,12 +108,12 @@ class AnnualFragment : Fragment() {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(false)
 
-// Customize legend text size
+    // Customize legend text size
         val legend = lineChart.legend
         legend.textSize = 14f // Set text size for legend labels
 
 
-// Luo kuukausien nimet
+    // array of months names
         val monthNames = arrayOf(
             "Jan",
             "Feb",
@@ -129,15 +129,15 @@ class AnnualFragment : Fragment() {
             "Dec"
         )
 
-// Aseta kuukausien nimet akselin arvoiksi
+    // set month names as x axis value
         xAxis.valueFormatter = IndexAxisValueFormatter(monthNames)
         xAxis.labelCount = monthNames.size
 
-// Aseta akselin avainten välistä etäisyyttä
+    // set gaps to x-axis
         xAxis.isGranularityEnabled = true
         xAxis.granularity = 1f
 
-// Aseta akselin avainmatriisin tyyppi kuukausittaiseksi
+    // set axis key matrix value
         xAxis.setAvoidFirstLastClipping(true)
 
         displayTreatMeterAnnual()
@@ -154,9 +154,6 @@ class AnnualFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         displayTreatMeterAnnual()
-    }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun fetchMonthlyBudgetsFromDatabase(userId: Long): List<Float> {
@@ -178,7 +175,7 @@ class AnnualFragment : Fragment() {
                         val monthBudget = cursor.getFloat(budgetIndex)
                         monthlyBudgets.add(monthBudget)
                     } else {
-                        monthlyBudgets.add(0f) // Asetetaan nolla, jos budjettia ei löydy
+                        monthlyBudgets.add(0f) // set zero if budget doesn't exist
                     }
                     cursor.close()
                 }
@@ -191,44 +188,11 @@ class AnnualFragment : Fragment() {
         return monthlyBudgets
     }
 
-
-
-    private fun fetchMonthlyBudget(userId: Long, year: Int, month: Int): Float {
-        val db = databaseManager.readableDatabase
-        var totalBudget = 0f
-
-        try {
-            val cursor = db.rawQuery(
-                "SELECT month_budget FROM monthly_budget WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ? AND user = ?",
-                arrayOf(year.toString(), (month + 1).toString().padStart(2, '0'), userId.toString())
-            )
-
-            if (cursor.moveToFirst()) {
-                val budgetIndex = cursor.getColumnIndex("month_budget")
-                if (budgetIndex != -1) {
-                    totalBudget = cursor.getFloat(budgetIndex)
-                }
-            } else {
-                // Lisää tyhjä budjetti, jos sitä ei löydetty
-                println("No budget found for month $month, adding empty budget.")
-                totalBudget = 0f
-            }
-
-            cursor.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            db.close()
-        }
-
-        return totalBudget
-    }
-
     private fun fetchMonthlyExpensesFromDatabase(userId: Long): List<Float> {
         val monthlyExpenses = mutableListOf<Float>()
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-        // Haetaan kuukausittaiset menot nykyiselle vuodelle
+        // get monthly expenses for current year
         for (month in 1..12) {
             val expensesForMonth = getExpensesForMonth(month, currentYear, userId)
             monthlyExpenses.add(expensesForMonth)
@@ -241,7 +205,7 @@ class AnnualFragment : Fragment() {
         val db = databaseManager.readableDatabase
         var totalExpense = 0f
 
-        // Haetaan tietyn kuukauden menot nykyiselle vuodelle ja tietylle käyttäjälle
+        // get monthly expenses for logged in user
         val cursor = db.rawQuery(
             "SELECT SUM(value) AS total_expense FROM purchase WHERE strftime('%Y-%m', date) = ? AND user = ?",
             arrayOf(String.format("%d-%02d", year, month), userId.toString())
@@ -267,14 +231,13 @@ class AnnualFragment : Fragment() {
     // function for showing treat meters value
     private fun displayTreatMeterAnnual() {
         val goalText = binding.txtGoalTextAnnual
-        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
-        val (treat, treatValue) = databaseManager.getTreat()
+        val (_, savingsValue, _) = databaseManager.getSavings()
+        val (_, treatValue) = databaseManager.getTreat()
         var treatPercent = 0
 
         if (treatValue != null && savingsValue != null) {
             treatPercent = if (treatValue > 0) (savingsValue / treatValue * 100).toInt() else 0
         }
-        println("treat% : $treatPercent")
 
         val treatRemainingPercent = if (treatPercent <= 100) treatPercent else 100
 

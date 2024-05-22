@@ -53,7 +53,6 @@ class ChangeMonthlyBudgetFragment(private var homeFragment: HomeFragment) : Dial
         btnCancelBudget.setOnClickListener {
             dismiss()
         }
-
         return view
     }
 

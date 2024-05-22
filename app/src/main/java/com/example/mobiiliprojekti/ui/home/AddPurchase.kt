@@ -20,10 +20,9 @@ import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
+
 
 interface AddPurchaseDialogListener {
     fun onDialogDismissed()
@@ -85,7 +84,6 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         }
     }
 
-
     private fun setupCategorySpinner() {
         val categories = databaseManager.allCategoryNames()
         if (categories.isEmpty()) {
@@ -117,7 +115,6 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         }
     }
 
-
     private fun savePurchase() {
         val name = etName.text.toString()
         val price = etPrice.text.toString().toDoubleOrNull()
@@ -132,8 +129,7 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         val year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
 
         val goalDate = databaseManager.getTreatDate()
-        println("date1: $goalDate")
-        println("date2: $date")
+
         var goalDateTime : LocalDate? = null
         var selectedDateTime2 : LocalDate? = null
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -142,7 +138,6 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
             goalDateTime = LocalDate.parse(goalDate, formatter)
             selectedDateTime2 = LocalDate.parse("$date 23:59:59", formatter)
         }
-
 
         Log.d("AddPurchaseFragment", "Name: $name")
         Log.d("AddPurchaseFragment", "Price: $price")
@@ -192,7 +187,7 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
     //for updating savings in db if purchase is added after month has changed
     private fun updateSavings(price: Double){
 
-        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
+        val (savingsId, savingsValue, _) = databaseManager.getSavings()
 
         if (savingsId != null && savingsValue != 0.0) {
             val saved = savingsValue?.minus(price)

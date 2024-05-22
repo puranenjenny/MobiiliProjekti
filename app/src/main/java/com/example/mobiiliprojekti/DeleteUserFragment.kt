@@ -35,7 +35,7 @@ class DeleteUserFragment : DialogFragment() {
 
         deleteUserButton.setOnClickListener {
             val userId = SessionManager.getLoggedInUserId()
-            println("Delete user_id: $userId")
+
             if (databaseManager.deleteUserData(userId)) {
                 Toast.makeText(requireContext(), "User deleted!", Toast.LENGTH_SHORT).show()
                 // create intent for starting a new LoginActivity

@@ -87,8 +87,8 @@ class PasswordFragment : DialogFragment() {
         }
     }
 
-    // Generate a random password, for example using UUID
-    fun generateRandomPassword(): String {
+    // Generate a random password, for using UUID
+    private fun generateRandomPassword(): String {
         return UUID.randomUUID().toString().substring(0, 8)
     }
 }

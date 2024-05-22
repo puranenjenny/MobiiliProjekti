@@ -1,5 +1,6 @@
 package com.example.mobiiliprojekti.ui.home
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
@@ -90,10 +91,8 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
 
         // Set up FragmentResultListener
-        parentFragmentManager.setFragmentResultListener("changeBudgetRequestKey", viewLifecycleOwner) { requestKey, bundle ->
+        parentFragmentManager.setFragmentResultListener("changeBudgetRequestKey", viewLifecycleOwner) { _, bundle ->
             val newBudgetValue = bundle.getInt("newBudgetValue")
-            println("new budget: $newBudgetValue")
-            println("FragmentResultListener received new budget: $newBudgetValue") // Debug-tuloste
             handleNewBudget(newBudgetValue)
             displayBudgetUsageChart() // Update chart when budget changes
         }
@@ -249,6 +248,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     }
 
     // this months last purchases
+    @SuppressLint("SetTextI18n")
     private fun displayLastPurchases() {
         val userId = SessionManager.getLoggedInUserId()
         val selectedMonth = currentMonthIndex
@@ -310,6 +310,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
         displayTreatMeter()
 
     }
+    @SuppressLint("SetTextI18n")
     private fun updateMonthYearDisplay() {
         val monthName = LocalDate.of(currentYear, currentMonthIndex, 1).month.getDisplayName(
             TextStyle.FULL, Locale.getDefault())
@@ -337,22 +338,21 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
 
     //money spent
+    @SuppressLint("SetTextI18n")
     private fun displayMoneySpent() {
         val userId = SessionManager.getLoggedInUserId()
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
 
-        println("$selectedMonth ja $selectedYear")
-
         val values = databaseManager.getSelectedMonthsPurchases(userId, selectedMonth, selectedYear)
 
-        println("$values")
         val totalMoneySpent = values.sum()
 
         binding.txtMoneyspent.text = "${String.format("%.1f", totalMoneySpent)} €"
     }
 
     //money left
+    @SuppressLint("SetTextI18n")
     private fun displayMoneyLeft()  {
         val userId = SessionManager.getLoggedInUserId()
         val monthlyBudget: Double
@@ -389,6 +389,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     }
 
     //this function shows monthly budget on monthly basis
+    @SuppressLint("SetTextI18n")
     private fun displayMonthlyBudget() {
         val userId = SessionManager.getLoggedInUserId()
         val monthlyBudget: Double
@@ -397,9 +398,6 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
 
         val monthNow = LocalDate.now().monthValue
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        println("current: $monthNow/$currentYear")
-
-
 
         monthlyBudget = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > monthNow)) {
             val budget = databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0
@@ -447,8 +445,6 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     private fun handleNewBudget(newBudgetValue: Int) {
         val selectedMonth = currentMonthIndex
         val selectedYear = currentYear
-        println("month: $selectedMonth") // Debug-tuloste
-        println("year: $selectedYear") // Debug-tuloste
 
         val currentDateTime = java.time.LocalDateTime.now()
 
@@ -479,18 +475,13 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
             pastDate = "$selectedYear-$selectedMonth-$totalDaysInMonth 23:59:59"
         }
 
-        println("Handling new budget: $newBudgetValue") // Debug-tuloste
-
         if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > currentMonth)) {
-            println("Future date: $futureDate + $selectedMonth vs. $currentMonth") // Debug-tuloste
             databaseManager.changeMonthlyBudgetByMonth(newBudgetValue, futureDate)
             databaseManager.addCategoryBudgetsForNewMonthlyBudget(SessionManager.getLoggedInUserId(), futureDate)
         } else if (selectedYear < currentYear || (selectedYear == currentYear && selectedMonth < currentMonth)) {
-            println("Past date: $pastDate") // Debug-tuloste
             databaseManager.changeMonthlyBudgetByMonth(newBudgetValue, pastDate)
             databaseManager.addCategoryBudgetsForNewMonthlyBudget(SessionManager.getLoggedInUserId(), pastDate)
         } else {
-            println("current date: $formattedDate") // Debug-tuloste
             databaseManager.changeMonthlyBudgetByMonth(newBudgetValue, formattedDate)
         }
 
@@ -519,10 +510,8 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
         }
 
         if(year == currentYear && monthIndex == monthNow) {
-            println("saved1: $savingsValueNew")
             if (savingsId != null && savingsValue != null) {
                 val saved = savingsValue + (savingsValueNew)
-                println("saved: $saved")
                 databaseManager.updateSavings(savingsId, saved)
             }
         }
@@ -539,7 +528,6 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
         if (selectedMonth == 0){
             selectedMonth = 12
             selectedYear = Calendar.getInstance().get(Calendar.YEAR) - 1
-            println("$selectedMonth and $selectedYear")
         }
 
         monthlyBudget = (databaseManager.getSelectedMonthsBudget(userId, selectedMonth, selectedYear) ?: 0.0).toDouble()
@@ -553,14 +541,13 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
     // function for showing treat meters value
     private fun displayTreatMeter() {
         val goalText = binding.txtGoalAchieved
-        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
-        val (treat, treatValue) = databaseManager.getTreat()
+        val (_, savingsValue, _) = databaseManager.getSavings()
+        val (_, treatValue) = databaseManager.getTreat()
         var treatPercent = 0
 
         if (treatValue != null && savingsValue != null) {
             treatPercent = if (treatValue > 0) (savingsValue / treatValue * 100).toInt() else 0
         }
-        println("treat% : $treatPercent")
 
         val treatRemainingPercent = if (treatPercent <= 100) treatPercent else 100
 
