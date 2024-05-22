@@ -268,7 +268,7 @@ class HomeFragment : Fragment(), AddPurchaseDialogListener, EditPurchaseDialogLi
             purchases.forEach { purchase ->
                     val categoryName = databaseManager.getCategoryNameById(purchase.category)
                     val purchaseView = TextView(context).apply {
-                        text = "${purchase.date} - $categoryName - ${purchase.name} - ${purchase.price} €"
+                        text = "${purchase.date}- ${purchase.name} - ${purchase.price} €"
                     textSize = 18f
                     setPadding(20, 20, 20, 20)
                     isClickable = true
