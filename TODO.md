@@ -1,20 +1,22 @@
 # MobiiliProjekti - Vaahtera - Budjetti App
-Suunnittelu, toteutus ja testaus tehtäviä  
+Suunnittelu, toteutus ja testaus -tehtäviä  
 
 ### TODO 
      
 ### IN PROGRESS  
-* [ ] lopputestaukset 
-   * [ ] login  
-   * [ ] home  
-   * [ ] dashboard  
-   * [ ] annual  
-   * [ ] profile
-* [ ] demovideo
-  * [ ] käsikirjotus
-  * [ ] nauhotus  
 
 ### DONE
+* [x] release APK luonti ja testaus
+* [x] mainiin mergeys
+* [x] lopputestaukset 
+   * [x] login  
+   * [x] home  
+   * [x] dashboard  
+   * [x] annual  
+   * [x] profile
+* [x] demovideo
+  * [x] käsikirjotus
+  * [x] nauhotus  
 * [x] home sivun toiminnallisuudet  
    * [x] tietokannasta haku  
    * [x] lisää tietokantaan  
