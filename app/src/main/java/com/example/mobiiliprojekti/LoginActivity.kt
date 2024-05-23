@@ -17,7 +17,7 @@ class LoginActivity : AppCompatActivity() {
 
         //for debugging
         databaseManager = DatabaseManager(this)
-        databaseManager.printAllUsers()
+
         SessionManager.clearLoggedInUserId()
         println(SessionManager.getLoggedInUserId())
 

@@ -76,6 +76,21 @@
             android:text="Select Date"
             android:textAllCaps="true" />
 
+        <Button
+            android:id="@+id/btnDeletePurchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/rounded_button"
+            app:backgroundTint="@color/cancel"
+            android:fontFamily="@font/poppins"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:text="Delete purchase"
+            android:textAllCaps="true" />
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"

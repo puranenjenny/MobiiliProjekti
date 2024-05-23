@@ -1,8 +1,8 @@
 package com.example.mobiiliprojekti.ui.annual
 
-
-import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +17,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.example.mobiiliprojekti.services.DatabaseManager
-import java.time.LocalDate
 import java.util.Calendar
 import com.example.mobiiliprojekti.services.SessionManager
-
 
 class AnnualFragment : Fragment() {
 
@@ -65,12 +63,13 @@ class AnnualFragment : Fragment() {
         }
 
         // Create LineDataSet object for budgets
-        val budgetDataSet = LineDataSet(budgetEntries, "Monthly Budget")
+        val budgetDataSet = LineDataSet(budgetEntries, "Monthly Budget    ")
         val dark_green = ContextCompat.getColor(requireContext(), R.color.dark_green)
         budgetDataSet.color = dark_green
         budgetDataSet.lineWidth = 5f
         budgetDataSet.setCircleColor(dark_green)
         budgetDataSet.setDrawValues(false)
+        budgetDataSet.valueTextSize = 14f
 
         // Create LineDataSet object for expenses
         val expenseDataSet = LineDataSet(expenseEntries, "Monthly Expenses")
@@ -79,6 +78,7 @@ class AnnualFragment : Fragment() {
         expenseDataSet.lineWidth = 5f
         expenseDataSet.setCircleColor(brown)
         expenseDataSet.setDrawValues(false)
+        expenseDataSet.valueTextSize = 14f
 
 
         // Create LineData object containing both budgets and expenses
@@ -96,17 +96,21 @@ class AnnualFragment : Fragment() {
         val yAxisLeft = lineChart.axisLeft
         yAxisLeft.granularity = 100f // Aseta välit 100 välein
         yAxisLeft.isGranularityEnabled = true
+        yAxisLeft.textSize = 14f
 
 
         val yAxisRight = lineChart.axisRight
         yAxisRight.isEnabled = true
+        yAxisRight.textSize = 14f
 
 
         val xAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(false)
 
-
+// Customize legend text size
+        val legend = lineChart.legend
+        legend.textSize = 14f // Set text size for legend labels
 
 
 // Luo kuukausien nimet
@@ -135,6 +139,9 @@ class AnnualFragment : Fragment() {
 
 // Aseta akselin avainmatriisin tyyppi kuukausittaiseksi
         xAxis.setAvoidFirstLastClipping(true)
+
+        displayTreatMeterAnnual()
+
         return root
 
     }
@@ -144,9 +151,12 @@ class AnnualFragment : Fragment() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        displayTreatMeterAnnual()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
     }
 
     private fun fetchMonthlyBudgetsFromDatabase(userId: Long): List<Float> {
@@ -253,6 +263,62 @@ class AnnualFragment : Fragment() {
 
         return totalExpense
     }
+
+    // function for showing treat meters value
+    private fun displayTreatMeterAnnual() {
+        val goalText = binding.txtGoalTextAnnual
+        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
+        val (treat, treatValue) = databaseManager.getTreat()
+        var treatPercent = 0
+
+        if (treatValue != null && savingsValue != null) {
+            treatPercent = if (treatValue > 0) (savingsValue / treatValue * 100).toInt() else 0
+        }
+        println("treat% : $treatPercent")
+
+        val treatRemainingPercent = if (treatPercent <= 100) treatPercent else 100
+
+        val textViewProgress = binding.progressText
+        textViewProgress.text = if (treatPercent <= 100) "$treatRemainingPercent%" else "100%"
+
+        val progressBar = binding.progressBarAnnual
+        progressBar.max = 100
+
+        when {
+            treatPercent >= 100 -> {
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.button)
+                progressBar.progress = 100
+                val layoutParams = goalText.layoutParams
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                goalText.layoutParams = layoutParams
+                val formattedText = "<b>Great job!</b> You have achieved your goal!<br>Set new goal at profile page!"
+                goalText.text = Html.fromHtml(formattedText, Html.FROM_HTML_MODE_LEGACY)
+            }
+            treatPercent < 0 -> {
+                progressBar.progress = 100
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel)
+                textViewProgress.setTextColor(Color.WHITE)
+                goalText.text = ""
+            }
+            treatPercent > 53 -> {
+                progressBar.progress = treatPercent
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+                textViewProgress.setTextColor(Color.WHITE)
+                goalText.text = ""
+            }
+            treatPercent == 0 -> {
+                progressBar.progress = 0
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+                goalText.text = ""
+            }
+            else -> {
+                progressBar.progress = treatPercent
+                progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.main)
+                goalText.text = ""
+            }
+        }
+    }
+
 }
 
 

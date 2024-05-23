@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +19,11 @@ import androidx.fragment.app.DialogFragment
 import com.example.mobiiliprojekti.R
 import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
-import com.example.mobiiliprojekti.services.Purchase
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 
 interface AddPurchaseDialogListener {
     fun onDialogDismissed()
@@ -123,6 +125,25 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         val date = btnDate.text.toString()
         val userId = SessionManager.getLoggedInUserId()
 
+        val selectedMonth = date.substring(5,7).toInt()
+        val selectedYear = date.substring(0, 4).toInt()
+
+        val month = LocalDate.now().monthValue
+        val year = android.icu.util.Calendar.getInstance().get(android.icu.util.Calendar.YEAR)
+
+        val goalDate = databaseManager.getTreatDate()
+        println("date1: $goalDate")
+        println("date2: $date")
+        var goalDateTime : LocalDate? = null
+        var selectedDateTime2 : LocalDate? = null
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        if (goalDate != null){
+            goalDateTime = LocalDate.parse(goalDate, formatter)
+            selectedDateTime2 = LocalDate.parse("$date 23:59:59", formatter)
+        }
+
+
         Log.d("AddPurchaseFragment", "Name: $name")
         Log.d("AddPurchaseFragment", "Price: $price")
         Log.d("AddPurchaseFragment", "Category: $category")
@@ -131,6 +152,11 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
 
         if (name.isNotEmpty() && price != null && date.isNotEmpty() && userId != -1L) {
             val result = databaseManager.addPurchase(name, price, category, date, userId)
+            if (goalDateTime != null) {
+                if (selectedYear < year && goalDateTime.isBefore(selectedDateTime2)|| selectedYear == year && selectedMonth < month && goalDateTime.isBefore(selectedDateTime2)){
+                    updateSavings(price)
+                }
+            }
             if (result != -1L) {
                     Log.d("AddPurchaseFragment", "Purchase saved successfully with ID: $result")
                     Toast.makeText(
@@ -162,4 +188,18 @@ class AddPurchase(private var homeFragment: HomeFragment) : DialogFragment() {
         super.onDismiss(dialog)
         listener?.onDialogDismissed()
     }
+
+    //for updating savings in db if purchase is added after month has changed
+    private fun updateSavings(price: Double){
+
+        val (savingsId, savingsValue, savingsDate) = databaseManager.getSavings()
+
+        if (savingsId != null && savingsValue != 0.0) {
+            val saved = savingsValue?.minus(price)
+            if (saved != null) {
+                databaseManager.updateSavings(savingsId, saved)
+            }
+        }
+    }
+
 }

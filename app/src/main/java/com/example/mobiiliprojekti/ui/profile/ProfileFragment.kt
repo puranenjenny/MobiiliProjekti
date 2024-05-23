@@ -1,9 +1,11 @@
 package com.example.mobiiliprojekti.ui.profile
 
+import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Editable
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +21,10 @@ import com.example.mobiiliprojekti.services.DatabaseManager
 import com.example.mobiiliprojekti.services.SessionManager
 import com.google.android.material.textfield.TextInputEditText
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import java.time.LocalDate
+import kotlin.math.ceil
 
 class ProfileFragment : Fragment() {
 
@@ -60,34 +64,34 @@ class ProfileFragment : Fragment() {
         val otherBudget: TextInputEditText = root.findViewById(R.id.OtherInput)
         val savings: TextView = root.findViewById(R.id.SavingsNumberText)
 
+        val treat: TextInputEditText = root.findViewById(R.id.TreatInput)
+        val treatValue: TextInputEditText = root.findViewById(R.id.TreatBudgetInput)
+        val btnSaveTreat : Button = root.findViewById(R.id.SaveTreatButton)
+
+        //Show treat if it is set
+        getTreat(treat, treatValue)
+
         //set text for welcome text
         val (username) = databaseManager.fetchUser(userId)
         welcomeTxt.text = "Welcome $username!"
 
         //set monthly budget input field value with value that is stored to db
-        showMonthlybudget(userId, monthlyBudget)
+        showMonthlyBudget(userId, monthlyBudget)
 
-        // TODO: do this again with some kind of loop and function
-        //set category budget input field values with values that is stored to db
-        val setHousingBudget = databaseManager.fetchCategoryBudget(userId, "Housing")
-        housingBudget.setText(setHousingBudget.toString())
+        // List of category names and corresponding TextView elements
+        val categoriesAndViews = listOf(
+            Pair("Housing", housingBudget),
+            Pair("Transportation", transportBudget),
+            Pair("Food", foodBudget),
+            Pair("Clothes", clothesBudget),
+            Pair("Well-being", wellnessBudget),
+            Pair("Entertainment", entertainmentBudget),
+            Pair("Other", otherBudget)
+        )
 
-        val setTransportBudget = databaseManager.fetchCategoryBudget(userId, "Transportation")
-        transportBudget.setText(setTransportBudget.toString())
+        // Iterate through the list and set the budget for each category
+        showCategoryBudget(userId, categoriesAndViews)
 
-        val setFoodBudget = databaseManager.fetchCategoryBudget(userId, "Food")
-        foodBudget.setText(setFoodBudget.toString())
-        val setClothesBudget = databaseManager.fetchCategoryBudget(userId, "Clothes")
-        clothesBudget.setText(setClothesBudget.toString())
-
-        val setWellnessBudget = databaseManager.fetchCategoryBudget(userId, "Well-being")
-        wellnessBudget.setText(setWellnessBudget.toString())
-
-        val setEntertainmentBudget = databaseManager.fetchCategoryBudget(userId, "Entertainment")
-        entertainmentBudget.setText(setEntertainmentBudget.toString())
-
-        val setOtherBudget = databaseManager.fetchCategoryBudget(userId, "Other")
-        otherBudget.setText(setOtherBudget.toString())
 
         //Calculate savings
         calculateSavings(monthlyBudget, housingBudget, transportBudget, foodBudget, clothesBudget, wellnessBudget, entertainmentBudget, otherBudget, savings)
@@ -101,19 +105,81 @@ class ProfileFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 // calculate savings after changes
                 calculateSavings(monthlyBudget, housingBudget, transportBudget, foodBudget, clothesBudget, wellnessBudget, entertainmentBudget, otherBudget, savings)
+
+                val treatValueInt = treatValue.text.toString().toIntOrNull()
+                if (treatValueInt != null) {
+                    showMonthsNeededText(treatValueInt, savings)
+                }
             }
         }
 
-        // TODO: do this again with some kind of loop?
-        // Add TextWatcher to all TextInputEditText fields
-        monthlyBudget.addTextChangedListener(textWatcher)
-        housingBudget.addTextChangedListener(textWatcher)
-        transportBudget.addTextChangedListener(textWatcher)
-        foodBudget.addTextChangedListener(textWatcher)
-        clothesBudget.addTextChangedListener(textWatcher)
-        wellnessBudget.addTextChangedListener(textWatcher)
-        entertainmentBudget.addTextChangedListener(textWatcher)
-        otherBudget.addTextChangedListener(textWatcher)
+        // List of category TextView elements
+        val budgetFields = listOf(
+            monthlyBudget,
+            housingBudget,
+            transportBudget,
+            foodBudget,
+            clothesBudget,
+            wellnessBudget,
+            entertainmentBudget,
+            otherBudget
+        )
+
+        // Iterate through the list and set the TextWatcher for each category
+        for (field in budgetFields) {
+            field.addTextChangedListener(textWatcher)
+        }
+
+        val treatValueInt = treatValue.text.toString().toIntOrNull()
+        if (treatValueInt != null) {
+            showMonthsNeededText(treatValueInt, savings)
+        }
+
+        // Set click listener for save budget button for saving new budgets
+        // TODO: should be changed so that if value is not changed no need for update?
+        btnSaveBudget.setOnClickListener {
+            val monthlyBudgetValue = monthlyBudget.text.toString()
+            val monthlyBudgetNumber = monthlyBudgetValue.toIntOrNull()
+            if (checkEmptyFields(budgetFields) && monthlyBudgetNumber != null) {
+                databaseManager.changeMonthlyBudget(monthlyBudgetNumber)
+                for ((categoryName, textView) in categoriesAndViews) {
+                    saveBudget(textView, categoryName)
+
+                }
+                Toast.makeText(requireContext(), "New budget stored successfully!", Toast.LENGTH_SHORT).show()
+
+                val imm = view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            }
+            else {
+                Toast.makeText(requireContext(), "Input budgets!", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        // Set click listener for save treat button
+        btnSaveTreat.setOnClickListener {
+            val treatName = treat.text.toString()
+            val treatPrice = treatValue.text.toString()
+            var treatValueNew = 0
+            println("treat: $treatName and $treatPrice")
+            if (treatPrice != null  && treatName.isNotEmpty()) {
+                treatValueNew = treatPrice.trim().toInt()
+                println("treat value: $treatValue")
+                databaseManager.addTreat(treatName, treatValueNew)
+                Toast.makeText(requireContext(), "Goal saved successfully!", Toast.LENGTH_SHORT).show()
+
+                val imm = view?.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            }
+            else {
+                Toast.makeText(requireContext(), "Input treat!", Toast.LENGTH_SHORT).show()
+            }
+
+            showMonthsNeededText(treatValueNew, savings)
+
+            getTreat(treat, treatValue)
+        }
 
         // Set click listener for edit user button
         btnEditUser.setOnClickListener {
@@ -121,28 +187,6 @@ class ProfileFragment : Fragment() {
             val fragmentEditUser = EditUserFragment()
             // Show fragment as dialog
             fragmentEditUser.show(parentFragmentManager, "edit_user_dialog")
-        }
-
-        // Set click listener for save budget button for saving new budget
-        // TODO: should be changed so that if value is not changed no need for update?
-        btnSaveBudget.setOnClickListener {
-            val monthlyBudgetValue = monthlyBudget.text.toString()
-            val monthlyBudgetNumber = monthlyBudgetValue.toIntOrNull()
-            if (monthlyBudgetNumber != null) {
-                databaseManager.changeMonthlyBudget(monthlyBudgetNumber)
-                Toast.makeText(requireContext(), "New budget stored successfully!", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                Toast.makeText(requireContext(), "Input budgets!", Toast.LENGTH_SHORT).show()
-            }
-            // TODO: do this again with some kind of loop?
-            saveBudget(housingBudget, "Housing")
-            saveBudget(transportBudget, "Transportation")
-            saveBudget(foodBudget, "Food")
-            saveBudget(clothesBudget, "Clothes")
-            saveBudget(wellnessBudget, "Well-being")
-            saveBudget(entertainmentBudget, "Entertainment")
-            saveBudget(otherBudget, "Other")
         }
 
         // Set click listener for delete user button
@@ -207,10 +251,90 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun showMonthlybudget(userId : Long, monthlyBudget : TextInputEditText){
+    //function for getting monthly budget from db
+    private fun showMonthlyBudget(userId : Long, monthlyBudget : TextInputEditText){
         val monthNow = LocalDate.now().monthValue
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         monthlyBudget.setText((databaseManager.getSelectedMonthsBudget(userId, monthNow, currentYear) ?: 0.0).toString())
+    }
+
+    //function for getting category budgets from db
+    private fun showCategoryBudget(userId: Long, categoriesAndViews: List<Pair<String, TextView>>) {
+        val monthNow = LocalDate.now().monthValue
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+        for ((categoryName, textView) in categoriesAndViews) {
+            val budget = databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, monthNow, currentYear)
+            textView.text = budget?.toString() ?: "0"
+        }
+    }
+
+    //function for checking that budget values are set
+    private fun checkEmptyFields(budgetFields: List<TextInputEditText>): Boolean {
+        for (field in budgetFields) {
+            if (field.text.toString().trim().isEmpty()) {
+                return false
+            }
+        }
+        return true
+    }
+
+    //function for getting savings goal from db
+    private fun getTreat(treat: TextInputEditText, treatNum : TextInputEditText) {
+        val (treatName, treatValue) = databaseManager.getTreat()
+        println("price of treat: $treatValue")
+        if (treatName != null && treatValue != null){
+            treat.setText(treatName)
+            treatNum.setText(treatValue.toString())
+            println("price of treat: $treatValue")
+        }
+    }
+
+    //function for showing text how long it takes to achieve goal
+    private fun showMonthsNeededText(treatValueNew:Int, savings : TextView) {
+        val textViewMonthsNeeded = binding.txtMonthsNeeded
+        val buttonSaveGoal = binding.SaveTreatButton
+
+        if (treatValueNew != 0){
+
+            val savingsPerMonth = savings.text.toString().toDoubleOrNull() ?: 0.0
+            val monthsNeeded = ceil(treatValueNew / savingsPerMonth).toInt()
+
+            val formattedText = "With current budget it takes <b>$monthsNeeded</b> months<br>to achieve this goal."
+            textViewMonthsNeeded.text = Html.fromHtml(formattedText, Html.FROM_HTML_MODE_LEGACY)
+
+            val layoutParams = textViewMonthsNeeded.layoutParams as ViewGroup.MarginLayoutParams
+            val layoutParams2 = buttonSaveGoal.layoutParams as ViewGroup.MarginLayoutParams
+
+            val topBottomMarginInDp = 20
+
+            val scale = resources.displayMetrics.density
+            val topBottomMarginInPx = (topBottomMarginInDp * scale + 0.5f).toInt()
+
+            layoutParams.topMargin = topBottomMarginInPx
+            layoutParams2.topMargin = topBottomMarginInPx
+
+
+            textViewMonthsNeeded.layoutParams = layoutParams
+            buttonSaveGoal.layoutParams = layoutParams2
+        }
+        else {
+            textViewMonthsNeeded.text = ""
+
+            val layoutParams = textViewMonthsNeeded.layoutParams as ViewGroup.MarginLayoutParams
+            val layoutParams2 = buttonSaveGoal.layoutParams as ViewGroup.MarginLayoutParams
+
+            val topBottomMarginInDp = 0
+
+            val scale = resources.displayMetrics.density
+            val topBottomMarginInPx = (topBottomMarginInDp * scale + 0.5f).toInt()
+
+            layoutParams.topMargin = topBottomMarginInPx
+
+
+            textViewMonthsNeeded.layoutParams = layoutParams
+            buttonSaveGoal.layoutParams = layoutParams2
+        }
     }
 
 }

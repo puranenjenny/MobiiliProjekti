@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.mobiiliprojekti.ChangeCategoryBudgetDialogListener
 import com.example.mobiiliprojekti.ChangeCategoryBudgetFragment
@@ -49,18 +50,14 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         databaseManager = DatabaseManager(requireContext())
 
         val spinner: Spinner = root.findViewById(R.id.spinner_category)
-        spinner.dropDownVerticalOffset = 150 // Set vertical offset to zero or adjust as needed
-        spinner.dropDownHorizontalOffset = 40 // Set horizontal offset to zero or adjust as needed
+        spinner.dropDownVerticalOffset = 150
+        spinner.dropDownHorizontalOffset = 40
 
-        val categories = databaseManager.allCategories() //get categories
-        //val categorynames = databaseManager.allCategoryNames() // get only names for the spinner
-        val textView: TextView = binding.textDashboard //binding
-
-        textView.text = categories // set text
         setupCategorySpinner() // set categories to the dropdown spinner
 
         updateMonthYearDisplay() // setting initial month and year
         updateDaysLeftDisplay() // setting days left
+
 
         var selectedCategoryString = spinner.selectedItem?.toString() ?: ""
         SelectedCategoryHandler.setSelectedCategory(selectedCategoryString)
@@ -74,6 +71,7 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
                 selectedCategoryString = selectedCategory
                 SelectedCategoryHandler.setSelectedCategory(selectedCategoryString)
                 selectedMonthsCategoryBudgetByCategory(selectedCategoryString)
+                updateEverything()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // No-op
@@ -93,9 +91,25 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
             changeCategoryBudgetDialog.show(childFragmentManager, "changeCategoryBudgetDialog")
         }
 
+        updateEverything() //initial display setup
+
         return root
     }
 
+
+    //updates all displays
+    private fun updateEverything(){
+        activity?.runOnUiThread {
+            displayMoneySpent()
+            displayMoneyLeft()
+            updateMonthYearDisplay()
+            updateDaysLeftDisplay()
+            displayLastPaymenttxt()
+            displayLastPurchases()
+            displayBudgetProgressItems()
+            selectedMonthsCategoryBudgetByCategory(SelectedCategoryHandler.getSelectedCategory())
+            }
+    }
 
     // date functions
     private fun navigateMonths(direction: Int) {
@@ -107,10 +121,10 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
             currentMonthIndex = 1
             currentYear += 1
         }
-        updateMonthYearDisplay()
-        updateDaysLeftDisplay()
-        selectedMonthsCategoryBudgetByCategory(SelectedCategoryHandler.getSelectedCategory())
+        updateEverything()
     }
+
+
     private fun updateMonthYearDisplay() {
         val monthName = LocalDate.of(currentYear, currentMonthIndex, 1).month.getDisplayName(
             TextStyle.FULL, Locale.getDefault())
@@ -132,8 +146,55 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
             // current month
             totalDaysInMonth - today.dayOfMonth + 1
         }
-
         binding.txtDaysLeftDashboard.text = if (daysLeft > 0) "$daysLeft / $totalDaysInMonth" else "0"
+    }
+
+    //money spent
+    private fun displayMoneySpent() {
+        println("DashboardFragment, displayMoneySpent called")
+        val userId = SessionManager.getLoggedInUserId()
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+        val categoryName = SelectedCategoryHandler.getSelectedCategory()
+
+        println("Selected month and year: $selectedMonth and $selectedYear")
+
+        val totalMoneySpent = databaseManager.getTotalExpenses(userId, categoryName, selectedMonth, selectedYear)
+
+        println("Total money spent: $totalMoneySpent")
+        binding.txtMoneySpentDashboard.text = String.format("%.1f €", totalMoneySpent)
+    }
+
+    //money left
+    private fun displayMoneyLeft() {
+        val userId = SessionManager.getLoggedInUserId()
+        val selectedCategory = SelectedCategoryHandler.getSelectedCategory()
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+
+        val monthNow = LocalDate.now().monthValue
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+        val categoryBudget: Double = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > monthNow)) {
+            val budget = databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, selectedMonth, selectedYear) ?: 0
+            if (budget != 0)
+                budget.toDouble()
+            else
+                databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, monthNow, currentYear)?.toDouble() ?: 0.0
+        } else {
+            databaseManager.getSelectedMonthsCategoryBudget(userId, selectedCategory, selectedMonth, selectedYear)?.toDouble() ?: 0.0
+        }
+
+        val totalExpenses = databaseManager.getTotalExpenses(userId, selectedCategory, selectedMonth, selectedYear)
+
+        val moneyLeft = categoryBudget - totalExpenses
+        binding.txtMoneyLeftDashboard.text = String.format("%.1f €", moneyLeft)
+
+        if (moneyLeft < 0) {
+            binding.txtMoneyLeftBackDash.setBackgroundResource(R.drawable.element_background_red)
+        } else {
+            binding.txtMoneyLeftBackDash.setBackgroundResource(R.drawable.element_background_orange)
+        }
     }
 
 
@@ -142,6 +203,96 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         val categories = databaseManager.allCategoryNames()
         val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, categories)
         binding.spinnerCategory.adapter = adapter
+
+        // listenerr to update everything when a new category is selected
+        binding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedCategory = parent.getItemAtPosition(position).toString()
+                SelectedCategoryHandler.setSelectedCategory(selectedCategory)
+                binding.txtlastPayCategory.text = "Last payments in $selectedCategory"
+                updateEverything()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // do nothing
+            }
+        }
+    }
+
+    //percentage bar items
+    private fun displayBudgetProgressItems() {
+        val userId = SessionManager.getLoggedInUserId()
+        val categoryName = SelectedCategoryHandler.getSelectedCategory()
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+
+        val monthNow = LocalDate.now().monthValue
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+        val totalBudget: Double = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > monthNow)) {
+            val budget = databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, selectedMonth, selectedYear) ?: 0
+            if (budget != 0)
+                budget.toDouble()
+            else
+                databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, monthNow, currentYear)?.toDouble() ?: 0.0
+        } else {
+            databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, selectedMonth, selectedYear)?.toDouble() ?: 0.0
+        }
+
+        val totalSpent = databaseManager.getTotalExpenses(userId, categoryName, selectedMonth, selectedYear)
+
+        val budgetUsagePercent = if (totalBudget > 0) (totalSpent / totalBudget * 100).toInt() else 0
+        val budgetRemainingPercent = if (budgetUsagePercent <= 100) 100 - budgetUsagePercent else 0
+
+        val textViewProgress = binding.txtHomeProgressBudget
+        textViewProgress.text = if (budgetUsagePercent <= 100) "$budgetRemainingPercent%" else "0%"
+
+        val progressBar = binding.progressBarCategoryBudget
+        progressBar.max = 100
+
+        if (budgetUsagePercent > 100) {
+            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.cancel)
+            progressBar.progress = 100
+        } else {
+            progressBar.progressTintList = ContextCompat.getColorStateList(requireContext(), R.color.button)
+            progressBar.progress = budgetUsagePercent
+        }
+    }
+
+
+    //payments items
+    private fun displayLastPaymenttxt() {
+        val category = SelectedCategoryHandler.getSelectedCategory()
+        selectedMonthsCategoryBudgetByCategory(category)
+        binding.txtlastPayCategory.text = "Last payments in $category"
+    }
+
+    private fun displayLastPurchases(){
+        val userId = SessionManager.getLoggedInUserId()
+        val categoryName = SelectedCategoryHandler.getSelectedCategory()
+        val selectedMonth = currentMonthIndex
+        val selectedYear = currentYear
+        val purchases = databaseManager.getSelectedMonthsAndCategoriesPurchases(userId, categoryName, selectedMonth, selectedYear)
+        val purchasesLayout = binding.linLastpaymentsDash
+        purchasesLayout.removeAllViews()
+
+        if (purchases.isEmpty()) {
+            val noPurchasesView = TextView(context).apply {
+                text = "No purchases yet"
+                textSize = 18f
+                setPadding(20, 20, 20, 20)
+            }
+            purchasesLayout.addView(noPurchasesView)
+        } else {
+            purchases.forEach { purchase ->
+                val purchaseView = TextView(context).apply {
+                    text = "${purchase.date} - ${purchase.name} - ${purchase.price} €"
+                    textSize = 18f
+                    setPadding(20, 20, 20, 20)
+                }
+                purchasesLayout.addView(purchaseView)
+            }
+        }
     }
 
     fun selectedMonthsCategoryBudgetByCategory(categoryName: String) {
@@ -152,8 +303,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
         val monthNow = LocalDate.now().monthValue
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-
-
 
         monthlyBudget = if (selectedYear > currentYear || (selectedYear == currentYear && selectedMonth > monthNow)) {
             val budget = databaseManager.getSelectedMonthsCategoryBudget(userId, categoryName, selectedMonth, selectedYear) ?: 0
@@ -168,9 +317,10 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
         }
 
-
         binding.txtMonthlyBudetNum.text = "${String.format("%.0f", monthlyBudget)} €"
+
     }
+
 
     override fun onDialogDismissed3() {
         val selectedCategoryString = SelectedCategoryHandler.getSelectedCategory()
@@ -190,7 +340,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
         val currentDateTime = java.time.LocalDateTime.now()
 
-
         val yearMonth = YearMonth.of(selectedYear, selectedMonth)
         val totalDaysInMonth = yearMonth.lengthOfMonth()
 
@@ -205,8 +354,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
 
         val formatterMonth = DateTimeFormatter.ofPattern("MM")
         val currentMonth = currentDateTime.format(formatterMonth).toInt()
-
-
 
         if (selectedMonth < 10){
             futureDate = "$selectedYear-0$selectedMonth-01 00:00:01"
@@ -231,6 +378,6 @@ class DashboardFragment : Fragment(), ChangeCategoryBudgetDialogListener {
         }
 
         val category = SelectedCategoryHandler.getSelectedCategory()
-            selectedMonthsCategoryBudgetByCategory(category)
+        selectedMonthsCategoryBudgetByCategory(category)
     }
 }
